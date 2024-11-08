@@ -58,13 +58,19 @@ class _RegisterState extends State<Register> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Sign Up",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "Panchang"
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Sign Up",
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Panchang"
+                      ),
+                    ),
+                  ],
                 ),
                 verticalSpaceTiny,
                 // Row(
@@ -152,7 +158,6 @@ class _RegisterState extends State<Register> {
                     return null; // Return null to indicate no validation error
                   },
                 ),
-                verticalSpaceSmall,
                 verticalSpaceMedium,
                 TextFieldWidget(
                   hint: "Confirm password",
