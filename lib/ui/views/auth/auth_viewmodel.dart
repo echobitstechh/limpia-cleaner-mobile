@@ -36,6 +36,8 @@ class AuthViewModel extends BaseViewModel {
   final genderController = TextEditingController();
   final addressController = TextEditingController();
   final serviceController = TextEditingController();
+  final cityController = TextEditingController();
+
   String? selectedGender;
   late String phoneValue = "";
   late PhoneNumber phoneNumber;
@@ -45,6 +47,8 @@ class AuthViewModel extends BaseViewModel {
   bool obscure = true;
   bool terms = false;
   bool remember = false;
+
+
 
   init() async {
 
