@@ -10,6 +10,7 @@ import '../../../app/app.router.dart';
 import '../../../core/utils/local_store_dir.dart';
 import '../../../core/utils/local_stotage.dart';
 import '../../components/empty_state.dart';
+import '../auth/register.dart';
 
 class OnboardingView2 extends StatelessWidget {
   const OnboardingView2({Key? key}) : super(key: key);
@@ -55,13 +56,10 @@ class OnboardingView2 extends StatelessWidget {
               ),
               verticalSpaceMassive,
               GestureDetector(
-                onTap: () {
-                  gotoRegister();
-
-                },
+                onTap: () {},
                 child: ElevatedButton(
                   onPressed: () {
-                    gotoRegister();
+                    locator<NavigationService>().navigateTo(Routes.registerView);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -82,8 +80,7 @@ class OnboardingView2 extends StatelessWidget {
               verticalSpaceMedium,
               GestureDetector(
                 onTap: () {
-                  gotologin();
-
+                  locator<NavigationService>().navigateTo(Routes.authView);
                 },
                 child: const Text(
                   "Login",

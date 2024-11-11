@@ -3,6 +3,7 @@ import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/components/submit_button.dart';
 import 'package:limpia/ui/components/text_field_widget.dart';
 import 'package:limpia/ui/views/auth/auth_viewmodel.dart';
+import 'package:limpia/ui/views/auth/set_up.dart';
 import 'package:limpia/utils/country_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -270,9 +271,9 @@ class _RegisterState extends State<Register> {
                   isLoading: model.isBusy,
                   label: "Continue",
                   submit: () {
-                    if (_formKey.currentState!.validate()) {
-                      model.register();
-                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SetUp()));
                   },
                   color: kcPrimaryColor,
                   boldText: true,
