@@ -6,6 +6,9 @@ import 'package:limpia/ui/common/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
+import '../../../app/app.locator.dart';
+import '../../../app/app.router.dart';
 import '../../../state.dart';
 import 'dashboard_viewmodel.dart';
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
@@ -81,7 +84,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // Define the action when the icon is tapped
+                    locator<NavigationService>().navigateTo(Routes.notificationView);
                   },
                   child: Icon(
                     Icons.notifications_active_outlined,
@@ -1907,7 +1910,6 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 // ),
                               ],
                             ),
-                            verticalSpaceSmall,
                             // DefaultTabController(
                             //   length: 2,
                             //   child: SingleChildScrollView(
@@ -2593,7 +2595,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                             //     ),
                             //   ),
                             // ),
-                            verticalSpaceSmall,
+
 
                             // RefreshIndicator(
                             //   onRefresh: () async {
