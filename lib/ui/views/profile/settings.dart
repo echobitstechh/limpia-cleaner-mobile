@@ -182,7 +182,7 @@ class _Settings extends State<Settings> {
                       height: 24,
                       width: 24,
                     ),
-                    title: const Text("Profile"),
+                    title: const Text("Help & Support"),
                   ),
                   ListTile(
                     onTap: () {
@@ -207,57 +207,7 @@ class _Settings extends State<Settings> {
                       height: 24,
                       width: 24,
                     ),
-                    title: const Text("Security"),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        // barrierColor: Colors.black.withAlpha(50),
-                        // backgroundColor: Colors.transparent,
-                        backgroundColor: Colors.black.withOpacity(0.7),
-                        builder: (BuildContext context) {
-                          return const FractionallySizedBox(
-                            heightFactor:
-                            1.0, // 70% of the screen's height
-                            child: ProfileScreen(),
-                          );
-                        },
-                      );
-                    },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
-                    title: const Text("Notification"),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        // barrierColor: Colors.black.withAlpha(50),
-                        // backgroundColor: Colors.transparent,
-                        backgroundColor: Colors.black.withOpacity(0.7),
-                        builder: (BuildContext context) {
-                          return const FractionallySizedBox(
-                            heightFactor:
-                            1.0, // 70% of the screen's height
-                            child: ProfileScreen(),
-                          );
-                        },
-                      );
-                    },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
-                    title: const Text("Privacy"),
+                    title: const Text("Terms and Policies"),
                   ),
                 ],
               ),
@@ -293,7 +243,7 @@ class _Settings extends State<Settings> {
                       height: 24,
                       width: 24,
                     ),
-                    title: const Text("Profile"),
+                    title: const Text("Report a problem"),
                   ),
                   ListTile(
                     onTap: () {
@@ -318,7 +268,7 @@ class _Settings extends State<Settings> {
                       height: 24,
                       width: 24,
                     ),
-                    title: const Text("Security"),
+                    title: const Text("Add account"),
                   ),
                   ListTile(
                     onTap: () {
@@ -343,32 +293,7 @@ class _Settings extends State<Settings> {
                       height: 24,
                       width: 24,
                     ),
-                    title: const Text("Notification"),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        // barrierColor: Colors.black.withAlpha(50),
-                        // backgroundColor: Colors.transparent,
-                        backgroundColor: Colors.black.withOpacity(0.7),
-                        builder: (BuildContext context) {
-                          return const FractionallySizedBox(
-                            heightFactor:
-                            1.0, // 70% of the screen's height
-                            child: ProfileScreen(),
-                          );
-                        },
-                      );
-                    },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
-                    title: const Text("Privacy"),
+                    title: const Text("Log out"),
                   ),
                 ],
               ),
