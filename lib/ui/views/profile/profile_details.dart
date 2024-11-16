@@ -162,71 +162,144 @@ class _ProfileScreen extends State<ProfileScreen> {
           ? kcDarkGreyColor
           : kcWhiteColor,
       appBar: AppBar(
-        toolbarHeight: 100.0,
-        title: const Text('Profile Details'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        backgroundColor: kcPrimaryColor,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+                bottomLeft: Radius.circular(25.0),
+                bottomRight: Radius.circular(25.0)
+            )
+        ),
+        toolbarHeight: 200.0,
+        title: Center(
+          child: Container(
+            padding:
+            const EdgeInsets.only(left: 7, right: 7, bottom: 7, top: 7),
+            decoration: BoxDecoration(
+              color: uiMode.value == AppUiModes.dark
+                  ? kcPrimaryColor.withOpacity(0.7)
+                  : kcPrimaryColor  .withOpacity(0.9),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: kcPrimaryColor, width: 0),
+            ),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                      alignment: Alignment.center,
+                      'assets/images/limpiarlogo.png'
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
       body: ListView(
         children: <Widget>[
           Card(
-            color: uiMode.value == AppUiModes.dark
-                ? kcDarkGreyColor
-                : kcWhiteColor,
-            shadowColor: Colors.transparent,
-            margin: const EdgeInsets.all(24.0),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  isUpdating
-                      ? const CircularProgressIndicator() // Show loader when updating
-                      : GestureDetector(
-                          onTap: () {
-                            updateProfilePicture();
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40.0),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          // barrierColor: Colors.black.withAlpha(50),
+                          // backgroundColor: Colors.transparent,
+                          backgroundColor:
+                          Colors.black.withOpacity(0.7),
+                          builder: (BuildContext context) {
+                            return const FractionallySizedBox(
+                              heightFactor:
+                              1.0, // 70% of the screen's height
+                              child: ProfileScreen(),
+                            );
                           },
-                          // This stack is just for the profile picture and the edit icon
-                          child: Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              ProfilePicture(
-                                  size: 100,
-                                  url: profile.value.profilePic?.url,
-                                  ),
-                              GestureDetector(
-                                onTap: () {
-                                  updateProfilePicture();
-                                },
-                                child: Container(
-                                  width: 25, // Width and height of the circle
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        kcPrimaryColor, // Background color of the circle
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color:
-                                          kcWhiteColor, // Border color of the circle
-                                      width: 2, // Border width
-                                    ),
-                                  ),
-                                  child: const Icon(
-                                    Icons.add,
-                                    color: kcWhiteColor, // Icon color
-                                    size: 18, // Icon size
-                                  ),
-                                ),
-                              ),
-                            ],
+                        );
+                        // viewModel.updateProfilePicture();
+                      },
+                      child: ProfilePicture(
+                        size: 100,
+                        url: profile.value.profilePic?.url,
+                      ),
+                    ),
+                    // horizontalSpaceLarge,
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          // barrierColor: Colors.black.withAlpha(50),
+                          // backgroundColor: Colors.transparent,
+                          backgroundColor:
+                          Colors.black.withOpacity(0.7),
+                          builder: (BuildContext context) {
+                            return const FractionallySizedBox(
+                              heightFactor:
+                              1.0, // 70% of the screen's height
+                              child: ProfileScreen(),
+                            );
+                          },
+                        );
+                        // viewModel.updateProfilePicture();
+                      },
+                      child: Container(
+                        width: 30, // Width and height of the circle
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color:
+                          kcPrimaryColor, // Background color of the circle
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color:
+                            kcWhiteColor, // Border color of the circle
+                            width: 2, // Border width
                           ),
                         ),
-                ],
-              ),
+                        child: const Icon(
+                          Icons.remove_red_eye_outlined,
+                          color: kcWhiteColor, // Icon color
+                          size: 18, // Icon size
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                horizontalSpaceMedium,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${profile.value.firstname} ${profile.value.lastname}",
+                      style: const TextStyle(
+                        color: kcPrimaryColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Cleaner',
+                      style: const TextStyle(
+                        color: kcPrimaryColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(profile.value.username ?? "")
+                  ],
+                ),
+              ],
             ),
           ),
           Padding(
@@ -235,158 +308,44 @@ class _ProfileScreen extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: ListTile(
-                                title: const Text(
-                                  'Full Name',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  "${profile.value.firstname} ${profile.value.lastname}",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: uiMode.value == AppUiModes.dark
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              // This will give bounded constraints to the ListTile.
-                              child: ListTile(
-                                title: const Text(
-                                  'Email Address',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  '${profile.value.email}',
-                                  style: TextStyle(
-                                      color: uiMode.value == AppUiModes.dark
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ListTile(
-                                title: const Text(
-                                  'Phone Number',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  "${profile.value.phone}",
-                                  style: TextStyle(
-                                      color: uiMode.value == AppUiModes.dark
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // ... Other widgets can go here
-                      ],
-                    ),
-                  ),
-                  horizontalSpaceLarge,
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0), // Optional padding for spacing
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns items properly
-                            children: [
-                              Text(
-                                "Create Afritag",
+                          Expanded(
+                            flex: 3,
+                            child: ListTile(
+                              title: const Text(
+                                'Location:',
                                 style: TextStyle(
-                                  color: uiMode.value == AppUiModes.dark
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontSize: 12,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ],
-                          ),
-                          verticalSpaceSmall,
-                          Text(
-                            "Create a unique username to transfer shopping credits with family to purchase or donate.",
-                            style: TextStyle(
-                              color: uiMode.value == AppUiModes.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: '• ',
+                                      style: TextStyle(fontSize: 20, color: Colors.black),
+                                      children: <TextSpan>[
+                                        TextSpan(text: 'Los Angelis -USA'),
+                                        TextSpan(text: '\n• '),
+                                        TextSpan(text: '13 banga Distric'),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                          verticalSpaceSmall,
-
-                          Row(
-                            children: [
-                             Container(
-                                width: 25, // Width and height of the circle
-                                height: 25,
-                                decoration: BoxDecoration(
-                                  color:
-                                  kcSecondaryColor, // Background color of the circle
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color:
-                                    kcWhiteColor, // Border color of the circle
-                                    width: 2, // Border width
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: kcWhiteColor, // Icon color
-                                  size: 12, // Icon size
-                                ),
-                              ),
-                              SizedBox(width: 8), // Adds spacing between the icon and text
-                              Text(
-                                "Create Afri Tag",
-                                style: TextStyle(
-                                  color: uiMode.value == AppUiModes.dark
-                                      ? Colors.white
-                                      : kcSecondaryColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-
                         ],
                       ),
-                    ),
+                      // ... Other widgets can go here
+                    ],
                   ),
-
                   horizontalSpaceMedium,
 
                   Padding(
