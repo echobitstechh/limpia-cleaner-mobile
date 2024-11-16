@@ -42,39 +42,18 @@ class _LoginState extends State<Login> {
           viewModelBuilder: () => AuthViewModel(),
           builder: (context, model, child) => ListView(
             children: [
-              const Text(
-                "Sign in",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              verticalSpaceTiny,
-          Row(
-            children:  [
-                const Text(
-                  "Don't have an account? ",
-                  style: TextStyle(
-                      fontSize: 12,
-                      ),
-                ),
-              GestureDetector(
-                onTap: () {
-                  gotoRegister();
-
-                },
-                child: const Text(
-                  "Create Account",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: kcPrimaryColor,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Sign in",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              )
-
-            ]
-          ),
-
+                ],
+              ),
               verticalSpaceMedium,
               TextFieldWidget(
                 hint: "Email",
@@ -150,7 +129,7 @@ class _LoginState extends State<Login> {
               SubmitButton(
                 isLoading: model.isBusy,
                 boldText: true,
-                label: "Login Account",
+                label: "Continue",
                 submit: () {
                   model.login();
                 },
@@ -201,6 +180,85 @@ class _LoginState extends State<Login> {
               //   },
               //   color: kcLightGrey,
               // ),
+              verticalSpaceMedium,
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(thickness: 1),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text('or'),
+                  ),
+                  Expanded(
+                    child: Divider(thickness: 1),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    icon: Image.asset(
+                      'assets/icons/twitter.png',
+                      height: 30,  // Adjust the height as needed
+                      width: 30,   // Adjust the width as needed
+                    ),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Image.asset(
+                      'assets/icons/facebook.png',
+                      height: 30,  // Adjust the height as needed
+                      width: 30,   // Adjust the width as needed
+                    ),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Image.asset(
+                      'assets/icons/google.png',
+                      height: 30,  // Adjust the height as needed
+                      width: 30,   // Adjust the width as needed
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+
+              verticalSpaceMedium,
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center ,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children:  [
+                    Row(
+                      children: [
+                        const Text(
+                          "Don't have an account? ",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        gotoRegister();
+
+                      },
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: kcPrimaryColor,
+                        ),
+                      ),
+                    )
+
+                  ]
+              ),
 
               verticalSpaceLarge,
             ],

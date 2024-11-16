@@ -13,11 +13,6 @@ import '../../../app/app.locator.dart';
 import 'home_viewmodel.dart';
 import 'module_switch.dart';
 
-/// @author George David
-/// email: georgequin19@gmail.com
-/// Feb, 2024
-///
-
 class HomeView extends StackedView<HomeViewModel> {
   const HomeView({Key? key}) : super(key: key);
 
@@ -57,7 +52,7 @@ class HomeView extends StackedView<HomeViewModel> {
                       child: GestureDetector(
                         onTap: () {
                           // Navigate to cart page
-                           locator<NavigationService>().navigateToCartView();
+                          locator<NavigationService>().navigateToCartView();
                         },
                         child: Container(
                           margin:const EdgeInsets.symmetric(horizontal: 5),
@@ -107,7 +102,7 @@ class HomeView extends StackedView<HomeViewModel> {
                                   ),
                                 ],
                               ),
-                               Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   const Text(
@@ -175,94 +170,64 @@ class BottomNavBar extends StatelessWidget {
         Color iconColor = Colors.grey;
         Color selectedColor = kcSecondaryColor;
 
-        List<BottomNavigationBarItem> items = (currentModule == AppModules.raffle)
-            ? _rafflesItems(iconColor, selectedColor)
-            : _shopItems(iconColor, selectedColor);
-
-        int currentIndex = (currentModule == AppModules.raffle)
-            ? viewModel.selectedRafflesTab
-            : viewModel.selectedShopTab;
+        List<BottomNavigationBarItem> items = [
+          _buildBottomNavigationBarItem(
+            iconPath: 'assets/icons/home_outline.svg',
+            label: "Home",
+            isSelected: viewModel.selectedShopTab == 0,
+          ),
+          _buildBottomNavigationBarItem(
+            iconPath: 'assets/icons/book',
+            label: "Book",
+            isSelected: viewModel.selectedShopTab == 1,
+          ),
+          _buildBottomNavigationBarItem(
+            iconPath: 'assets/icons/message-square',
+            label: "Messages",
+            isSelected: viewModel.selectedShopTab == 2,
+          ),
+          _buildBottomNavigationBarItem(
+            iconPath: 'assets/icons/settings',
+            label: "Settings",
+            isSelected: viewModel.selectedShopTab == 3,
+          ),
+        ];
 
         return BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: uiMode.value == AppUiModes.dark
-              ? kcDarkGreyColor // Dark mode logo
-              : kcWhiteColor,
-
-          // currentModule == AppModules.shop ? const Color(0xFFFFF3DB) : Colors.white,
+          backgroundColor: Colors.white,
           selectedLabelStyle: TextStyle(color: selectedColor),
           selectedItemColor: selectedColor,
           unselectedItemColor: iconColor,
           onTap: (index) => viewModel.changeSelected(index, currentModule),
-          currentIndex: currentIndex,
+          currentIndex: viewModel.selectedShopTab,
           items: items,
         );
       },
     );
   }
 
-  List<BottomNavigationBarItem> _rafflesItems(Color iconColor, Color selectedColor) {
-    return [
-      BottomNavigationBarItem(
-        icon: _navBarItemIcon('home.svg', 'home_outline.svg', viewModel.selectedRafflesTab == 0, iconColor),
-        label: "Home",
+  BottomNavigationBarItem _buildBottomNavigationBarItem({
+    required String iconPath,
+    required String label,
+    required bool isSelected,
+  }) {
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(
+        '$iconPath${isSelected ? '_selected' : ''}.svg',
+        color: isSelected ? kcSecondaryColor : Colors.grey,
+        height: 24,
       ),
-      BottomNavigationBarItem(
-        icon: _navBarItemIcon('ticket_star.svg', 'ticket_star_outline.svg', viewModel.selectedRafflesTab == 1, iconColor),
-        label: "Draws",
-      ),
-      BottomNavigationBarItem(
-        icon: _navBarItemIcon('heart.svg', 'heart_outline.svg', viewModel.selectedRafflesTab == 2, iconColor),
-        label: "Donate",
-      ),
-      BottomNavigationBarItem(
-        icon: _navBarItemIcon('menu.svg', 'menu_outline.svg', viewModel.selectedRafflesTab == 3, iconColor),
-        label: "Menu",
-      ),
-    ];
-  }
-
-  List<BottomNavigationBarItem> _shopItems(Color iconColor, Color selectedColor) {
-    return [
-      BottomNavigationBarItem(
-        icon: _navBarItemIcon('home.svg', 'home_outline.svg', viewModel.selectedShopTab == 0, iconColor),
-        label: "Home",
-      ),
-      BottomNavigationBarItem(
-        icon: _navBarItemIcon('ticket_star.svg', 'ticket_star_outline.svg', viewModel.selectedShopTab == 1, iconColor),
-        label: "Draws",
-      ),
-
-      BottomNavigationBarItem(
-        icon: _navBarItemIcon('notification.svg','notification.svg', viewModel.selectedShopTab == 3, iconColor),
-        label: "Notifications",
-      ),
-      BottomNavigationBarItem(
-        icon: _navBarItemIcon('menu.svg', 'notification.svg', viewModel.selectedShopTab == 4, iconColor),
-        label: "Menu",
-      ),
-    ];
-  }
-
-
-  Widget _navBarItemIcon(String filledIcon, String outlinedIcon, bool isSelected, Color iconColor) {
-    return Container(
-      width: 30,
-      height: 30,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: isSelected ? kcSecondaryColor.withOpacity(0.2) : Colors.transparent,
-      ),
-      child: SvgPicture.asset(
-        'assets/icons/${isSelected ? filledIcon : outlinedIcon}', // Use filledIcon when selected, outlinedIcon when unselected
-        height: 16, // Icon size
-        color: isSelected ? kcSecondaryColor : iconColor,
-      ),
+      label: label,
     );
   }
 
 
-  // Widget _navBarItemWithCounter(String icon, bool isSelected, ValueListenable<List<dynamic>> counterListenable, Color color) {
+
+
+
+
+// Widget _navBarItemWithCounter(String icon, bool isSelected, ValueListenable<List<dynamic>> counterListenable, Color color) {
   //   return ValueListenableBuilder<List<dynamic>>(
   //     valueListenable: counterListenable,
   //     builder: (context, value, child) {

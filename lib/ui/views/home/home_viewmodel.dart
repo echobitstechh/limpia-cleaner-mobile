@@ -26,6 +26,7 @@ import '../../../core/utils/local_store_dir.dart';
 import '../../../core/utils/local_stotage.dart';
 import '../../../state.dart';
 import '../../common/ui_helpers.dart';
+import '../dashboard/messages.dart';
 import '../draws/draws_view.dart';
 
 /// @author George David
@@ -40,7 +41,7 @@ class HomeViewModel extends BaseViewModel {
      DashboardView(),
      const DrawsView(),
     const CartView(),
-    const NotificationView(),
+    const Messages(),
     const ProfileView()
   ];
 
@@ -60,7 +61,7 @@ class HomeViewModel extends BaseViewModel {
   List<Widget> rafflesPages = [
     DashboardView(),
      const DrawsView(),
-    const NotificationView(),
+    const Messages(),
     const ProfileView()
   ];
 
@@ -68,7 +69,7 @@ class HomeViewModel extends BaseViewModel {
   List<Widget> shopPages = [
     // ShopDashboardView(),
      const DrawsView(),
-    const NotificationView(),
+    const Messages(),
     const ProfileView()
   ];
 

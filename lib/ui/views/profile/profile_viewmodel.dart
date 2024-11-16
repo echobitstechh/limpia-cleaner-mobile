@@ -82,6 +82,8 @@ class ProfileViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  void togglePage(bool bool) {}
+
 
   // void getProfile() async {
   //   setBusy(true);
