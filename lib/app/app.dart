@@ -13,11 +13,11 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:limpia/ui/views/auth/auth_view.dart';
 import 'package:limpia/ui/views/dashboard/dashboard_view.dart';
-import 'package:limpia/ui/views/draws/draws_view.dart';
 import 'package:limpia/ui/views/cart/raffle_cart_view.dart';
 import 'package:limpia/ui/views/notification/notification_view.dart';
 import 'package:limpia/ui/views/profile/profile_view.dart';
 
+import '../ui/views/bookings/booking_view.dart';
 import '../ui/views/profile/wallet.dart';
 import 'package:limpia/ui/views/otp/otp_view.dart';
 import 'package:limpia/ui/views/change_password/change_password_view.dart';
@@ -37,7 +37,7 @@ import 'package:limpia/ui/views/withdraw/withdraw_view.dart';
     MaterialRoute(page: StartupView),
     MaterialRoute(page: AuthView),
     MaterialRoute(page: DashboardView),
-    MaterialRoute(page: DrawsView),
+    MaterialRoute(page: BookingView),
     MaterialRoute(page: CartView),
    // MaterialRoute(page: ShopCartView),
     MaterialRoute(page: NotificationView),

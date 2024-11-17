@@ -60,22 +60,22 @@ class DashboardViewModel extends BaseViewModel {
 
 
   Future<void> init() async {
-    setBusy(true);
-    onboarded = await locator<LocalStorage>().fetch(LocalStorageDir.onboarded) ?? false;
-    if (!onboarded!) {
-      showDialog = true; // Show modal if not onboarded
-    }
-    notifyListeners();
-    await loadRaffles();
-    await loadAds();
-    // await loadProducts();
-     await loadProjects();
-    if (userLoggedIn.value == true) {
-      initCart();
-      await getNotifications();
-      await getProfile();
-    }
-    setBusy(false);
+    // setBusy(true);
+    // onboarded = await locator<LocalStorage>().fetch(LocalStorageDir.onboarded) ?? false;
+    // if (!onboarded!) {
+    //   showDialog = true; // Show modal if not onboarded
+    // }
+    // notifyListeners();
+    // await loadRaffles();
+    // await loadAds();
+    // // await loadProducts();
+    //  await loadProjects();
+    // if (userLoggedIn.value == true) {
+    //   initCart();
+    //   await getNotifications();
+    //   await getProfile();
+    // }
+    // setBusy(false);
     notifyListeners();
   }
 

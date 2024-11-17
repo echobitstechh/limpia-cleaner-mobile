@@ -3,14 +3,11 @@ import 'dart:io';
 import 'package:limpia/app/app.bottomsheets.dart';
 import 'package:limpia/app/app.dialogs.dart';
 import 'package:limpia/app/app.locator.dart';
-import 'package:limpia/app/app.router.dart';
 import 'package:limpia/core/utils/config.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/common/app_strings.dart';
-import 'package:limpia/ui/components/submit_button.dart';
 import 'package:limpia/ui/views/cart/raffle_cart_view.dart';
 import 'package:limpia/ui/views/dashboard/dashboard_view.dart';
-import 'package:limpia/ui/views/notification/notification_view.dart';
 import 'package:limpia/ui/views/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -25,9 +22,8 @@ import '../../../core/network/interceptors.dart';
 import '../../../core/utils/local_store_dir.dart';
 import '../../../core/utils/local_stotage.dart';
 import '../../../state.dart';
-import '../../common/ui_helpers.dart';
+import '../bookings/booking_view.dart';
 import '../dashboard/messages.dart';
-import '../draws/draws_view.dart';
 
 /// @author George David
 /// email: georgequin19@gmail.com
@@ -37,16 +33,9 @@ import '../draws/draws_view.dart';
 class HomeViewModel extends BaseViewModel {
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
-  List<Widget> pages = [
-     DashboardView(),
-     const DrawsView(),
-    const CartView(),
-    const Messages(),
-    const ProfileView()
-  ];
 
-  int selectedRafflesTab = 0;
-  int selectedShopTab = 0;
+
+  int selectedBarTab = 0;
 
   @override
   void dispose() {
@@ -56,19 +45,10 @@ class HomeViewModel extends BaseViewModel {
   }
 
 
-
-  // Pages for the Raffles dashboard
-  List<Widget> rafflesPages = [
-    DashboardView(),
-     const DrawsView(),
-    const Messages(),
-    const ProfileView()
-  ];
-
   // Pages for the Shop dashboard
   List<Widget> shopPages = [
-    // ShopDashboardView(),
-     const DrawsView(),
+     DashboardView(),
+     const BookingView(),
     const Messages(),
     const ProfileView()
   ];
@@ -132,15 +112,13 @@ class HomeViewModel extends BaseViewModel {
     //   return;
     //}
 
-      selectedRafflesTab = index;
+      selectedBarTab = index;
       notifyListeners();
   }
 
 
   Widget get currentPage {
-    return currentModuleNotifier.value == AppModules.raffle
-        ? rafflesPages[selectedRafflesTab]
-        : shopPages[selectedShopTab];
+    return shopPages[selectedBarTab];
   }
 
   void _showDialog() {

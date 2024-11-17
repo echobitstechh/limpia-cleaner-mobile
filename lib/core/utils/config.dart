@@ -11,6 +11,7 @@ class AppConfig {
 
 
   static const String flutterWaveBaseUrl = 'https://api.flutterwave.com/v3';
+  static const String mapsApiKey = "AIzaSyC9_rwpVhGaE3ITcfGBtau01r2NsZwO3-o";
   static const String paystackApiKey = 'pk_live_540bdf095640f7765b0a822f08161087b68df565';
   static const String paystackApiKeyTest = 'pk_test_aae035e8425d5319b6500ef86c0472474a38a5fd';
   static const String flutterWaveTestKey = 'FLWPUBK_TEST-07c9ee8a719c8e4bf7216e273e7de20f-X';

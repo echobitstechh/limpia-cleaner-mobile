@@ -1,13 +1,12 @@
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:limpia/ui/views/dashboard/dashboard_viewmodel.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../state.dart';
 import '../../common/app_colors.dart';
-import '../draws/draws_viewmodel.dart';
+
 
 class Messages extends StatelessWidget {
   const Messages({super.key});
@@ -16,10 +15,10 @@ class Messages extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: ViewModelBuilder<DrawsViewModel>.reactive(
-        viewModelBuilder: () => DrawsViewModel(),
+      child: ViewModelBuilder<DashboardViewModel>.reactive(
+        viewModelBuilder: () => DashboardViewModel(),
         onModelReady: (viewModel) {
-          viewModel.init();
+          // viewModel.init();
         },
         builder: (context, viewModel, child) => Scaffold(
           appBar: AppBar(

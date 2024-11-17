@@ -13,7 +13,9 @@ import 'login.dart';
 
 
 class AuthView extends StatefulWidget {
-  const AuthView({Key? key}) : super(key: key);
+  final bool isLogin;
+  const AuthView({Key? key, required this.isLogin}) : super(key: key);
+
 
   @override
   State<StatefulWidget> createState() {
@@ -23,12 +25,15 @@ class AuthView extends StatefulWidget {
 
 class _AuthViewState extends State<AuthView> with TickerProviderStateMixin {
   late TabController tabController;
-  bool isLogin = true;
+  late bool isLogin;
+
 
   @override
   void initState() {
-    tabController = TabController(length: 2, vsync: this);
     super.initState();
+    print('init value of islogin is: ${widget.isLogin}');
+    isLogin = widget.isLogin;
+    tabController = TabController(length: 2, vsync: this);
   }
 
   void updateIsLogin(bool value) {
@@ -49,23 +54,17 @@ class _AuthViewState extends State<AuthView> with TickerProviderStateMixin {
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               background: Align(
-                alignment: Alignment.bottomCenter,
+                alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0), // Adjust the padding to move the image down
+                  padding: const EdgeInsets.only(top: 20.0), // Adjust the padding to move the image down
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        "assets/images/limpiar_purple.png",
-                        height: 60, // Adjust the height to make the image smaller
+                        "assets/images/limpiador_logo.png",
+                        height: 90, // Adjust the height to make the image smaller
                         fit: BoxFit.fitHeight,
-                      ),
-                      SvgPicture.asset(
-                        "assets/images/Limpiador.svg",
-                        height: 40, // Adjust the height to make the image smaller
-                        fit: BoxFit.fitHeight,
-                        color: kcPrimaryColor,
                       ),
                     ],
                   ),
@@ -80,7 +79,7 @@ class _AuthViewState extends State<AuthView> with TickerProviderStateMixin {
               [
 
                 Container(
-                  padding: const EdgeInsets.all(25),
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                   height: MediaQuery.of(context).size.height,  // Set a specific height constraint
                   child: Column(
                     children:  [
@@ -101,56 +100,7 @@ class _AuthViewState extends State<AuthView> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
-                // Container(
-                //   padding: const EdgeInsets.all(30),
-                //   child: Column(
-                //     children: const [
-                //       Flexible(
-                //         child: SingleChildScrollView(
-                //           child: Login(),
-                //         ),
-                //       ),
-                //       // Stack(
-                //       //   children: [
-                //       //
-                //       //     // Positioned(
-                //       //     //   bottom: 0,
-                //       //     //   child: Container(
-                //       //     //     height: 4,
-                //       //     //     width: MediaQuery.of(context).size.width,
-                //       //     //     color: kcVeryLightGrey,
-                //       //     //   ),
-                //       //     // ),
-                //       //     // TabBar(
-                //       //     //   controller: tabController,
-                //       //     //   labelColor: kcSecondaryColor,
-                //       //     //   unselectedLabelColor:
-                //       //     //       uiMode.value == AppUiModes.light
-                //       //     //           ? kcBlackColor
-                //       //     //           : kcWhiteColor,
-                //       //     //   indicatorWeight: 4,
-                //       //     //   indicatorColor: kcSecondaryColor,
-                //       //     //   tabs: const [
-                //       //     //     Tab(
-                //       //     //       text: "Login",
-                //       //     //     ),
-                //       //     //     Tab(
-                //       //     //       text: "Register",
-                //       //     //     )
-                //       //     //   ],
-                //       //     // ),
-                //       //   ],
-                //       // ),
-                //       // SizedBox(
-                //       //   height: MediaQuery.of(context).size.height / 1.7,
-                //       //   child: TabBarView(
-                //       //     controller: tabController,
-                //       //     children: _tabs,
-                //       //   ),
-                //       // ),
-                //     ],
-                //   ),
-                // ),
+
               ],
             ),
           )

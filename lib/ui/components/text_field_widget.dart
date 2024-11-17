@@ -2,12 +2,10 @@ import 'package:limpia/state.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:flutter/material.dart';
 
-
 /// @author George David
 /// email: georgequin19@gmail.com
 /// Feb, 2024
 ///
-
 
 class TextFieldWidget extends StatelessWidget {
   final String? label;
@@ -16,6 +14,7 @@ class TextFieldWidget extends StatelessWidget {
   final Function? validator;
   final Widget? suffix;
   final Widget? leading;
+  final Widget? labelIcon; // New property for the icon before the label
   final bool obscureText;
   final TextInputType? inputType;
   final bool readOnly;
@@ -33,6 +32,7 @@ class TextFieldWidget extends StatelessWidget {
     this.onChanged,
     this.leading,
     this.suffix,
+    this.labelIcon, // Add labelIcon to the constructor
   }) : super(key: key);
 
   @override
@@ -42,17 +42,18 @@ class TextFieldWidget extends StatelessWidget {
       controller: controller,
       onChanged: onChanged as void Function(String value)?,
       cursorColor:
-          uiMode.value == AppUiModes.light ? kcBlackColor : kcWhiteColor,
+      uiMode.value == AppUiModes.light ? kcBlackColor : kcWhiteColor,
       style: TextStyle(
-          color: uiMode.value == AppUiModes.light ? kcBlackColor : kcWhiteColor,
-          fontSize: 14),
+        color: uiMode.value == AppUiModes.light ? kcBlackColor : kcWhiteColor,
+        fontSize: 14,
+      ),
       validator: validator as String? Function(String?)?,
       obscureText: obscureText,
       keyboardType: inputType,
       decoration: InputDecoration(
         filled: true,
         fillColor:
-            uiMode.value == AppUiModes.light ? kcWhiteColor : kcBlackColor,
+        uiMode.value == AppUiModes.light ? kcWhiteColor : kcBlackColor,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: kcBlackColor.withOpacity(0.22)),
@@ -65,23 +66,37 @@ class TextFieldWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: kcBlackColor.withOpacity(0.22)),
         ),
-        labelText: hint,
+        // labelText: hint,
         labelStyle: TextStyle(
-            color:
-                uiMode.value == AppUiModes.light ? kcBlackColor : kcWhiteColor,
-            fontSize: 14),
+          color:
+          uiMode.value == AppUiModes.light ? kcBlackColor : kcWhiteColor,
+          fontSize: 14,
+        ),
         prefixIcon: leading == null
             ? null
             : Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: leading,
-              ),
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: leading,
+        ),
         suffixIcon: suffix == null
             ? null
             : Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: suffix,
-              ),
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: suffix,
+        ),
+        // Add an icon before the label
+        label: labelIcon == null
+            ? Text(hint)
+            : Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (labelIcon != null) ...[
+              labelIcon!,
+              const SizedBox(width: 8), // Spacing between icon and text
+            ],
+            Text(hint),
+          ],
+        ),
       ),
     );
   }

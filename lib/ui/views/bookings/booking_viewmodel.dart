@@ -1,6 +1,7 @@
 import 'package:stacked/stacked.dart';
 
 import '../../../app/app.locator.dart';
+import '../../../core/data/models/booking.dart';
 import '../../../core/data/models/product.dart';
 import '../../../core/data/models/raffle_ticket.dart';
 import '../../../core/network/api_response.dart';
@@ -8,7 +9,7 @@ import '../../../core/network/interceptors.dart';
 import '../../../core/utils/local_store_dir.dart';
 import '../../../core/utils/local_stotage.dart';
 
-class DrawsViewModel extends BaseViewModel {
+class BookingsViewModel extends BaseViewModel {
 
   bool isDrawSelected = true;
   // Example data lists
@@ -17,6 +18,68 @@ class DrawsViewModel extends BaseViewModel {
   List<DrawEvent> raffleDrawEvents = [];
   List<Raffle> filteredRaffle = [];
   String searchQuery = '';
+
+
+  final List<Booking> bookings = [
+    Booking(
+        sqft: '2500',
+        price: '\$50',
+        address: '8 Magodo, California USA',
+        dateTime: 'Feb, 27, 10:00',
+        type: 'Deep cleaning',
+        status: 'Pending'
+    ),
+    Booking(
+        sqft: '3000',
+        price: '\$60',
+        address: '12 Crescent Avenue, Texas USA',
+        dateTime: 'Feb, 28, 12:00',
+        type: 'Regular cleaning',
+        status: 'Pending'
+    ),
+    // Add more bookings as needed
+  ];
+
+  final List<Booking> activeBookings = [
+    Booking(
+        sqft: '4000',
+        price: '\$300',
+        address: '13 Albert McCauley, Texas USA',
+        dateTime: 'Sept, 29, 10:00',
+        type: 'Deep cleaning',
+        status: 'Ongoing'
+    ),
+    Booking(
+        sqft: '3000',
+        price: '\$60',
+        address: '12 Crescent Avenue, Texas USA',
+        dateTime: 'Feb, 28, 12:00',
+        type: 'Regular cleaning',
+        status: 'Active Booking'
+    ),
+    // Add more bookings as needed
+  ];
+
+  DateTime? selectedDay;
+
+  List<DateTime> activeBookingDays = [
+    DateTime.now(),
+    DateTime.now().add(Duration(days: 2)),
+    DateTime.now().add(Duration(days: 5)),
+  ];
+
+  List<String> getEventsForDay(DateTime day) {
+    if (activeBookingDays.contains(day)) {
+      return ['Active Booking'];
+    }
+    return [];
+  }
+
+  void onDaySelected(DateTime day) {
+    selectedDay = day;
+    notifyListeners();
+  }
+
 
   void togglePage(bool isDraw) {
     isDrawSelected = isDraw;
@@ -37,11 +100,11 @@ class DrawsViewModel extends BaseViewModel {
   }
 
   Future<void> init() async {
-    setBusy(true);  // Show shimmer
-    await loadRaffles();
-    await loadRafflesWinners();
-    await loadDrawsEvent();
-    setBusy(false);  // Hide shimmer
+    // setBusy(true);  // Show shimmer
+    // await loadRaffles();
+    // await loadRafflesWinners();
+    // await loadDrawsEvent();
+    // setBusy(false);  // Hide shimmer
   }
 
 

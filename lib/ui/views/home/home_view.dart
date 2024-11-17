@@ -34,106 +34,6 @@ class HomeView extends StackedView<HomeViewModel> {
           body: Stack(
             children: [
               viewModel.currentPage, // Assuming you have separate getters for pages in your viewModel
-
-              // Floating Cart Button
-              ValueListenableBuilder<List<dynamic>>(
-                valueListenable: raffleCart, // Replace with your cart notifier
-                builder: (context, cartItems, _) {
-                  if (raffleCart.value.isNotEmpty && viewModel.selectedRafflesTab != 3) {
-
-                    // Calculate total number of tickets and total amount
-                    int totalTickets = raffleCart.value.fold(0, (sum, item) => sum + (item.quantity ?? 0));
-                    int totalAmount = raffleCart.value.fold(0, (sum, item) => sum + ((item.quantity ?? 0) * (item.raffle?.ticketPrice ?? 0)));
-
-                    return Positioned(
-                      bottom: 20, // Adjust the value to control how high above the bottom it should be
-                      left: 20,
-                      right: 20,
-                      child: GestureDetector(
-                        onTap: () {
-                          // Navigate to cart page
-                          locator<NavigationService>().navigateToCartView();
-                        },
-                        child: Container(
-                          margin:const EdgeInsets.symmetric(horizontal: 5),
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: kcSecondaryColor,
-                            borderRadius: BorderRadius.circular(4),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/Bag.svg', // Replace with your cart icon
-                                    height: 24,
-                                    color: kcBlackColor,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Go to Cart',
-                                        style: const TextStyle(
-                                          color: kcPrimaryColor,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${cartItems.length} Raffle, $totalTickets Tickets.',
-                                        style: const TextStyle(
-                                          color: kcPrimaryColor,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  const Text(
-                                    'Total Amount',
-                                    style: TextStyle(
-                                      color: kcPrimaryColor,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Text(
-                                    '₦$totalAmount',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Roboto',
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
             ],
           ),
           bottomNavigationBar: BottomNavBar(viewModel: viewModel),
@@ -168,28 +68,28 @@ class BottomNavBar extends StatelessWidget {
       valueListenable: currentModuleNotifier,
       builder: (context, currentModule, _) {
         Color iconColor = Colors.grey;
-        Color selectedColor = kcSecondaryColor;
+        Color selectedColor = kcPrimaryColor;
 
         List<BottomNavigationBarItem> items = [
           _buildBottomNavigationBarItem(
             iconPath: 'assets/icons/home_outline.svg',
             label: "Home",
-            isSelected: viewModel.selectedShopTab == 0,
+            isSelected: viewModel.selectedBarTab == 0,
           ),
           _buildBottomNavigationBarItem(
-            iconPath: 'assets/icons/book',
+            iconPath: 'assets/icons/book.svg',
             label: "Book",
-            isSelected: viewModel.selectedShopTab == 1,
+            isSelected: viewModel.selectedBarTab == 1,
           ),
           _buildBottomNavigationBarItem(
-            iconPath: 'assets/icons/message-square',
+            iconPath: 'assets/icons/message-square.svg',
             label: "Messages",
-            isSelected: viewModel.selectedShopTab == 2,
+            isSelected: viewModel.selectedBarTab == 2,
           ),
           _buildBottomNavigationBarItem(
-            iconPath: 'assets/icons/settings',
+            iconPath: 'assets/icons/settings.svg',
             label: "Settings",
-            isSelected: viewModel.selectedShopTab == 3,
+            isSelected: viewModel.selectedBarTab == 3,
           ),
         ];
 
@@ -200,7 +100,7 @@ class BottomNavBar extends StatelessWidget {
           selectedItemColor: selectedColor,
           unselectedItemColor: iconColor,
           onTap: (index) => viewModel.changeSelected(index, currentModule),
-          currentIndex: viewModel.selectedShopTab,
+          currentIndex: viewModel.selectedBarTab,
           items: items,
         );
       },
@@ -214,8 +114,8 @@ class BottomNavBar extends StatelessWidget {
   }) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
-        '$iconPath${isSelected ? '_selected' : ''}.svg',
-        color: isSelected ? kcSecondaryColor : Colors.grey,
+        '$iconPath',
+        color: isSelected ? kcPrimaryColor : Colors.grey,
         height: 24,
       ),
       label: label,
