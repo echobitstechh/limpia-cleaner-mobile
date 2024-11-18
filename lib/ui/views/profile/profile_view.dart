@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import '../../../core/data/models/profile.dart';
 import '../../../core/network/api_response.dart';
 import '../../../core/network/interceptors.dart';
 import 'profile_viewmodel.dart';
@@ -170,8 +171,9 @@ class ProfileView extends StatelessWidget {
                                 ProfileMenuItem(
                                   icon: 'assets/images/wallet.svg',
                                   label: 'Wallet',
-                                  onTap: () {
-                                    // Navigate to Wallet Page
+                                  onTap: () async {
+                                    locator<NavigationService>()
+                                        .navigateToWallet();
                                   },
                                 ),
                                 verticalSpaceSmall,
