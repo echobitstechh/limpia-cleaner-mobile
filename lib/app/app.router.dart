@@ -21,7 +21,7 @@ import 'package:limpia/ui/views/dashboard/dashboard_view.dart' as _i6;
 import 'package:limpia/ui/views/dashboard/raffle_detail.dart' as _i12;
 import 'package:limpia/ui/views/delete_account/delete_account_view.dart'
     as _i19;
-import 'package:limpia/ui/views/draws/draws_view.dart' as _i7;
+import 'package:limpia/ui/views/bookings/booking_view.dart' as _i7;
 import 'package:limpia/ui/views/enter_email/enter_email_view.dart' as _i18;
 import 'package:limpia/ui/views/home/home_view.dart' as _i2;
 import 'package:limpia/ui/views/notification/notification_view.dart' as _i9;
@@ -163,7 +163,7 @@ class StackedRouter extends _i1.RouterBase {
     ),
     _i1.RouteDef(
       Routes.drawsView,
-      page: _i7.DrawsView,
+      page: _i7.BookingView,
     ),
     _i1.RouteDef(
       Routes.cartView,
@@ -259,8 +259,9 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i5.AuthView: (data) {
+      final args = data.getArgs<AuthViewArguments>(nullOk: false);
       return _i21.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i5.AuthView(),
+        builder: (context) =>  _i5.AuthView(isLogin: args.isLogin, key: args.key,),
         settings: data,
       );
     },
@@ -270,9 +271,9 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i7.DrawsView: (data) {
+    _i7.BookingView: (data) {
       return _i21.MaterialPageRoute<dynamic>(
-        builder: (context) =>  const _i7.DrawsView(),
+        builder: (context) =>  const _i7.BookingView(),
         settings: data,
       );
     },
@@ -397,32 +398,7 @@ class CheckoutArguments {
   }
 }
 
-// class ProductDetailArguments {
-//   const ProductDetailArguments({
-//     required this.product,
-//     this.key,
-//   });
-//
-//   final _i24.Product product;
-//
-//   final _i23.Key? key;
-//
-//   @override
-//   String toString() {
-//     return '{"product": "$product", "key": "$key"}';
-//   }
-//
-//   @override
-//   bool operator ==(covariant ProductDetailArguments other) {
-//     if (identical(this, other)) return true;
-//     return other.product == product && other.key == key;
-//   }
-//
-//   @override
-//   int get hashCode {
-//     return product.hashCode ^ key.hashCode;
-//   }
-// }
+
 
 class RaffleDetailArguments {
   const RaffleDetailArguments({
@@ -561,6 +537,33 @@ class OtpViewArguments {
   }
 }
 
+class AuthViewArguments {
+  const AuthViewArguments({
+    required this.isLogin,
+    this.key,
+  });
+
+  final bool isLogin;
+
+  final _i23.Key? key;
+
+  @override
+  String toString() {
+    return '{"isLogin": "$isLogin", "key": "$key"}';
+  }
+
+  @override
+  bool operator ==(covariant AuthViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.isLogin == isLogin && other.key == key;
+  }
+
+  @override
+  int get hashCode {
+    return isLogin.hashCode ^ key.hashCode;
+  }
+}
+
 class ChangePasswordViewArguments {
   const ChangePasswordViewArguments({
     this.isResetPassword = false,
@@ -632,19 +635,8 @@ extension NavigatorStateExtension on _i27.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToAuthView([
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
-  ]) async {
-    return navigateTo<dynamic>(Routes.authView,
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
-  }
+
+
 
   Future<dynamic> navigateToAddShippingView([
     int? routerId,
@@ -885,6 +877,25 @@ extension NavigatorStateExtension on _i27.NavigationService {
         parameters: parameters,
         transition: transition);
   }
+
+  Future<dynamic> navigateToAuthView({
+    _i23.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    bool isLogin = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)? transition,
+  }) async {
+    return navigateTo<dynamic>(
+      Routes.authView,
+      arguments: AuthViewArguments(isLogin: isLogin, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
 
   Future<dynamic> navigateToChangePasswordView({
     bool isResetPassword = false,

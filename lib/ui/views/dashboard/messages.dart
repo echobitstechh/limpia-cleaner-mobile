@@ -1,13 +1,13 @@
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:limpia/ui/views/dashboard/dashboard_viewmodel.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../state.dart';
 import '../../common/app_colors.dart';
-import '../draws/draws_viewmodel.dart';
+import '../../common/ui_helpers.dart';
+
 
 class Messages extends StatelessWidget {
   const Messages({super.key});
@@ -16,10 +16,10 @@ class Messages extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: ViewModelBuilder<DrawsViewModel>.reactive(
-        viewModelBuilder: () => DrawsViewModel(),
+      child: ViewModelBuilder<DashboardViewModel>.reactive(
+        viewModelBuilder: () => DashboardViewModel(),
         onModelReady: (viewModel) {
-          viewModel.init();
+          // viewModel.init();
         },
         builder: (context, viewModel, child) => Scaffold(
           appBar: AppBar(
@@ -35,74 +35,139 @@ class Messages extends StatelessWidget {
                 ),
               ],
             ),
-            actions: [
-            ],
-            // backgroundColor: kcSecondaryColor,
-            // // shape: RoundedRectangleBorder(
-            // //     borderRadius: BorderRadius.only(
-            // //         topLeft: Radius.circular(25.0),
-            // //         topRight: Radius.circular(25.0),
-            // //         bottomLeft: Radius.circular(25.0),
-            // //         bottomRight: Radius.circular(25.0)
-            // //     )
-            // // ),
-            // toolbarHeight: 100.0,
-            // title: Center(
-            //   child: Container(
-            //     padding:
-            //         const EdgeInsets.only(left: 7, right: 7, bottom: 7, top: 7),
-            //     decoration: BoxDecoration(
-            //       color: uiMode.value == AppUiModes.dark
-            //           ? kcWhiteColor.withOpacity(0.7)
-            //           : kcWhiteColor.withOpacity(0.9),
-            //       borderRadius: BorderRadius.circular(10),
-            //       border: Border.all(color: kcSecondaryColor, width: 0),
-            //     ),
-            //     child: Builder(
-            //       builder: (context) {
-            //         final TabController tabController =
-            //             DefaultTabController.of(context);
-            //         return Row(
-            //           mainAxisSize: MainAxisSize.min,
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             // Draws Button
-            //             buildOption(
-            //               context: context,
-            //               text: 'Draws',
-            //               icon: 'ticket_star.svg',
-            //               isSelected: tabController.index ==
-            //                   0, // Selected if on the first tab
-            //               onTap: () {
-            //                 viewModel.togglePage(
-            //                     true); // Updates the view model state
-            //                 tabController
-            //                     .animateTo(0); // Switch to the first tab
-            //                 viewModel.notifyListeners(); // Rebuild on tap
-            //               },
-            //             ),
-            //             // Winners Button
-            //             buildOption(
-            //               context: context,
-            //               text: 'Winners',
-            //               icon: 'star.svg',
-            //               isSelected: tabController.index ==
-            //                   1, // Selected if on the second tab
-            //               onTap: () {
-            //                 tabController
-            //                     .animateTo(1); // Switch to the second tab
-            //                 viewModel.notifyListeners(); // Rebuild on tap
-            //               },
-            //             ),
-            //           ],
-            //         );
-            //       },
-            //     ),
-            //   ),
-            // ),
           ),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 26.0),
+            padding: const EdgeInsets.symmetric(vertical: 26.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold
+                        ),
+                          'Message'
+                      ),
+                    ],
+                  ),
+                ),
+                verticalSpaceSmall,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      // Profile picture
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundImage: profile.value.profilePic?.url != null
+                            ? NetworkImage(profile.value.profilePic!.url!)
+                        as ImageProvider
+                            : const AssetImage(
+                            'assets/images/pp.png'),
+                      ),
+                      horizontalSpaceMedium,
+                      // User name and role
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Emelie Message you',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Are you coming today',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      // Profile picture
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundImage: profile.value.profilePic?.url != null
+                            ? NetworkImage(profile.value.profilePic!.url!)
+                        as ImageProvider
+                            : const AssetImage(
+                            'assets/images/pp.png'),
+                      ),
+                      horizontalSpaceMedium,
+                      // User name and role
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Tosin Message you',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            'hi',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      // Profile picture
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundImage: profile.value.profilePic?.url != null
+                            ? NetworkImage(profile.value.profilePic!.url!)
+                        as ImageProvider
+                            : const AssetImage(
+                            'assets/images/pp.png'),
+                      ),
+                      horizontalSpaceMedium,
+                      // User name and role
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'John Message you',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Im on my way',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

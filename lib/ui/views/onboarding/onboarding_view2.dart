@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/common/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -17,110 +18,232 @@ class OnboardingView2 extends StatelessWidget {
 
   get widget => null;
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     body:Column(
+  //       children: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: [
+  //             Expanded(
+  //               child: Image.asset(
+  //                 'assets/images/onboarding.png',
+  //                 fit: BoxFit.cover,
+  //                 alignment: Alignment.center,
+  //                 height: 500,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //
+  //         verticalSpaceMedium,
+  //         Column(
+  //           children: [
+  //             Text(
+  //               style: GoogleFonts.inter(
+  //                 textStyle: const TextStyle(
+  //                   fontWeight: FontWeight.bold,
+  //                   fontSize: 24,
+  //                   color: Colors.black,
+  //                 ),
+  //               ),
+  //                 'Work On Your Schedule'
+  //             ),
+  //             verticalSpaceSmall,
+  //             Text(
+  //               textAlign: TextAlign.center,
+  //               style: GoogleFonts.inter(
+  //                 textStyle: const TextStyle(
+  //
+  //                   fontWeight: FontWeight.w500,
+  //                   fontSize: 15,
+  //                   color: Colors.black,
+  //                 ),
+  //               ),
+  //               'Find Cleaning Jobs,' 'Manage Your Tasks\n'
+  //                   'Get Paid Quickly',
+  //             ),
+  //             verticalSpaceSmall,
+  //             GestureDetector(
+  //               onTap: () {},
+  //               child: ElevatedButton(
+  //                 onPressed: () {
+  //                   locator<NavigationService>().navigateTo(Routes.registerView);
+  //                 },
+  //                 style: ElevatedButton.styleFrom(
+  //                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(10),
+  //                   ),
+  //                   backgroundColor: kcPrimaryColor
+  //                 ),
+  //                 child: const Text(
+  //                   "Sign Up",
+  //                   style: TextStyle(
+  //                     fontSize: 25,
+  //                     color: Colors.white70,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             verticalSpaceMedium,
+  //             GestureDetector(
+  //               onTap: () {
+  //                 locator<NavigationService>().navigateTo(Routes.authView);
+  //               },
+  //               child: const Text(
+  //                 "Login",
+  //                 style: TextStyle(
+  //                   fontSize: 25,
+  //                   color: kcPrimaryColor,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //
+  //     // OnboardingPagePresenter(
+  //     //     pages: [
+  //     //   OnboardingPageModel(
+  //     //     title: 'Join the Excitement!',
+  //     //     description:
+  //     //     'Every ticket you purchase is your golden ticket to adventure! Imagine the thrill of winning incredible prizes while having fun.',
+  //     //     imageUrl: "second.json",
+  //     //     bgColor: kcWhiteColor,
+  //     //
+  //     //
+  //     //   ),
+  //     //   // OnboardingPageModel(
+  //     //   //   title: 'Earn Points with Every Ticket!',
+  //     //   //   description:
+  //     //   //   'Every ticket isn’t just a chance to win; it’s a step towards unlocking exciting rewards! Watch your points stack up as you play.',
+  //     //   //   imageUrl: 'second.json',
+  //     //   //   bgColor: kcWhiteColor,
+  //     //   // ),
+  //     //   OnboardingPageModel(
+  //     //     title: 'Make an Impact!',
+  //     //     description:
+  //     //     'Your points hold the power to create change! Team up with fellow adventurers to support noble causes.',
+  //     //     imageUrl: 'third.json',
+  //     //     bgColor: kcWhiteColor,
+  //     //   )
+  //     // ]),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final double screenHeight = constraints.maxHeight;
+          return Column(
             children: [
-              Expanded(
-                child: Image.asset(
-                  'assets/images/onboarding.png',
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                  height: 500,
-                ),
-              ),
-            ],
-          ),
-          verticalSpaceMedium,
-          Column(
-            children: [
-              Text(
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30
-                ),
-                  'Work On Your Schedule'
-              ),
-              verticalSpaceSmall,
-              Text(
-                style: TextStyle(
-                  fontSize: 16
-                ),
-                'Find Cleaning Jobs,' 'Manage Your Tasks\n'
-                    'Get Paid Quickly',
-              ),
-              verticalSpaceMassive,
-              GestureDetector(
-                onTap: () {},
-                child: ElevatedButton(
-                  onPressed: () {
-                    locator<NavigationService>().navigateTo(Routes.registerView);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    backgroundColor: kcPrimaryColor
-                  ),
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ),
-              ),
-              verticalSpaceMedium,
-              GestureDetector(
-                onTap: () {
-                  locator<NavigationService>().navigateTo(Routes.authView);
-                },
-                child: const Text(
-                  "Login",
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: kcPrimaryColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+              // Image at the top taking 40% of the screen
+              // SizedBox(
+              //   height: screenHeight * 0.4,
+              //   child: Image.asset(
+              //     'assets/images/onboarding.png',
+              //     fit: BoxFit.cover,
+              //     alignment: Alignment.center,
+              //   ),
+              // ),
 
-      // OnboardingPagePresenter(
-      //     pages: [
-      //   OnboardingPageModel(
-      //     title: 'Join the Excitement!',
-      //     description:
-      //     'Every ticket you purchase is your golden ticket to adventure! Imagine the thrill of winning incredible prizes while having fun.',
-      //     imageUrl: "second.json",
-      //     bgColor: kcWhiteColor,
-      //
-      //
-      //   ),
-      //   // OnboardingPageModel(
-      //   //   title: 'Earn Points with Every Ticket!',
-      //   //   description:
-      //   //   'Every ticket isn’t just a chance to win; it’s a step towards unlocking exciting rewards! Watch your points stack up as you play.',
-      //   //   imageUrl: 'second.json',
-      //   //   bgColor: kcWhiteColor,
-      //   // ),
-      //   OnboardingPageModel(
-      //     title: 'Make an Impact!',
-      //     description:
-      //     'Your points hold the power to create change! Team up with fellow adventurers to support noble causes.',
-      //     imageUrl: 'third.json',
-      //     bgColor: kcWhiteColor,
-      //   )
-      // ]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Image.asset(
+                              'assets/images/onboarding.png',
+                              fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                                height: screenHeight * 0.5
+                            ),
+                          ),
+                        ],
+                      ),
+              // Text section
+              verticalSpaceSmall,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Work On Your Schedule',
+                      style: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    verticalSpaceSmall,
+                    Text(
+                      'Find Cleaning Jobs, Manage Your Tasks, Get Paid Quickly',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              // Buttons at the bottom
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 100.0, vertical: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        locator<NavigationService>().navigateToAuthView(isLogin: false);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: kcPrimaryColor,
+                      ),
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    verticalSpaceSmall,
+                    TextButton(
+                      onPressed: () {
+                        locator<NavigationService>().navigateTo(Routes.authView);
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: kcPrimaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 

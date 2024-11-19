@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import '../../../core/data/models/profile.dart';
 import '../../../core/network/api_response.dart';
 import '../../../core/network/interceptors.dart';
 import 'profile_viewmodel.dart';
@@ -35,11 +36,13 @@ class ProfileView extends StatelessWidget {
       builder: (context, viewModel, child) {
         return Scaffold(
             appBar: AppBar(
+              leading: null,
+              automaticallyImplyLeading: false,
               backgroundColor: kcPrimaryColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25.0),
-                      topRight: Radius.circular(25.0),
+                      topLeft: Radius.circular(0.0),
+                      topRight: Radius.circular(0.0),
                       bottomLeft: Radius.circular(25.0),
                       bottomRight: Radius.circular(25.0)
                   )
@@ -57,15 +60,9 @@ class ProfileView extends StatelessWidget {
                     border: Border.all(color: kcPrimaryColor, width: 0),
                   ),
                   child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                            alignment: Alignment.center,
-                            'assets/images/limpiarlogo.png'
-                        ),
-                      ],
+                    child: Image.asset(
+                        alignment: Alignment.center,
+                        'assets/images/settings_dor.png'
                     ),
                   ),
                 ),
@@ -75,106 +72,52 @@ class ProfileView extends StatelessWidget {
                 ? const Center(child: CircularProgressIndicator())
                 : ListView(
                     children: [
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Stack(
-                              alignment: Alignment.bottomRight,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          elevation: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      // barrierColor: Colors.black.withAlpha(50),
-                                      // backgroundColor: Colors.transparent,
-                                      backgroundColor:
-                                          Colors.black.withOpacity(0.7),
-                                      builder: (BuildContext context) {
-                                        return const FractionallySizedBox(
-                                          heightFactor:
-                                              1.0, // 70% of the screen's height
-                                          child: ProfileScreen(),
-                                        );
-                                      },
-                                    );
-                                    // viewModel.updateProfilePicture();
-                                  },
-                                  child: ProfilePicture(
-                                      size: 100,
-                                        url: profile.value.profilePic?.url,
-                                      ),
+                                // Profile picture
+                                CircleAvatar(
+                                  radius: 35,
+                                  backgroundImage: profile.value.profilePic?.url != null
+                                      ? NetworkImage(profile.value.profilePic!.url!)
+                                  as ImageProvider
+                                      : const AssetImage(
+                                      'assets/images/default_user.png'),
                                 ),
-                                // horizontalSpaceLarge,
-                                GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      // barrierColor: Colors.black.withAlpha(50),
-                                      // backgroundColor: Colors.transparent,
-                                      backgroundColor:
-                                          Colors.black.withOpacity(0.7),
-                                      builder: (BuildContext context) {
-                                        return const FractionallySizedBox(
-                                          heightFactor:
-                                              1.0, // 70% of the screen's height
-                                          child: ProfileScreen(),
-                                        );
-                                      },
-                                    );
-                                    // viewModel.updateProfilePicture();
-                                  },
-                                  child: Container(
-                                    width: 30, // Width and height of the circle
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          kcPrimaryColor, // Background color of the circle
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color:
-                                            kcWhiteColor, // Border color of the circle
-                                        width: 2, // Border width
+                                horizontalSpaceMedium,
+                                // User name and role
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${profile.value.firstname ?? 'User'} ${profile.value.lastname ?? ''}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: kcPrimaryColor,
                                       ),
                                     ),
-                                    child: const Icon(
-                                      Icons.remove_red_eye_outlined,
-                                      color: kcWhiteColor, // Icon color
-                                      size: 18, // Icon size
+                                    const SizedBox(height: 4),
+                                    const Text(
+                                      'Cleaner',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: kcPrimaryColor,
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
-                            horizontalSpaceMedium,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${profile.value.firstname} ${profile.value.lastname}",
-                                  style: const TextStyle(
-                                    color: kcPrimaryColor,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Cleaner',
-                                  style: const TextStyle(
-                                    color: kcPrimaryColor,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(profile.value.username ?? "")
-                              ],
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                       viewModel.showChangePP
@@ -197,188 +140,68 @@ class ProfileView extends StatelessWidget {
                               ],
                             )
                           : const SizedBox(),
-                      verticalSpaceMedium,
                       Column(
                         children: [
-                          Card(
-                            child: ListTile(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  // barrierColor: Colors.black.withAlpha(50),
-                                  // backgroundColor: Colors.transparent,
-                                  backgroundColor: Colors.black.withOpacity(0.7),
-                                  builder: (BuildContext context) {
-                                    return const FractionallySizedBox(
-                                      heightFactor:
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              children: [
+                                verticalSpaceMedium,
+                                ProfileMenuItem(
+                                  icon: 'assets/images/person.svg',
+                                  label: 'Profile',
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      // barrierColor: Colors.black.withAlpha(50),
+                                      // backgroundColor: Colors.transparent,
+                                      backgroundColor: Colors.black.withOpacity(0.7),
+                                      builder: (BuildContext context) {
+                                        return const FractionallySizedBox(
+                                          heightFactor:
                                           1.0, // 70% of the screen's height
-                                      child: ProfileScreen(),
+                                          child: ProfileScreen(),
+                                        );
+                                      },
                                     );
                                   },
-                                );
-                              },
-                              leading: SvgPicture.asset(
+                                ),
+                                verticalSpaceSmall,
+                                ProfileMenuItem(
+                                  icon: 'assets/images/wallet.svg',
+                                  label: 'Wallet',
+                                  onTap: () async {
+                                    locator<NavigationService>()
+                                        .navigateToWallet();
+                                  },
+                                ),
+                                verticalSpaceSmall,
+                                ProfileMenuItem(
+                                  icon: 'assets/images/settings.svg',
+                                  label: 'Settings',
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (c) {
+                                      return Settings();
+                                    }));
 
-                                'assets/images/person.svg', // Replace with your SVG file path
-                                color: kcPrimaryColor,        // Set the color for the icon
-                                height: 24,
-                                width: 24,
-                              ),
-                              title: const Text("Profile"),
+                                  },
+                                ),
+                                verticalSpaceSmall,
+                                ProfileMenuItem(
+                                  icon: 'assets/images/star.svg',
+                                  label: 'Ratings',
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (c) {
+                                      return const Support();
+                                    }));
+                                  },
+                                ),
+                              ],
                             ),
                           ),
-                          verticalSpaceSmall,
-                          Card(
-                            child: ListTile(
-                              onTap: () {
-                                locator<NavigationService>()
-                                    .navigateToWallet()
-                                    .whenComplete(() => viewModel.getProfile());
-                              },
-                              leading: SvgPicture.asset(
-                                'assets/images/wallet.svg', // Replace with your SVG file path
-                                color: kcPrimaryColor,        // Set the color for the icon
-                                height: 24,
-                                width: 24,
-                              ),
-                              title: const Text("My wallet"),
-                            ),
-                          ),
-                          verticalSpaceSmall,
-                          Card(
-                            child: ListTile(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (c) {
-                                  return Settings();
-                                }));
-                              },
-                              leading: SvgPicture.asset(
-                                'assets/images/gift.svg', // Replace with your SVG file path
-                                color: kcPrimaryColor,        // Set the color for the icon
-                                height: 24,
-                                width: 24,
-                              ),
-                              title: const Text("Settings"),
-                            ),
-                          ),
-                          verticalSpaceSmall,
-                          Card(
-                            child: ListTile(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (c) {
-                                  return const Support();
-                                }));
-                              },
-                              leading: SvgPicture.asset(
-                                'assets/images/phone-outgoing.svg', // Replace with your SVG file path
-                                color: kcPrimaryColor,        // Set the color for the icon
-                                height: 24,
-                                width: 24,
-                              ),
-                              title: const Text("Ratings"),
-                            ),
-                          ),
-                          // ListTile(
-                          //   onTap: () {
-                          //     // locator<NavigationService>().navigateToTrack();
-                          //     Navigator.of(context)
-                          //         .push(MaterialPageRoute(builder: (c) {
-                          //       return const OrderList();
-                          //     }));
-                          //   },
-                          //   leading: const Icon(
-                          //     Icons.wallet,
-                          //     color: kcSecondaryColor,
-                          //   ),
-                          //   title: const Text("My orders"),
-                          // ),
-                          // ListTile(
-                          //   onTap: () {
-                          //     // locator<NavigationService>().navigateToTrack();
-                          //     Navigator.of(context)
-                          //         .push(MaterialPageRoute(builder: (c) {
-                          //       return const TicketList();
-                          //     }));
-                          //   },
-                          //   leading: SvgPicture.asset(
-                          //     'assets/images/ticket.svg', // Replace with your SVG file path
-                          //     color: kcSecondaryColor,
-                          //     height: 17,
-                          //     width: 17,
-                          //   ),
-                          //   title: const Text("My tickets"),
-                          // ),
-                          // ListTile(
-                          //   onTap: () {
-                          //     locator<NavigationService>()
-                          //         .navigateToChangePasswordView();
-                          //   },
-                          //   leading: SvgPicture.asset(
-                          //     'assets/images/lock-closed.svg', // Replace with your SVG file path
-                          //     color: kcSecondaryColor,        // Set the color for the icon
-                          //     height: 24,
-                          //     width: 24,
-                          //   ),
-                          //   title: const Text("Change password"),
-                          // ),
-                          // ListTile(
-                          //   onTap: () {},
-                          //   leading: SvgPicture.asset(
-                          //     'assets/images/sun.svg', // Replace with your SVG file path
-                          //     color: kcSecondaryColor,        // Set the color for the icon
-                          //     height: 24,
-                          //     width: 24,
-                          //   ),
-                          //   title: const Text("Dark Theme"),
-                          //   trailing: ValueListenableBuilder<AppUiModes>(
-                          //     valueListenable: uiMode,
-                          //     builder: (context, value, child) => Switch(
-                          //       value: value == AppUiModes.dark ? true : false,
-                          //       onChanged: (val) async {
-                          //         if (value == AppUiModes.light) {
-                          //           uiMode.value = AppUiModes.dark;
-                          //           await locator<LocalStorage>()
-                          //               .save(LocalStorageDir.uiMode, "dark");
-                          //         } else {
-                          //           uiMode.value = AppUiModes.light;
-                          //           await locator<LocalStorage>()
-                          //               .save(LocalStorageDir.uiMode, "light");
-                          //         }
-                          //       },
-                          //     ),
-                          //   ),
-                          // ),
-                          // ListTile(
-                          //     onTap: () async {
-                          //       final res = await locator<DialogService>()
-                          //           .showConfirmationDialog(
-                          //               title: "Are you sure?",
-                          //               cancelTitle: "No",
-                          //               confirmationTitle: "Yes");
-                          //       if (res!.confirmed) {
-                          //         userLoggedIn.value = false;
-                          //         await locator<LocalStorage>()
-                          //             .delete(LocalStorageDir.authToken);
-                          //         await locator<LocalStorage>()
-                          //             .delete(LocalStorageDir.authUser);
-                          //         await locator<LocalStorage>()
-                          //             .delete(LocalStorageDir.cart);
-                          //         await locator<LocalStorage>()
-                          //             .delete(LocalStorageDir.authRefreshToken);
-                          //         raffleCart.value.clear();
-                          //         raffleCart.notifyListeners();
-                          //         locator<NavigationService>()
-                          //             .clearStackAndShow(Routes.authView);
-                          //       }
-                          //     },
-                          //     leading: Icon(
-                          //       Icons.logout,
-                          //       color: kcSecondaryColor,
-                          //     ),
-                          //     title: Text("Signout")),
                         ],
                       ),
                       // verticalSpaceMedium,
@@ -428,6 +251,8 @@ class ProfileView extends StatelessWidget {
   ) =>
       ProfileViewModel();
 
+
+
   Widget buildOption({
     required BuildContext context,
     required String text,
@@ -467,6 +292,59 @@ class ProfileView extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontFamily: "Panchang",
                   fontSize: 13),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileMenuItem extends StatelessWidget {
+  final String icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const ProfileMenuItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5.0),
+        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              icon,
+              height: 24,
+              width: 24,
+              color: kcPrimaryColor,
+            ),
+            horizontalSpaceMedium,
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: kcPrimaryColor,
+              ),
             ),
           ],
         ),

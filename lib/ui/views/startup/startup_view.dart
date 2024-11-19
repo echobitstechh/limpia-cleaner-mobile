@@ -24,35 +24,37 @@ class StartupView extends StackedView<StartupViewModel> {
     return Scaffold(
       backgroundColor: kcPrimaryColor,
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(50.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/limpiar_purple.png",
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Image.asset(
+                    "assets/images/startup_background.png",
                     color: kcWhiteColor,
+                    fit: BoxFit.cover, // Ensures the image fits inside the available space
                   ),
-                  SvgPicture.asset(
-                    "assets/images/Limpiador.svg",
-                    color: kcWhiteColor,
-                  ),
-                ],
-              ),
-              Text(
-                "Cleaning Opportunities, simplified",
-                style: TextStyle(
-                    color: kcWhiteColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
+                ),
+                // SvgPicture.asset(
+                //   "assets/images/Limpiador.svg",
+                //   color: kcWhiteColor,
+                // ),
+              ],
+            ),
           ),
-        ),
+          // Text(
+          //   "Cleaning Opportunities, simplified",
+          //   style: TextStyle(
+          //       color: kcWhiteColor,
+          //       fontSize: 20,
+          //       fontWeight: FontWeight.bold),
+          // ),
+        ],
+                ),
       ),
     );
   }

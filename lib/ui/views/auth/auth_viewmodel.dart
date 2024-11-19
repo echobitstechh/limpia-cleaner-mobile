@@ -38,6 +38,8 @@ class AuthViewModel extends BaseViewModel {
   final serviceController = TextEditingController();
   final cityController = TextEditingController();
 
+
+
   String? selectedGender;
   late String phoneValue = "";
   late PhoneNumber phoneNumber;
@@ -52,15 +54,14 @@ class AuthViewModel extends BaseViewModel {
 
   init() async {
 
-    bool rem = await locator<LocalStorage>().fetch(LocalStorageDir.remember);
+
     String? token = await locator<LocalStorage>().fetch(LocalStorageDir.authToken);
     String? lastEmail = await locator<LocalStorage>().fetch(LocalStorageDir.lastEmail);
-    remember = rem;
+
 
 
     // If remember me is true and we have a token, validate it
-    if (remember && token != null && JwtDecoder.isExpired(token)) {
-      // Here you should make a call to your backend to validate the token
+    if (token != null && JwtDecoder.isExpired(token)) {
       // bool isValidToken = await validateToken(token);
       // if (isValidToken) {
         userLoggedIn.value = true;

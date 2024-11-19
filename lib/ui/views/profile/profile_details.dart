@@ -329,11 +329,113 @@ class _ProfileScreen extends State<ProfileScreen> {
                                   RichText(
                                     text: TextSpan(
                                       text: '• ',
-                                      style: TextStyle(fontSize: 20, color: Colors.black),
+                                      style: TextStyle(fontSize: 20, color: Colors.black26),
                                       children: <TextSpan>[
                                         TextSpan(text: 'Los Angelis -USA'),
                                         TextSpan(text: '\n• '),
                                         TextSpan(text: '13 banga Distric'),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: ListTile(
+                              title: const Text(
+                                'Service Type Offered:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: '• ',
+                                      style: TextStyle(fontSize: 20, color: Colors.black26),
+                                      children: <TextSpan>[
+                                        TextSpan(text: 'Residential Cleaning'),
+                                        TextSpan(text: '\n• '),
+                                        TextSpan(text: 'Deep Cleaning'),
+                                        TextSpan(text: '\n• '),
+                                        TextSpan(text: 'Move-In/Move-Out Cleaning'),
+                                        TextSpan(text: '\n• '),
+                                        TextSpan(text: 'Office Cleaning'),
+                                        TextSpan(text: '\n• '),
+                                        TextSpan(text: 'Eco-Friendly Cleaning Services'),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: ListTile(
+                              title: const Text(
+                                'Availability:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: '• ',
+                                      style: TextStyle(fontSize: 20, color: Colors.black26),
+                                      children: <TextSpan>[
+                                        TextSpan(text: 'Days: Monday to Friday'),
+                                        TextSpan(text: '\n• '),
+                                        TextSpan(text: 'Times: 9 AM - 5 PM'),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: ListTile(
+                              title: const Text(
+                                'Completed Jobs:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: '• ',
+                                      style: TextStyle(fontSize: 20, color: Colors.black26),
+                                      children: <TextSpan>[
+                                        TextSpan(text: '49 Completed'),
+                                        TextSpan(text: '\n• '),
+                                        TextSpan(text: '1 Rejected'),
                                       ],
                                     ),
                                   )
