@@ -207,7 +207,7 @@ class OnboardingView2 extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        locator<NavigationService>().navigateToAuthView(isLogin: false);
+                        locator<NavigationService>().clearStackAndShow(Routes.authView, arguments: const AuthViewArguments(isLogin: false));
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),

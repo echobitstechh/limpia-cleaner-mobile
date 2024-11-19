@@ -1,12 +1,9 @@
-import  'package:limpia/core/data/models/country.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/components/submit_button.dart';
 import 'package:limpia/ui/components/text_field_widget.dart';
 import 'package:limpia/ui/views/auth/auth_viewmodel.dart';
-import 'package:limpia/ui/views/auth/set_up.dart';
-import 'package:limpia/utils/country_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:stacked/stacked.dart';
 import 'package:lottie/lottie.dart' as lot;
 import '../../../app/app.locator.dart';
@@ -15,6 +12,7 @@ import '../../../core/service/location_service.dart';
 import '../../../core/utils/maps_util.dart';
 import 'package:location/location.dart' as locationLib;
 import '../../common/ui_helpers.dart';
+import '../home/home_view.dart';
 
 
 /// @author George David
@@ -37,10 +35,8 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  List<Country> countries = [];
-  final List<String> genderOptions = ['Male', 'Female'];
-  final TextEditingController houseAddressController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
   final locationLib.Location location = locationLib.Location();
   final LocationService _locationService = locator<LocationService>();
   locationLib.LocationData? _locationData;
@@ -80,7 +76,7 @@ class _RegisterState extends State<Register> {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
       builder: (context, model, child) =>
-
+      _currentPage == 0 ?
           Form(
             key: _formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -236,9 +232,12 @@ class _RegisterState extends State<Register> {
                   isLoading: model.isBusy,
                   label: "Continue",
                   submit: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SetUp()));
+                    setState(() {
+                      _currentPage = 1;
+                    });
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(builder: (context) => SetUp()));
                   },
                   color: kcPrimaryColor,
                   boldText: true,
@@ -250,7 +249,7 @@ class _RegisterState extends State<Register> {
                 verticalSpaceMassive
               ],
             ),
-          ),
+          ) : buildSetUpPage(model),
     );
   }
 
@@ -305,6 +304,7 @@ class _RegisterState extends State<Register> {
               if (updatedPrediction != null) {
                 setState(() {
                     _selectedAddress = updatedPrediction;
+                    print("selected address is: $_selectedAddress");
                     controller.text = updatedPrediction.description;
                     _autocompleteResults = [];
                   FocusScope.of(context).unfocus();
@@ -317,15 +317,488 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget buildLoadingAnimation() {
-    return Center(
-      child: lot.Lottie.asset(
-        'assets/animations/loading_location.json',
-        width: 100,
-        height: 100,
-        repeat: true,
+  Widget buildSetUpPage(AuthViewModel model) {
+    return Form(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                IconButton(onPressed: (){
+                  setState(() {
+                    _currentPage = 0;
+                  });
+                }, icon: const Icon(Icons.arrow_back)),
+                const Text(
+                  "Set Your Work Preferences",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            verticalSpaceSmall,
+            Text(
+              style: TextStyle(
+                fontSize: 12,
+              ),
+              "Help cleaners to understand they are tailoring the Job opportunities to their own needs",
+            ),
+            verticalSpaceMedium,
+            Text(
+              "Select Services You Offer",
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0, vertical: 1.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Pick service",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                        Icons.add_circle_outline_outlined),
+                    onPressed: () {
+                      model.showCleaningServicesDialog(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            verticalSpaceSmall,
+            if (model.selectedServices.isNotEmpty)
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: model.selectedServices
+                    .map(
+                      (service) => Chip(
+                    label: Text(service),
+                    deleteIcon:
+                    const Icon(Icons.close), // Remove icon
+                    onDeleted: () {
+                      setState(() {
+                        model.selectedServices.remove(
+                            service); // Remove the service
+                      });
+                    },
+                  ),
+                )
+                    .toList(),
+              ),
+            verticalSpaceMedium,
+            buildAvailabilitySection(model),
+            verticalSpaceMedium,
+            DropdownButtonFormField(
+              decoration: InputDecoration(
+                labelText: 'Choose your preferred job Type',
+                labelStyle: const TextStyle(
+                    color: Colors.black, fontSize: 13),
+                floatingLabelStyle:
+                const TextStyle(color: Colors.black),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide:
+                  const BorderSide(color: Color(0xFFCC9933)),
+                ),
+              ),
+              value: model.selectedGender,
+              onSaved: (String? newValue) {
+                model.selectedGender = newValue!;
+              },
+              onChanged: (String? newValue) {
+                model.selectedGender = newValue!;
+              },
+              items: model.preferedJobTypes
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              validator: (value) =>
+              value == null ? 'Please select a job type' : null,
+            ),
+            verticalSpaceMedium,
+            Text(
+              "Set Your Travel Distance (Optional)",
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            verticalSpaceMedium,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SubmitButton(
+                    isLoading: model.isBusy,
+                    label: "Go back",
+                    submit: () {
+                      setState(() {
+                        _currentPage = 0;
+                      });
+                    },
+                    color: kcPrimaryColor,
+                    boldText: true,
+                  ),
+                ),
+                horizontalSpaceSmall,
+                Expanded(
+                  child: SubmitButton(
+                    isLoading: model.isBusy,
+                    label: "Save",
+                    submit: () {
+                      model.register();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeView()),
+                      );
+                    },
+                    color: kcPrimaryColor,
+                    boldText: true,
+                  ),
+                ),
+              ],
+            ),
+            verticalSpaceLarge,
+            const SizedBox(height: 50),
+            verticalSpaceMassive,
+          ],
+        ),
       ),
     );
   }
+
+  void _navigateToPage(int pageIndex) {
+    setState(() {
+      _currentPage = pageIndex;
+    });
+    _pageController.animateToPage(
+      pageIndex,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  Widget buildAvailabilitySection(AuthViewModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!model.isSpecificDateSelected)
+          const Text(
+            "Choose Your Availability",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        verticalSpaceSmall,
+
+        // Weekdays/Weekends Selection
+        if (!model.isSpecificDateSelected)
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (model.selectedDays.contains(AvailabilityDay.weekdays)) {
+                        model.selectedDays.remove(AvailabilityDay.weekdays);
+                      } else {
+                        model.selectedDays.add(AvailabilityDay.weekdays);
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 10.0,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: model.selectedDays.contains(AvailabilityDay.weekdays)
+                            ? kcPrimaryColor
+                            : Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Text(
+                      "Weekdays",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: model.selectedDays.contains(AvailabilityDay.weekdays)
+                            ? kcPrimaryColor
+                            : Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              horizontalSpaceSmall,
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (model.selectedDays.contains(AvailabilityDay.weekends)) {
+                        model.selectedDays.remove(AvailabilityDay.weekends);
+                      } else {
+                        model.selectedDays.add(AvailabilityDay.weekends);
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 10.0,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: model.selectedDays.contains(AvailabilityDay.weekends)
+                            ? kcPrimaryColor
+                            : Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Text(
+                      "Weekends",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: model.selectedDays.contains(AvailabilityDay.weekends)
+                            ? kcPrimaryColor
+                            : Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        verticalSpaceSmall,
+
+        // Time Slots Selection
+        if (!model.isSpecificDateSelected)
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (model.selectedTimes.contains(AvailabilityTime.morning)) {
+                        model.selectedTimes.remove(AvailabilityTime.morning);
+                      } else {
+                        model.selectedTimes.add(AvailabilityTime.morning);
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 10.0,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: model.selectedTimes.contains(AvailabilityTime.morning)
+                            ? kcPrimaryColor
+                            : Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Morning",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color:
+                            model.selectedTimes.contains(AvailabilityTime.morning)
+                                ? kcPrimaryColor
+                                : Colors.black,
+                          ),
+                        ),
+                        Text(
+                          "6AM-12PM",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color:
+                            model.selectedTimes.contains(AvailabilityTime.morning)
+                                ? kcPrimaryColor
+                                : Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              horizontalSpaceSmall,
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (model.selectedTimes.contains(AvailabilityTime.afternoon)) {
+                        model.selectedTimes.remove(AvailabilityTime.afternoon);
+                      } else {
+                        model.selectedTimes.add(AvailabilityTime.afternoon);
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 10.0,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color:
+                        model.selectedTimes.contains(AvailabilityTime.afternoon)
+                            ? kcPrimaryColor
+                            : Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Afternoon",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: model.selectedTimes
+                                .contains(AvailabilityTime.afternoon)
+                                ? kcPrimaryColor
+                                : Colors.black,
+                          ),
+                        ),
+                        Text(
+                          "12PM-6PM",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: model.selectedTimes
+                                .contains(AvailabilityTime.afternoon)
+                                ? kcPrimaryColor
+                                : Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              horizontalSpaceSmall,
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (model.selectedTimes.contains(AvailabilityTime.evening)) {
+                        model.selectedTimes.remove(AvailabilityTime.evening);
+                      } else {
+                        model.selectedTimes.add(AvailabilityTime.evening);
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 10.0,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: model.selectedTimes.contains(AvailabilityTime.evening)
+                            ? kcPrimaryColor
+                            : Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Evening",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color:
+                            model.selectedTimes.contains(AvailabilityTime.evening)
+                                ? kcPrimaryColor
+                                : Colors.black,
+                          ),
+                        ),
+                        Text(
+                          "6PM-12AM",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color:
+                            model.selectedTimes.contains(AvailabilityTime.evening)
+                                ? kcPrimaryColor
+                                : Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        verticalSpaceMedium,
+
+        // Schedule Specific Date Section
+        Row(
+          children: [
+            Text(
+              "Schedule Date (Optional)",
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            horizontalSpaceSmall,
+            GestureDetector(
+                onTap: () => model.showMultiDatePicker(context),
+                child: const Icon(Icons.calendar_today)),
+          ],
+        ),
+        // Display Selected Dates Below the Row
+        if (model.selectedDates.isNotEmpty)
+          Wrap(
+            spacing: 8.0,
+            runSpacing: 8.0,
+            children: model.selectedDates
+                .map((date) => Chip(
+              label: Text(
+                "${date.day}-${date.month}-${date.year}",
+                style: const TextStyle(fontSize: 12),
+              ),
+              deleteIcon: const Icon(Icons.close),
+              onDeleted: () {
+                setState(() {
+                  model.selectedDates.remove(date);
+
+                  // Enable availability section if no dates are selected
+                  if (model.selectedDates.isEmpty) {
+                    model.isSpecificDateSelected = false;
+                  }
+                });
+              },
+            ))
+                .toList(),
+          ),
+      ],
+    );
+  }
+
 
 }

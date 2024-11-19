@@ -46,65 +46,68 @@ class _AuthViewState extends State<AuthView> with TickerProviderStateMixin {
   Widget build(
     BuildContext context,
   ) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 150,
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              background: Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0), // Adjust the padding to move the image down
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/images/limpiador_logo.png",
-                        height: 90, // Adjust the height to make the image smaller
-                        fit: BoxFit.fitHeight,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SafeArea(
+        child: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 150,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  background: Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20.0), // Adjust the padding to move the image down
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/limpiador_logo.png",
+                            height: 90, // Adjust the height to make the image smaller
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
 
-
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                  height: MediaQuery.of(context).size.height,  // Set a specific height constraint
-                  child: Column(
-                    children:  [
-                      Flexible(
-                        child: SingleChildScrollView(
-                          child: isLogin ? Login(updateIsLogin: (value) {
-                            setState(() {
-                              isLogin = value;
-                            });
-                          })
-                              : Register(updateIsLogin: (value) {
-                            setState(() {
-                              isLogin = value;
-                            });
-                          }),
-                        ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                      height: MediaQuery.of(context).size.height,  // Set a specific height constraint
+                      child: Column(
+                        children:  [
+                          Flexible(
+                            child: SingleChildScrollView(
+                              child: isLogin ? Login(updateIsLogin: (value) {
+                                setState(() {
+                                  isLogin = value;
+                                });
+                              })
+                                  : Register(updateIsLogin: (value) {
+                                setState(() {
+                                  isLogin = value;
+                                });
+                              }),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
 
-              ],
-            ),
-          )
-        ],
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

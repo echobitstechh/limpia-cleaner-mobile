@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:limpia/app/app.locator.dart';
 import 'package:limpia/app/app.logger.dart';
 import 'package:limpia/app/app.router.dart';
@@ -12,10 +13,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:multi_date_picker/multi_date_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+import '../../../core/data/models/country.dart';
 import '../../../core/data/models/profile.dart';
+import '../../common/app_colors.dart';
 
 
 /// @author George David
@@ -25,6 +29,11 @@ import '../../../core/data/models/profile.dart';
 
 
 enum RegistrationResult { success, failure }
+
+enum AvailabilityDay { weekdays, weekends }
+
+enum AvailabilityTime { morning, afternoon, evening }
+
 class AuthViewModel extends BaseViewModel {
   final log = getLogger("AuthViewModel");
   final repo = locator<Repository>();
@@ -49,6 +58,31 @@ class AuthViewModel extends BaseViewModel {
   bool obscure = true;
   bool terms = false;
   bool remember = false;
+
+  final List<String> preferedJobTypes = ['One Time', 'Reoccurring'];
+
+  bool? loadingCountries = false;
+  String? countryValue;
+  String? stateValue;
+  String? cityValue;
+
+  bool isSpecificDateSelected = false;
+  List<DateTime> selectedDates = [];
+  List<AvailabilityDay> selectedDays = [];
+  List<AvailabilityTime> selectedTimes = [];
+
+  // List of cleaning services
+  final List<String> cleaningServices = [
+    'House Cleaning',
+    'Office Cleaning',
+    'Carpet Cleaning',
+    'Deep Cleaning',
+    'Window Cleaning',
+    'Kitchen Cleaning',
+  ];
+
+  // List to store selected services
+  List<String> selectedServices = [];
 
 
 
@@ -97,6 +131,164 @@ class AuthViewModel extends BaseViewModel {
     }
     rebuildUi();
   }
+
+  void showCleaningServicesDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              title: Text(
+                'Select Cleaning Multiple Services',
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              content: SizedBox(
+                height: 300.0,
+                width: double.maxFinite,
+                child: cleaningServices.isEmpty
+                    ? Center(
+                  child: Text(
+                    'No cleaning services available.',
+                    style: GoogleFonts.nunito(
+                      textStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                )
+                    : GridView.builder(
+                  itemCount: cleaningServices.length,
+                  gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Two services per row
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    childAspectRatio: 2.0, // Adjust height/width ratio
+                  ),
+                  itemBuilder: (context, index) {
+                    final service = cleaningServices[index];
+                    final isSelected = selectedServices.contains(service);
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            selectedServices.remove(service);
+                          } else {
+                            selectedServices.add(service);
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color:
+                          isSelected ? kcPrimaryColor : Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(
+                            color:
+                            isSelected ? kcPrimaryColor : Colors.grey,
+                            width: 1.0,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 5.0,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            service,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              fontSize: 14,
+                            ),
+                            textAlign: TextAlign.center,
+                            softWrap: true, // Ensure wrapping
+                            maxLines: 2, // Limit to 2 lines
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+     notifyListeners();
+    });
+  }
+
+  void showMultiDatePicker(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            'Select Dates',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          content: SizedBox(
+            width: double.maxFinite, // Make the dialog take up available width
+            height: 400.0, // Set a fixed height to avoid intrinsic dimensions
+            child: MultiDatePicker(
+              calendarStartDate: DateTime.now(),
+              calendarEndDate: DateTime(2100),
+              enableMultiSelect: true,
+              onDateSelected: (List<DateTime> dates) {
+
+                  isSpecificDateSelected = true;
+                  selectedDates = dates;
+                  selectedDays.clear();
+                  selectedTimes.clear();
+                  notifyListeners();
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Done'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   void toggleRemember() {
     remember = !remember;
@@ -160,14 +352,38 @@ class AuthViewModel extends BaseViewModel {
     // }
     setBusy(true);
 
+  //   {
+  //     "firstName": "Jane",
+  //   "lastName": "Smith",
+  //   "email": "cleaner@domain.com",
+  //   "password": "securePassword456",
+  //   "address": "456 Oak St, Anytown, USA",
+  //   "city": "Anytown",
+  //   "countryAndState": "USA, CA",
+  //   "preferredLocations": [
+  //   "Downtown"
+  //   ],
+  //   "services": [
+  //   "House Cleaning"
+  //   ],
+  //   "availability": "weekdays",
+  //   "availabilityTime": [
+  // {
+  //   "period": "morning",
+  //   "start": "8am",
+  //   "end": "12pm"
+  // }
+  //   ],
+  //   "preferredJobType": "part-time"
+  // }
+
     try {
       ApiResponse res = await repo.register({
-        "firstname": firstname.text,
-        "lastname": lastname.text,
+        "firstName": firstname.text,
+        "lastName": lastname.text,
         "email": email.text,
-        "phone": phoneNumber.completeNumber,
-        "country": countryId,
         "password": password.text,
+        "address": password.text,
         "confirm_password": password.text
 
       });
