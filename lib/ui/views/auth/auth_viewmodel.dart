@@ -49,7 +49,7 @@ class AuthViewModel extends BaseViewModel {
 
 
 
-  String? selectedGender;
+  String? selectedJobType;
   late String phoneValue = "";
   late PhoneNumber phoneNumber;
   late String countryId = "";
@@ -63,7 +63,7 @@ class AuthViewModel extends BaseViewModel {
 
   bool? loadingCountries = false;
   String? countryValue;
-  String? stateValue;
+  String? addressValue;
   String? cityValue;
 
   bool isSpecificDateSelected = false;
@@ -352,7 +352,38 @@ class AuthViewModel extends BaseViewModel {
     // }
     setBusy(true);
 
-  //   {
+    List<String> availabilityTime = [];
+    String availability = "";
+
+    if (isSpecificDateSelected) {
+      availability = "specific";
+      availabilityTime = selectedDates.map((date) {
+        return "${date.year}-${date.month}-${date.day}";
+      }).toList();
+    } else {
+
+      if (selectedDays.contains(AvailabilityDay.weekdays)) {
+        availability = "weekdays";
+      }
+      if (selectedDays.contains(AvailabilityDay.weekends)) {
+        availability = availability.isEmpty ? "weekends" : "both";
+      }
+
+      // Handle time slots (morning, afternoon, evening)
+      availabilityTime = selectedTimes.map((time) {
+        switch (time) {
+          case AvailabilityTime.morning:
+            return "morning";
+          case AvailabilityTime.afternoon:
+            return "afternoon";
+          case AvailabilityTime.evening:
+            return "evening";
+        }
+      }).toList();
+    }
+
+
+    //   {
   //     "firstName": "Jane",
   //   "lastName": "Smith",
   //   "email": "cleaner@domain.com",
@@ -383,9 +414,13 @@ class AuthViewModel extends BaseViewModel {
         "lastName": lastname.text,
         "email": email.text,
         "password": password.text,
-        "address": password.text,
-        "confirm_password": password.text
-
+        "address": addressValue,
+        "city": cityValue,
+        "countryAndState": countryValue,
+        "services": selectedServices,
+        "availability": availability,
+        "availabilityTime": availabilityTime,
+        "preferredJobType": selectedJobType
       });
       if (res.statusCode == 201) {
         snackBar.showSnackbar(message: res.data["message"]);

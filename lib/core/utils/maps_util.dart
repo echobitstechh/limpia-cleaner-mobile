@@ -81,6 +81,7 @@ class MapsUtils {
       final data = jsonDecode(response);
       if (data['status'] == 'OK') {
         final result = data['result'];
+        print("map result is $result");
         return PlacePrediction(
           description: prediction.description,
           placeId: prediction.placeId,

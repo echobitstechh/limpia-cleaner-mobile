@@ -77,177 +77,179 @@ class _RegisterState extends State<Register> {
       viewModelBuilder: () => AuthViewModel(),
       builder: (context, model, child) =>
       _currentPage == 0 ?
-          Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Sign Up",
-                      style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "roboto"
+          SafeArea(
+            child: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "roboto"
+                        ),
                       ),
+                    ],
+                  ),
+            
+                  verticalSpaceMedium,
+                  verticalSpaceMedium,
+                  TextFieldWidget(
+                    labelIcon:  Icon(Icons.person_2_outlined, color: Colors.black),
+                    hint: "Name",
+                    controller: model.firstname,
+                    inputType: TextInputType.name,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'required';
+                      }
+                      return null; // Return null to indicate no validation error
+                    },
+                  ),
+                  verticalSpaceMedium,
+                  TextFieldWidget(
+                    labelIcon:  Icon(Icons.email_outlined, color: Colors.black),
+                    hint: "Email Address",
+                    controller: model.email,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'required';
+                      }
+                      if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(value)) {
+                        return 'Invalid email address';
+                      }
+                      return null; // Return null to indicate no validation error
+                    },
+                  ),
+                  verticalSpaceMedium,
+                  TextFieldWidget(
+                    labelIcon:  Icon(Icons.password_outlined, color: Colors.black),
+                    inputType: TextInputType.visiblePassword,
+                    hint: "Password",
+                    controller: model.password,
+                    obscureText: model.obscure,
+                    suffix: InkWell(
+                      onTap: () {
+                        model.toggleObscure();
+                      },
+                      child:
+                          Icon(model.obscure ? Icons.visibility_off : Icons.visibility),
                     ),
-                  ],
-                ),
-
-                verticalSpaceMedium,
-                verticalSpaceMedium,
-                TextFieldWidget(
-                  labelIcon:  Icon(Icons.person_2_outlined, color: Colors.black),
-                  hint: "Name",
-                  controller: model.firstname,
-                  inputType: TextInputType.name,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'required';
-                    }
-                    return null; // Return null to indicate no validation error
-                  },
-                ),
-                verticalSpaceMedium,
-                TextFieldWidget(
-                  labelIcon:  Icon(Icons.email_outlined, color: Colors.black),
-                  hint: "Email Address",
-                  controller: model.email,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'required';
-                    }
-                    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(value)) {
-                      return 'Invalid email address';
-                    }
-                    return null; // Return null to indicate no validation error
-                  },
-                ),
-                verticalSpaceMedium,
-                TextFieldWidget(
-                  labelIcon:  Icon(Icons.password_outlined, color: Colors.black),
-                  inputType: TextInputType.visiblePassword,
-                  hint: "Password",
-                  controller: model.password,
-                  obscureText: model.obscure,
-                  suffix: InkWell(
-                    onTap: () {
-                      model.toggleObscure();
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Password is required';
+                      }
+                      if (value.length < 8) {
+                        return 'Password must be at least 8 characters long';
+                      }
+                      if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                        return 'Password must contain at least one uppercase letter';
+                      }
+                      if (!RegExp(r'[a-z]').hasMatch(value)) {
+                        return 'Password must contain at least one lowercase letter';
+                      }
+                      if (!RegExp(r'[0-9]').hasMatch(value)) {
+                        return 'Password must contain at least one digit';
+                      }
+                      if (!RegExp(r'[!@#$%^&*]').hasMatch(value)) {
+                        return 'Password must contain at least one special character';
+                      }
+                      return null; // Return null to indicate no validation error
                     },
-                    child:
-                        Icon(model.obscure ? Icons.visibility_off : Icons.visibility),
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Password is required';
-                    }
-                    if (value.length < 8) {
-                      return 'Password must be at least 8 characters long';
-                    }
-                    if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                      return 'Password must contain at least one uppercase letter';
-                    }
-                    if (!RegExp(r'[a-z]').hasMatch(value)) {
-                      return 'Password must contain at least one lowercase letter';
-                    }
-                    if (!RegExp(r'[0-9]').hasMatch(value)) {
-                      return 'Password must contain at least one digit';
-                    }
-                    if (!RegExp(r'[!@#$%^&*]').hasMatch(value)) {
-                      return 'Password must contain at least one special character';
-                    }
-                    return null; // Return null to indicate no validation error
-                  },
-                ),
-                verticalSpaceMedium,
-                TextFieldWidget(
-                  labelIcon:  Icon(Icons.password_outlined, color: Colors.black),
-                  hint: "Confirm password",
-                  controller: model.cPassword,
-                  obscureText: model.obscure,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Password confirmation is required';
-                    }
-                    if (value != model.password.text) {
-                      return 'Passwords do not match';
-                    }
-                    return null; // Return null to indicate no validation error
-                  },
-                  suffix: InkWell(
-                    onTap: () {
-                      model.toggleObscure();
+                  verticalSpaceMedium,
+                  TextFieldWidget(
+                    labelIcon:  Icon(Icons.password_outlined, color: Colors.black),
+                    hint: "Confirm password",
+                    controller: model.cPassword,
+                    obscureText: model.obscure,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Password confirmation is required';
+                      }
+                      if (value != model.password.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null; // Return null to indicate no validation error
                     },
-                    child:
-                        Icon(model.obscure ? Icons.visibility_off : Icons.visibility),
+                    suffix: InkWell(
+                      onTap: () {
+                        model.toggleObscure();
+                      },
+                      child:
+                          Icon(model.obscure ? Icons.visibility_off : Icons.visibility),
+                    ),
                   ),
-                ),
-                verticalSpace(30),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    buildSearchField("Enter Address", model.addressController, false,
-                        false, _selectedAddress),
-                    (_autocompleteResults == null || _autocompleteResults!.isEmpty)
-                        ? SizedBox()
-                        : buildAutocompleteResults(false, model.addressController),
-                  ],
-                ),
-                verticalSpace(30),
-                Row(
-                  children: [
-                    horizontalSpaceSmall,
-                    Row(
-                        children:  [
-                          const Text(
-                            "Already have an account? ",
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              gotoLogin();
-                            },
-                            child: const Text(
-                              "login",
+                  verticalSpace(30),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      buildSearchField("Enter Address", model.addressController, false,
+                          false, _selectedAddress),
+                      (_autocompleteResults == null || _autocompleteResults!.isEmpty)
+                          ? SizedBox()
+                          : buildAutocompleteResults(false, model.addressController, model),
+                    ],
+                  ),
+                  verticalSpace(30),
+                  Row(
+                    children: [
+                      horizontalSpaceSmall,
+                      Row(
+                          children:  [
+                            const Text(
+                              "Already have an account? ",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: kcPrimaryColor,
                               ),
                             ),
-                          )
-
-                        ]
-                    ),
-                  ],
-                ),
-                verticalSpaceSmall,
-                SubmitButton(
-                  isLoading: model.isBusy,
-                  label: "Continue",
-                  submit: () {
-                    setState(() {
-                      _currentPage = 1;
-                    });
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (context) => SetUp()));
-                  },
-                  color: kcPrimaryColor,
-                  boldText: true,
-                ),
-                verticalSpaceLarge,
-                const SizedBox(
-                  height: 50,
-                ),
-                verticalSpaceMassive
-              ],
+                            GestureDetector(
+                              onTap: () {
+                                gotoLogin();
+                              },
+                              child: const Text(
+                                "login",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: kcPrimaryColor,
+                                ),
+                              ),
+                            )
+            
+                          ]
+                      ),
+                    ],
+                  ),
+                  verticalSpaceSmall,
+                  SubmitButton(
+                    isLoading: model.isBusy,
+                    label: "Continue",
+                    submit: () {
+                      setState(() {
+                        _currentPage = 1;
+                      });
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(builder: (context) => SetUp()));
+                    },
+                    color: kcPrimaryColor,
+                    boldText: true,
+                  ),
+                  verticalSpaceLarge,
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  verticalSpaceMassive
+                ],
+              ),
             ),
           ) : buildSetUpPage(model),
     );
@@ -287,7 +289,7 @@ class _RegisterState extends State<Register> {
   }
 
 
-  Widget buildAutocompleteResults(bool isFullScreen, TextEditingController controller) {
+  Widget buildAutocompleteResults(bool isFullScreen, TextEditingController controller, AuthViewModel model) {
     return SingleChildScrollView(
       child: ListView.builder(
         shrinkWrap: true,
@@ -302,9 +304,20 @@ class _RegisterState extends State<Register> {
               final updatedPrediction =
               await MapsUtils().getPlaceDetails(prediction!);
               if (updatedPrediction != null) {
+                final secondaryTextParts = updatedPrediction.secondaryText.split(',');
+
+
+                if (secondaryTextParts.isNotEmpty) {
+                  model.cityValue = secondaryTextParts.first.trim();
+                  model.countryValue = secondaryTextParts.last.trim();
+                  model.addressValue = updatedPrediction.mainText;
+                }
+
                 setState(() {
                     _selectedAddress = updatedPrediction;
-                    print("selected address is: $_selectedAddress");
+                    print("selected address main is: ${_selectedAddress?.mainText}");
+                    print("selected address secondary is: ${_selectedAddress?.secondaryText}");
+                    print("selected address description is: ${_selectedAddress?.description}");
                     controller.text = updatedPrediction.description;
                     _autocompleteResults = [];
                   FocusScope.of(context).unfocus();
@@ -420,12 +433,12 @@ class _RegisterState extends State<Register> {
                   const BorderSide(color: Color(0xFFCC9933)),
                 ),
               ),
-              value: model.selectedGender,
+              value: model.selectedJobType,
               onSaved: (String? newValue) {
-                model.selectedGender = newValue!;
+                model.selectedJobType = newValue!;
               },
               onChanged: (String? newValue) {
-                model.selectedGender = newValue!;
+                model.selectedJobType = newValue!;
               },
               items: model.preferedJobTypes
                   .map<DropdownMenuItem<String>>((String value) {
@@ -488,16 +501,6 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void _navigateToPage(int pageIndex) {
-    setState(() {
-      _currentPage = pageIndex;
-    });
-    _pageController.animateToPage(
-      pageIndex,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
 
   Widget buildAvailabilitySection(AuthViewModel model) {
     return Column(
