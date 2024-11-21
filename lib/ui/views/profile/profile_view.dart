@@ -195,7 +195,7 @@ class ProfileView extends StatelessWidget {
                                   onTap: () {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(builder: (c) {
-                                      return const Support();
+                                      return const Ratings();
                                     }));
                                   },
                                 ),
