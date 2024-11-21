@@ -65,13 +65,8 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
-                    title: const Text("Profile"),
+                    leading: Icon(Icons.person),
+                    title: const Text("Edit profile"),
                   ),
                   ListTile(
                     onTap: () {
@@ -90,12 +85,7 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
+                    leading: Icon(Icons.privacy_tip_outlined),
                     title: const Text("Security"),
                   ),
                   ListTile(
@@ -115,12 +105,7 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
+                    leading: Icon(Icons.notifications),
                     title: const Text("Notification"),
                   ),
                   ListTile(
@@ -140,12 +125,7 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
+                    leading: Icon(Icons.lock_outline_sharp),
                     title: const Text("Privacy"),
                   ),
                 ],
@@ -176,12 +156,7 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
+                    leading: Icon(Icons.help_outline_rounded),
                     title: const Text("Help & Support"),
                   ),
                   ListTile(
@@ -201,12 +176,7 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
+                    leading: Icon(Icons.report_gmailerrorred_rounded),
                     title: const Text("Terms and Policies"),
                   ),
                 ],
@@ -237,12 +207,7 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
+                    leading: Icon(Icons.flag_outlined),
                     title: const Text("Report a problem"),
                   ),
                   ListTile(
@@ -262,12 +227,7 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
+                    leading: Icon(Icons.supervisor_account_outlined),
                     title: const Text("Add account"),
                   ),
                   ListTile(
@@ -287,12 +247,7 @@ class _Settings extends State<Settings> {
                         },
                       );
                     },
-                    leading: SvgPicture.asset(
-                      'assets/images/person.svg', // Replace with your SVG file path
-                      color: kcPrimaryColor,        // Set the color for the icon
-                      height: 24,
-                      width: 24,
-                    ),
+                    leading: Icon(Icons.logout),
                     title: const Text("Log out"),
                   ),
                 ],

@@ -11,7 +11,7 @@ import 'package:limpia/ui/views/profile/order_list.dart';
 import 'package:limpia/ui/views/profile/profile_details.dart';
 import 'package:limpia/ui/views/profile/refferal.dart';
 import 'package:limpia/ui/views/profile/settings.dart';
-import 'package:limpia/ui/views/profile/support.dart';
+import 'package:limpia/ui/views/profile/ratings.dart';
 import 'package:limpia/ui/views/profile/ticket_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
