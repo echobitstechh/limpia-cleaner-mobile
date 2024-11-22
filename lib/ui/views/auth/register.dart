@@ -478,13 +478,15 @@ class _RegisterState extends State<Register> {
                   child: SubmitButton(
                     isLoading: model.isBusy,
                     label: "Save",
-                    submit: () {
-                      model.register();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeView()),
-                      );
+                    submit: () async {
+                      RegistrationResult registrationResult = await model.register();
+                      if (registrationResult == RegistrationResult.success) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeView()),
+                        );
+                      }
                     },
                     color: kcPrimaryColor,
                     boldText: true,

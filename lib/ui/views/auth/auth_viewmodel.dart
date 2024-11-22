@@ -409,9 +409,9 @@ class AuthViewModel extends BaseViewModel {
   // }
 
     try {
-      ApiResponse res = await repo.register({
-        "firstName": firstname.text,
-        "lastName": lastname.text,
+      ApiResponse res = await repo.register({ 
+        "firstname": firstname.text,
+        "lastname": firstname.text.split(' ').length > 1 ? firstname.text.split(' ')[1][1] : '',
         "email": email.text,
         "password": password.text,
         "address": addressValue,
@@ -442,6 +442,10 @@ class AuthViewModel extends BaseViewModel {
           return RegistrationResult.failure; // Return failure since it's an error message
         }
         else if (res.data["message"] is List<String>) {
+          snackBar.showSnackbar(message: res.data["message"].join('\n'));
+          return RegistrationResult.failure; // Return failure since it's an error message
+        }
+        else if (res.data["message"] is List) {
           snackBar.showSnackbar(message: res.data["message"].join('\n'));
           return RegistrationResult.failure; // Return failure since it's an error message
         } else {
