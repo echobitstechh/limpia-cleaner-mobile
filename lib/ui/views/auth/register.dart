@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/components/submit_button.dart';
 import 'package:limpia/ui/components/text_field_widget.dart';
+import 'package:limpia/ui/views/auth/auth_view.dart';
 import 'package:limpia/ui/views/auth/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -484,7 +485,7 @@ class _RegisterState extends State<Register> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const HomeView()),
+                              builder: (context) => const AuthView(isLogin: true)),
                         );
                       }
                     },

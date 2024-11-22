@@ -11,7 +11,7 @@ class Repository extends IRepository {
   Future<ApiResponse> login(Map<String, dynamic> req) async {
     ApiResponse response = await api.call(
       method: HttpMethod.post,
-      endpoint: "auth/login",
+      endpoint: "user/cleaner/signIn",
       reqBody: req,
     );
 
@@ -41,7 +41,7 @@ class Repository extends IRepository {
   Future<ApiResponse> register(Map<String, dynamic> req) async {
     ApiResponse response = await api.call(
       method: HttpMethod.post,
-      endpoint: "auth/create_account",
+      endpoint: "user/cleaner/signup",
       reqBody: req,
     );
 

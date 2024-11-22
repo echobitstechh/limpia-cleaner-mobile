@@ -281,7 +281,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "${profile.value.firstname} ${profile.value.lastname}",
+                      "${profile.value.firstName} ${profile.value.lastName}",
                       style: const TextStyle(
                         color: kcPrimaryColor,
                         fontSize: 18,
@@ -289,7 +289,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                       ),
                     ),
                     Text(
-                      'Cleaner',
+                      "${profile.value.role}",
                       style: const TextStyle(
                         color: kcPrimaryColor,
                         fontSize: 18,
@@ -331,9 +331,9 @@ class _ProfileScreen extends State<ProfileScreen> {
                                       text: '• ',
                                       style: TextStyle(fontSize: 20, color: Colors.black26),
                                       children: <TextSpan>[
-                                        TextSpan(text: 'Los Angelis -USA'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: '13 banga Distric'),
+                                        TextSpan(text: '${profile.value.address ?? ''}, ${profile.value.countryAndState ?? ''}'),
+                                        // TextSpan(text: '\n• '),
+                                        // TextSpan(text: '13 banga Distric'),
                                       ],
                                     ),
                                   )
@@ -360,18 +360,16 @@ class _ProfileScreen extends State<ProfileScreen> {
                                 children: [
                                   RichText(
                                     text: TextSpan(
-                                      text: '• ',
                                       style: TextStyle(fontSize: 20, color: Colors.black26),
-                                      children: <TextSpan>[
-                                        TextSpan(text: 'Residential Cleaning'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Deep Cleaning'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Move-In/Move-Out Cleaning'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Office Cleaning'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Eco-Friendly Cleaning Services'),
+                                      children: profile.value.services?.asMap().entries.map<TextSpan>((entry) {
+                                        int index = entry.key;
+                                        String service = entry.value;
+                                        return TextSpan(
+                                          text: '• $service${index < profile.value.services!.length - 1 ? '\n' : ''}',
+                                          style: TextStyle(fontSize: 20, color: Colors.black26),
+                                        );
+                                      }).toList() ?? [
+                                        TextSpan(text: '- No services offered -'),
                                       ],
                                     ),
                                   )
@@ -401,9 +399,9 @@ class _ProfileScreen extends State<ProfileScreen> {
                                       text: '• ',
                                       style: TextStyle(fontSize: 20, color: Colors.black26),
                                       children: <TextSpan>[
-                                        TextSpan(text: 'Days: Monday to Friday'),
+                                        TextSpan(text: 'Days: ${profile.value.availability?.join(', ') ?? ''}'),
                                         TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Times: 9 AM - 5 PM'),
+                                        TextSpan(text: 'Times: ${profile.value.availabilityTime?.join(', ') ?? ''}'),
                                       ],
                                     ),
                                   )
@@ -430,12 +428,12 @@ class _ProfileScreen extends State<ProfileScreen> {
                                 children: [
                                   RichText(
                                     text: TextSpan(
-                                      text: '• ',
+                                      // text: '• ',
                                       style: TextStyle(fontSize: 20, color: Colors.black26),
                                       children: <TextSpan>[
-                                        TextSpan(text: '49 Completed'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: '1 Rejected'),
+                                        TextSpan(text: '- No Completed Jobs Yet -'),
+                                        // TextSpan(text: '\n• '),
+                                        // TextSpan(text: '1 Rejected'),
                                       ],
                                     ),
                                   )

@@ -13,7 +13,7 @@ import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
 import '../../../core/data/models/booking.dart';
 import '../../../state.dart';
-import '../../../utils/booking_success.dart';
+import 'package:limpia/state.dart';
 import '../../../utils/bookings_card.dart';
 import 'dashboard_viewmodel.dart';
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
@@ -42,21 +42,19 @@ class DashboardView extends StackedView<DashboardViewModel> {
 
   final List<Booking> bookings = [
     Booking(
-      sqft: '2500',
-      price: '\$50',
-      address: '8 Magodo, California USA',
-      dateTime: 'Feb, 27, 10:00',
-      type: 'Deep cleaning',
-      status: 'Pending'
-    ),
+        sqft: '2500',
+        price: '\$50',
+        address: '8 Magodo, California USA',
+        dateTime: 'Feb, 27, 10:00',
+        type: 'Deep cleaning',
+        status: 'Pending'),
     Booking(
-      sqft: '3000',
-      price: '\$60',
-      address: '12 Crescent Avenue, Texas USA',
-      dateTime: 'Feb, 28, 12:00',
-      type: 'Regular cleaning',
-      status: 'Pending'
-    ),
+        sqft: '3000',
+        price: '\$60',
+        address: '12 Crescent Avenue, Texas USA',
+        dateTime: 'Feb, 28, 12:00',
+        type: 'Regular cleaning',
+        status: 'Pending'),
     // Add more bookings as needed
   ];
 
@@ -67,16 +65,14 @@ class DashboardView extends StackedView<DashboardViewModel> {
         address: '13 Albert McCauley, Texas USA',
         dateTime: 'Sept, 29, 10:00',
         type: 'Deep cleaning',
-        status: 'Ongoing'
-    ),
+        status: 'Ongoing'),
     Booking(
-      sqft: '3000',
-      price: '\$60',
-      address: '12 Crescent Avenue, Texas USA',
-      dateTime: 'Feb, 28, 12:00',
-      type: 'Regular cleaning',
-      status: 'Active Booking'
-    ),
+        sqft: '3000',
+        price: '\$60',
+        address: '12 Crescent Avenue, Texas USA',
+        dateTime: 'Feb, 28, 12:00',
+        type: 'Regular cleaning',
+        status: 'Active Booking'),
     // Add more bookings as needed
   ];
 
@@ -143,8 +139,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
+                          padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
@@ -161,38 +156,45 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                     children: [
                                       Row(
                                         children: [
-                                          Text(
-                                            "Adamu Isha",
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  RatingBarIndicator(
+                                                    rating: 4.5, // Replace with dynamic rating
+                                                    itemBuilder: (context, index) => Icon(
+                                                      Icons.star,
+                                                      color: Colors.amber,
+                                                    ),
+                                                    itemCount: 5,
+                                                    itemSize: 10.0,
+                                                  ),
+                                                  horizontalSpaceTiny,
+                                                  Text(
+                                                    "4.5",
+                                                    style: TextStyle(
+                                                      color: Colors.amber,
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(
+                                                '${profile.value.firstName ?? ''} ${profile.value.lastName ?? ''}',
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                           horizontalSpaceTiny,
-                                          RatingBarIndicator(
-                                            rating:
-                                                4.5, // Replace with dynamic rating
-                                            itemBuilder: (context, index) =>
-                                                Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
-                                            ),
-                                            itemCount: 5,
-                                            itemSize: 14.0,
-                                          ),
-                                          horizontalSpaceTiny,
-                                          Text(
-                                            "4.5",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                            ),
-                                          ),
                                         ],
                                       ),
                                       Text(
-                                        "Cleaner",
+                                        "${profile.value.role ?? ''}",
                                         style: const TextStyle(
                                           fontSize: 14,
                                           color: Colors.white70,
@@ -252,7 +254,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                               ),
                               verticalSpaceSmall,
                               Text(
-                                "Address: 8 Magodo, California USA",
+                                "Address: ${profile.value.address ?? ''}, ${profile.value.countryAndState ?? ''}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -270,7 +272,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                       ),
                                       horizontalSpaceTiny,
                                       Text(
-                                        "Sunday, 12 June",
+                                        "${profile.value.availability?.join(", ") ?? ''}",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -288,7 +290,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                       ),
                                       horizontalSpaceTiny,
                                       Text(
-                                        "11:00 - 12:00 AM",
+                                        "${profile.value.availabilityTime?.join(", ") ?? ''}",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -455,8 +457,8 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                                       ),
                                                       horizontalSpaceLarge,
                                                       RatingBar.builder(
-                                                        initialRating:
-                                                            4.5, // Replace with the user's average rating
+                                                        initialRating: 4.5,
+                                                        // Replace with the user's average rating
                                                         minRating: 1,
                                                         direction:
                                                             Axis.horizontal,
@@ -943,8 +945,8 @@ class DashboardView extends StackedView<DashboardViewModel> {
       DashboardViewModel();
 }
 
-
-Widget _notificationIcon(int unreadCount, BuildContext context, DashboardViewModel viewModel) {
+Widget _notificationIcon(
+    int unreadCount, BuildContext context, DashboardViewModel viewModel) {
   print('notif count is $unreadCount');
   return Stack(
     children: [
@@ -952,9 +954,13 @@ Widget _notificationIcon(int unreadCount, BuildContext context, DashboardViewMod
           icon: SvgPicture.asset(
             uiMode.value == AppUiModes.dark
                 ? "assets/images/dashboard_otification_white.svg" // Dark mode logo
-                : "assets/images/dashboard_otification.svg", width: 22, height: 22,),
-          onPressed: (){_showNotificationSheet(context, viewModel);}
-      ),
+                : "assets/images/dashboard_otification.svg",
+            width: 22,
+            height: 22,
+          ),
+          onPressed: () {
+            _showNotificationSheet(context, viewModel);
+          }),
       if (unreadCount > 0)
         Positioned(
           right: 10,
@@ -977,8 +983,8 @@ Widget _notificationIcon(int unreadCount, BuildContext context, DashboardViewMod
   );
 }
 
-void _showNotificationSheet(BuildContext context, DashboardViewModel viewModel) {
-
+void _showNotificationSheet(
+    BuildContext context, DashboardViewModel viewModel) {
   TopModalSheet.show(
       context: context,
       isShowCloseButton: true,
@@ -990,7 +996,8 @@ void _showNotificationSheet(BuildContext context, DashboardViewModel viewModel) 
         height: MediaQuery.of(context).size.height * 0.5,
         child: Column(
           children: [
-            Text("Notifications", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text("Notifications",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             Expanded(
               child: ListView.builder(
                 itemCount: notifications.value.length,
@@ -1024,7 +1031,9 @@ void _showNotificationSheet(BuildContext context, DashboardViewModel viewModel) 
                         ),
                       ),
                     ),
-                    trailing: notification.unread ? Icon(Icons.circle, color: Colors.red, size: 10) : null,
+                    trailing: notification.unread
+                        ? Icon(Icons.circle, color: Colors.red, size: 10)
+                        : null,
                   );
                 },
               ),
@@ -1033,7 +1042,6 @@ void _showNotificationSheet(BuildContext context, DashboardViewModel viewModel) 
         ),
       ));
 }
-
 
 class Profile {
   final String name;

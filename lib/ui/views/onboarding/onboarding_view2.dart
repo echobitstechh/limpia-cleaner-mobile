@@ -227,7 +227,7 @@ class OnboardingView2 extends StatelessWidget {
                     verticalSpaceSmall,
                     TextButton(
                       onPressed: () {
-                        locator<NavigationService>().navigateTo(Routes.authView);
+                        locator<NavigationService>().clearStackAndShow(Routes.authView, arguments: const AuthViewArguments(isLogin: true));
                       },
                       child: const Text(
                         "Login",

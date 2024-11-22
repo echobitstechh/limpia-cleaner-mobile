@@ -4,11 +4,14 @@ import 'package:limpia/core/data/models/product.dart';
 
 class Profile {
   String? id;
-  String? firstname;
-  String? lastname;
+  String? firstName;
+  String? lastName;
   String? email;
   String? username;
   String? phone;
+  String? address;
+  String? countryAndState;
+  String? city;
   Country? country;
   Media? profilePic;
   bool? isUserVerified;
@@ -21,12 +24,22 @@ class Profile {
   String? lastActivity;
   NotificationPreferences? notificationPreferences;
 
+  List<String>? preferredLocations;
+  List<String>? services;
+  List<String>? availability;
+  List<String>? availabilityTime;
+  String? preferredJobType;
+  String? role;
+
   Profile({
     this.id,
-    this.firstname,
-    this.lastname,
+    this.firstName,
+    this.lastName,
     this.email,
     this.username,
+    this.address,
+    this.city,
+    this.countryAndState,
     this.phone,
     this.country,
     this.profilePic,
@@ -39,16 +52,25 @@ class Profile {
     this.updatedAt,
     this.lastActivity,
     this.notificationPreferences,
+    this.preferredLocations,
+    this.services,
+    this.availability,
+    this.availabilityTime,
+    this.preferredJobType,
+    this.role,
   });
 
   // Updated Profile.fromJson method
   Profile.fromJson(Map<String, dynamic> json) {
-    id = json['_id'];
-    firstname = json['firstname'];
-    lastname = json['lastname'];
+    id = json['id'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
     email = json['email'];
     username = json['username'];
     phone = json['phone'];
+    address = json['address'];
+    city = json['city'];
+    countryAndState = json['countryAndState'];
     // Country object handling
     country = json['country'] != null ? Country.fromJson(json['country']) : null;
     profilePic = json['profile_pic'] != null ? Media.fromJson(json['profile_pic']) : null; // Handle profile_pic
@@ -66,13 +88,22 @@ class Profile {
     notificationPreferences = json['notification_preferences'] != null
         ? NotificationPreferences.fromJson(json['notification_preferences'])
         : null;
+  
+    preferredLocations = List<String>.from(json['preferredLocations']);
+    services = List<String>.from(json['services']);
+    availability = List<String>.from(json['availability']);
+    availabilityTime = List<String>.from(json['availabilityTime']);
+    preferredJobType = json['preferredJobType'];
+    role = json['role'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = id;
-    data['firstname'] = firstname;
-    data['lastname'] = lastname;
+    data['id'] = id;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
     data['email'] = email;
     data['username'] = username;
     data['phone'] = phone;
@@ -99,7 +130,21 @@ class Profile {
       data['notification_preferences'] = notificationPreferences!.toJson();
     }
 
+    data['address'] = address;
+    data['city'] = city;
+    data['countryAndState'] = countryAndState;
+    data['preferredLocations'] = preferredLocations;
+    data['services'] = services;
+    data['availability'] = availability;
+    data['availabilityTime'] = availabilityTime;
+    data['preferredJobType'] = preferredJobType;
+    data['role'] = role;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+
     return data;
+    
+    
   }
 }
 

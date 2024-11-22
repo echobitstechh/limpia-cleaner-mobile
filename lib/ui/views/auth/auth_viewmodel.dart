@@ -312,19 +312,16 @@ class AuthViewModel extends BaseViewModel {
     try {
       ApiResponse res = await repo.login({
         "email": email.text,
-        "password": password.text,
-        "account_type": "CUSTOMER"
+        "password": password.text
       });
-      if (res.statusCode == 201) {
-        print('login response: ${res.data["data"]}');
+      if (res.statusCode == 200) {
+        print('login response: ${res.data['cleaner']}');
         userLoggedIn.value = true;
-        profile.value =
-            Profile.fromJson(Map<String, dynamic>.from(res.data['data']["user"]));
-        locator<LocalStorage>().save(LocalStorageDir.authToken, res.data['data']["accessToken"]);
-        locator<LocalStorage>().save(LocalStorageDir.authRefreshToken, res.data['data']["refreshToken"]);
-        locator<LocalStorage>().save(LocalStorageDir.authUser, jsonEncode(res.data['data']["user"]));
+        profile.value = Profile.fromJson(Map<String, dynamic>.from(res.data['cleaner']));
+        locator<LocalStorage>().save(LocalStorageDir.authToken, res.data['token']);
+        locator<LocalStorage>().save(LocalStorageDir.authRefreshToken, res.data['refreshToken']);
+        locator<LocalStorage>().save(LocalStorageDir.authUser, jsonEncode(res.data['cleaner']));
         locator<LocalStorage>().save(LocalStorageDir.remember, remember);
-
 
         if (remember) {
           locator<LocalStorage>().save(LocalStorageDir.lastEmail, email.text);
@@ -409,16 +406,17 @@ class AuthViewModel extends BaseViewModel {
   // }
 
     try {
-      ApiResponse res = await repo.register({ 
-        "firstname": firstname.text,
-        "lastname": firstname.text.split(' ').length > 1 ? firstname.text.split(' ')[1][1] : '',
+      ApiResponse res = await repo.register({
+        "firstName": firstname.text.split(' ').first,
+        "lastName": firstname.text.split(' ').length > 1 ? firstname.text.split(' ').sublist(1).join(' ') : '',
         "email": email.text,
         "password": password.text,
         "address": addressValue,
         "city": cityValue,
         "countryAndState": countryValue,
+        "preferredLocations": ["Downtown"], // Placeholder for now
         "services": selectedServices,
-        "availability": availability,
+        "availability": [availability],
         "availabilityTime": availabilityTime,
         "preferredJobType": selectedJobType
       });
