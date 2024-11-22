@@ -190,7 +190,7 @@ class ProfileView extends StatelessWidget {
                                 ),
                                 verticalSpaceSmall,
                                 ProfileMenuItem(
-                                  icon: 'assets/images/star.svg',
+                                  icon: 'assets/images/star.png',
                                   label: 'Ratings',
                                   onTap: () {
                                     Navigator.of(context)
