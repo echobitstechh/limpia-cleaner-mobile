@@ -32,7 +32,7 @@ class Repository extends IRepository {
   Future<ApiResponse> refresh() async {
     ApiResponse response = await api.call(
         method: HttpMethod.postRefresh,
-        endpoint: "auth/refresh_tokens"
+        endpoint: "user/propertymanager/refresh-token"
     );
     return response;
   }
@@ -625,5 +625,32 @@ class Repository extends IRepository {
       // protected: true, // This flag is used to decide if Authorization header should be included
     );
   }
+
+  @override
+  Future<ApiResponse> fetchAssignments() async {
+    ApiResponse response = await api.call(
+      method: HttpMethod.get,
+      endpoint: "/cleaner-assignments",
+    );
+
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> updateCleanerAssignments(String cleanerAssignmentId, String action) async {
+    Map<String, dynamic> reqParams = {
+      'action': action,
+      'reason': 'Cleaner Updated'
+    };
+    ApiResponse response = await api.call(
+      method: HttpMethod.put,
+      endpoint: "/cleaner-assignments/$cleanerAssignmentId",
+        reqBody: reqParams
+    );
+
+    return response;
+  }
+
+
 
 }

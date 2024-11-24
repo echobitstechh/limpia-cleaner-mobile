@@ -107,4 +107,8 @@ abstract class IRepository {
     required String destinationCurrency,
     required String sourceCurrency,
   });
+
+  Future<ApiResponse> fetchAssignments();
+  Future<ApiResponse> updateCleanerAssignments(String cleanerAssignmentId, String action);
+
 }
