@@ -13,6 +13,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../core/data/models/app_notification.dart';
+import '../../../core/data/models/booking.dart';
 import '../../../core/data/models/profile.dart';
 import '../../../core/data/models/project.dart';
 
@@ -34,6 +35,10 @@ class DashboardViewModel extends BaseViewModel {
   bool appBarLoading = false;
   bool shouldShowShowcase = true;  // Controls when to show showcase
 
+  List<BookingAssignment> pendingAssignments = [];
+  List<BookingAssignment> assignments = [];
+  List<BookingAssignment> activeAssignments = [];
+  BookingAssignment? activeAssignment;
 
   @override
   void initialise() {
@@ -60,7 +65,7 @@ class DashboardViewModel extends BaseViewModel {
 
 
   Future<void> init() async {
-    // setBusy(true);
+    setBusy(true);
     // onboarded = await locator<LocalStorage>().fetch(LocalStorageDir.onboarded) ?? false;
     // if (!onboarded!) {
     //   showDialog = true; // Show modal if not onboarded
@@ -70,104 +75,19 @@ class DashboardViewModel extends BaseViewModel {
     // await loadAds();
     // // await loadProducts();
     //  await loadProjects();
-    // if (userLoggedIn.value == true) {
-    //   initCart();
-    //   await getNotifications();
-    //   await getProfile();
-    // }
-    // setBusy(false);
-    notifyListeners();
-  }
-
-
-  Future<void> loadRaffles() async {
-
-    if (raffleList.isEmpty) {
-      setBusy(true);
-      notifyListeners();
+    if (userLoggedIn.value == true) {
+      // initCart();
+      // await getNotifications();
+      await fetchAssignments();
     }
-
-    dynamic storedRaffle = await locator<LocalStorage>().fetch(LocalStorageDir.raffle);
-    if (storedRaffle != null) {
-      // Extracting and filtering only active raffles
-      raffleList = List<Map<String, dynamic>>.from(storedRaffle)
-          .map((e) => Raffle.fromJson(Map<String, dynamic>.from(e)))
-          .where((raffle) => raffle.status == "ACTIVE")
-          .toList();
-      notifyListeners();
-    }
-
-    await getRaffles();
-    setBusy(false);
-    notifyListeners();
-
-  }
-
-  Future<void> loadAds() async {
-
-    if (raffleList.isEmpty) {
-      setBusy(true);
-      notifyListeners();
-    }
-
-    dynamic storedRaffle = await locator<LocalStorage>().fetch(LocalStorageDir.raffle);
-    // if (storedRaffle != null) {
-    //   // Extracting and filtering only active raffles
-    //   raffleList = List<Map<String, dynamic>>.from(storedRaffle)
-    //       .map((e) => Raffle.fromJson(Map<String, dynamic>.from(e)))
-    //       .where((raffle) => raffle.status == "ACTIVE")
-    //       .toList();
-    //   notifyListeners();
-    // }
-
-    await getAds();
-    setBusy(false);
-    notifyListeners();
-
-  }
-
-  Future<void> loadWinners() async {
-
-    if (raffleList.isEmpty) {
-      setBusy(true);
-      notifyListeners();
-    }
-
-    dynamic storedRaffle = await locator<LocalStorage>().fetch(LocalStorageDir.raffle);
-    if (storedRaffle != null) {
-      // Extracting and filtering only active raffles
-      raffleList = List<Map<String, dynamic>>.from(storedRaffle)
-          .map((e) => Raffle.fromJson(Map<String, dynamic>.from(e)))
-          .where((raffle) => raffle.status == "ACTIVE")
-          .toList();
-      notifyListeners();
-    }
-
-    await getRaffles();
-    setBusy(false);
-    notifyListeners();
-
-  }
-
-  Future<void> loadProjects() async {
-    if (projectResources.isEmpty) {
-      setBusy(true);
-      notifyListeners();
-    }
-
-    dynamic storedProjectResources = await locator<LocalStorage>().fetch(LocalStorageDir.projectResource);
-    if (storedProjectResources != null) {
-      projectResources = List<Map<String, dynamic>>.from(storedProjectResources)
-          .map((e) => ProjectResource.fromJson(Map<String, dynamic>.from(e)))
-          .toList();
-    }
-
-    await getProjects();
     setBusy(false);
     notifyListeners();
   }
+
+
 
   Future<void> refreshData() async {
+    print('refreshing data');
     setBusy(true);
     notifyListeners();
     getResourceList();
@@ -176,106 +96,11 @@ class DashboardViewModel extends BaseViewModel {
   }
 
   void getResourceList(){
-    getRaffles();
-    getProjects();
-    getAds();
-    if (userLoggedIn.value == true) {
-      initCart();
-       getNotifications();
-    }
+    fetchAssignments();
   }
-
-  Future<void> getRaffles() async {
-    setBusy(true);
-    notifyListeners();
-    try {
-      ApiResponse res = await repo.getRaffle();
-      if (res.statusCode == 200) {
-        if (res.data != null && res.data["data"]["items"] != null) {
-          raffleList = (res.data["data"]["items"] as List)
-              .map((e) {
-            final raffle = Raffle.fromJson(Map<String, dynamic>.from(e['raffle']));
-            final participants = (e['participants'] as List?)?.map((participant) => Participant.fromJson(Map<String, dynamic>.from(participant))).toList();
-            raffle.participants = participants;
-            return raffle;
-          })
-              .where((raffle) => raffle.status == "ACTIVE")
-              .toList();
-
-          // Store raffles locally
-          List<Map<String, dynamic>> storedRaffles = raffleList.map((e) => e.toJson()).toList();
-          locator<LocalStorage>().save(LocalStorageDir.raffle, storedRaffles);
-          notifyListeners();
-        }
-        rebuildUi();
-      }
-    } catch (e) {
-      log.e(e);
-    } finally {
-      setBusy(false);
-      notifyListeners();
-    }
-    print('raffle list is: $raffleList');
-  }
+  
 
 
-  Future<void> getAds() async {
-    setBusy(true);
-    notifyListeners();
-    try {
-      ApiResponse res = await repo.getAds();
-      if (res.statusCode == 200) {
-        if (res.data != null && res.data["data"]["items"] != null) {
-          adsList = (res.data["data"]["items"] as List)
-              .map((e) => Ads.fromJson(Map<String, dynamic>.from(e)))
-              .toList();
-
-          // Save ads to local storage if needed
-          List<Map<String, dynamic>> storedAds = adsList.map((e) => e.toJson()).toList();
-          locator<LocalStorage>().save(LocalStorageDir.ads, storedAds);
-          notifyListeners();
-        }
-      }
-    } catch (e) {
-      log.e(e);
-    } finally {
-      setBusy(false);
-      notifyListeners();
-    }
-  }
-
-  Future<void> getProjects() async {
-    setBusy(true);
-    notifyListeners();
-    try {
-      ApiResponse res = await repo.getProjects();
-
-      if (res.statusCode == 200) {
-
-        if (res.data != null && res.data["data"]["items"] != null) {
-
-          projectResources = (res.data["data"]["items"] as List)
-              .map((e) => ProjectResource.fromJson(Map<String, dynamic>.from(e)))
-              .toList();
-
-          projects = projectResources.map((resource) => resource.project!).toList();
-          List<Map<String, dynamic>> storedProjects = projects.map((e) => e.toJson()).toList();
-          List<Map<String, dynamic>> storedProjectResources = projectResources.map((resource) => resource.toJson()).toList();
-
-          locator<LocalStorage>().save(LocalStorageDir.projectResource, storedProjectResources);
-          locator<LocalStorage>().save(LocalStorageDir.projects, storedProjects);
-          notifyListeners();
-        }
-        rebuildUi();
-      }
-    } catch (e) {
-      log.e(e);
-    }finally{
-      setBusy(false);
-      notifyListeners();
-    }
-
-  }
 
   Future<void> getNotifications() async {
     try {
@@ -315,6 +140,20 @@ class DashboardViewModel extends BaseViewModel {
       }
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  Future<void> updateCleanerAssignments(String cleanerAssignmentId,String action) async {
+    setBusy(true);
+    try {
+      ApiResponse res = await repo.updateCleanerAssignments(cleanerAssignmentId, action);
+      if (res.statusCode == 200) {
+        notifyListeners();
+      }
+    } catch (e) {
+      throw Exception(e);
+    } finally{
+      setBusy(false);
     }
   }
 
@@ -451,4 +290,147 @@ class DashboardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> fetchAssignments() async {
+    setBusy(true);
+    notifyListeners();
+    try {
+      ApiResponse response = await repo.fetchAssignments();
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data != null && data['assignments'] != null && data['assignments'] is List) {
+          
+          assignments = (data['assignments'] as List)
+              .map((assignment) => BookingAssignment.fromJson(assignment))
+              .toList();
+
+          // Sort assignments by the first date in descending order
+          assignments.sort((a, b) {
+            DateTime dateA = DateTime.parse(a.booking.date.first);
+            DateTime dateB = DateTime.parse(b.booking.date.first);
+            return dateB.compareTo(dateA);
+          });
+          
+          pendingAssignments = assignments
+              .where((assignment) => assignment.status == 'Pending')
+              .toList();
+
+          activeAssignments = assignments
+              .where((assignment) => assignment.status == 'Active')
+              .toList();
+          
+          activeAssignment = activeAssignments.isNotEmpty ? activeAssignments.first : null;
+
+
+        } else {
+          pendingAssignments = [];
+          assignments = [];
+          activeAssignment = null;
+          activeAssignments = [];
+        }
+      } else {
+        throw Exception('Failed to load assignments');
+      }
+    } catch (e) {
+      log.e(e);
+    } finally {
+      setBusy(false);
+      notifyListeners();
+    }
+  }
+
+}
+
+class BookingAssignment {
+  final String id;
+  final String cleanerId;
+  final String status;
+  final List<String> newDate;
+  final List<String> newTime;
+  final Booking booking;
+
+  BookingAssignment({
+    required this.id,
+    required this.cleanerId,
+    required this.status,
+    required this.newDate,
+    required this.newTime,
+    required this.booking,
+  });
+
+  factory BookingAssignment.fromJson(Map<String, dynamic> json) {
+    return BookingAssignment(
+      id: json['id'] ?? '',
+      cleanerId: json['cleanerId'] ?? '',
+      status: json['status'] ?? '',
+      newDate: json['newDate'] != null ? List<String>.from(json['newDate']) : [],
+      newTime: json['newTime'] != null ? List<String>.from(json['newTime']) : [],
+      booking: json['Booking'] != null ? Booking.fromJson(json['Booking']) : Booking(id: '', cleaningType: '', property: Property(id: '', nameOfProperty: '', country: '', city: '', address: '', type: '', numberOfUnit: '', numberOfRoom: '', state: ''), date: [], time: []),
+    );
+  }
+}
+
+
+class Property {
+  final String id;
+  final String type;
+  final String nameOfProperty;
+  final String numberOfUnit;
+  final String numberOfRoom;
+  final String country;
+  final String state;
+  final String city;
+  final String address;
+
+  Property({
+    required this.id,
+    required this.type,
+    required this.nameOfProperty,
+    required this.numberOfUnit,
+    required this.numberOfRoom,
+    required this.country,
+    required this.state,
+    required this.city,
+    required this.address,
+  });
+
+  factory Property.fromJson(Map<String, dynamic> json) {
+    return Property(
+      id: json['id'],
+      type: json['type'],
+      nameOfProperty: json['nameOfProperty'],
+      numberOfUnit: json['numberOfUnit'],
+      numberOfRoom: json['numberOfRoom'],
+      country: json['country'],
+      state: json['state'],
+      city: json['city'],
+      address: json['address'],
+    );
+  }
+}
+
+class Booking {
+  final String id;
+  final List<String> date;
+  final List<String> time;
+  final String cleaningType;
+  final Property property;
+
+  Booking({
+    required this.id,
+    required this.date,
+    required this.time,
+    required this.cleaningType,
+    required this.property,
+  });
+
+  factory Booking.fromJson(Map<String, dynamic> json) {
+    return Booking(
+      id: json['id'],
+      date: List<String>.from(json['date']),
+      time: List<String>.from(json['time']),
+      cleaningType: json['cleaningType'],
+      property: Property.fromJson(json['Property']),
+    );
+  }
 }

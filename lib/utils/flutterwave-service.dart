@@ -15,7 +15,7 @@ class FlutterwavePaymentService {
     bool isTestMode = false,
   }) async {
     final Customer customer = Customer(
-      name: '${profile.value.firstname} ${profile.value.lastname}' ?? "Afriprize NG",
+      name: '${profile.value.firstName} ${profile.value.lastName}' ?? "Afriprize NG",
       phoneNumber: profile.value.phone ?? "07045007400",
       email: profile.value.email ?? 'dev@afriprize.com',
     );

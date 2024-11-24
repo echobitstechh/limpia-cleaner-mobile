@@ -79,7 +79,7 @@ final requestInterceptors = InterceptorsWrapper(
         refreshTokenRetryCount = 0;
         ApiResponse res = await repo.logOut();
         if (res.statusCode == 200) {
-          return locator<NavigationService>().clearStackAndShow(Routes.authView);
+          return locator<NavigationService>().clearStackAndShow(Routes.authView, arguments: const AuthViewArguments(isLogin: false));
         }
       }
       refreshTokenRetryCount++;
@@ -116,7 +116,7 @@ final requestInterceptors = InterceptorsWrapper(
             await locator<LocalStorage>().delete(LocalStorageDir.authUser);
             await locator<LocalStorage>().delete(LocalStorageDir.cart);
             await locator<LocalStorage>().delete(LocalStorageDir.authRefreshToken);
-            return locator<NavigationService>().clearStackAndShow(Routes.authView);
+            return locator<NavigationService>().clearStackAndShow(Routes.authView, arguments: const AuthViewArguments(isLogin: true));
           }
         }
       }
@@ -126,7 +126,7 @@ final requestInterceptors = InterceptorsWrapper(
         }
         final res = await showDialogWithResponse("Session Expired", "Login again to continue", isDialogBeingDisplayed);
         if (res!.confirmed) {
-          return locator<NavigationService>().clearStackAndShow(Routes.authView);
+          return locator<NavigationService>().clearStackAndShow(Routes.authView, arguments: const AuthViewArguments(isLogin: false));
         }
 
       }

@@ -6,15 +6,14 @@ import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/common/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:limpia/utils/booking_assignment_card.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:top_bottom_sheet_flutter/top_bottom_sheet_flutter.dart';
-import '../../../app/app.locator.dart';
-import '../../../app/app.router.dart';
 import '../../../core/data/models/booking.dart';
 import '../../../state.dart';
-import '../../../utils/booking_success.dart';
 import '../../../utils/bookings_card.dart';
+import '../../components/empty_state.dart';
 import 'dashboard_viewmodel.dart';
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
 
@@ -40,45 +39,41 @@ class DashboardView extends StackedView<DashboardViewModel> {
     ),
   ];
 
-  final List<Booking> bookings = [
-    Booking(
-      sqft: '2500',
-      price: '\$50',
-      address: '8 Magodo, California USA',
-      dateTime: 'Feb, 27, 10:00',
-      type: 'Deep cleaning',
-      status: 'Pending'
-    ),
-    Booking(
-      sqft: '3000',
-      price: '\$60',
-      address: '12 Crescent Avenue, Texas USA',
-      dateTime: 'Feb, 28, 12:00',
-      type: 'Regular cleaning',
-      status: 'Pending'
-    ),
-    // Add more bookings as needed
-  ];
-
-  final List<Booking> activeBookings = [
-    Booking(
-        sqft: '4000',
-        price: '\$300',
-        address: '13 Albert McCauley, Texas USA',
-        dateTime: 'Sept, 29, 10:00',
-        type: 'Deep cleaning',
-        status: 'Ongoing'
-    ),
-    Booking(
-      sqft: '3000',
-      price: '\$60',
-      address: '12 Crescent Avenue, Texas USA',
-      dateTime: 'Feb, 28, 12:00',
-      type: 'Regular cleaning',
-      status: 'Active Booking'
-    ),
-    // Add more bookings as needed
-  ];
+  // final List<Booking> bookings = [
+  //   Booking(
+  //       sqft: '2500',
+  //       price: '\$50',
+  //       address: '8 Magodo, California USA',
+  //       dateTime: 'Feb, 27, 10:00',
+  //       type: 'Deep cleaning',
+  //       status: 'Pending'),
+  //   Booking(
+  //       sqft: '3000',
+  //       price: '\$60',
+  //       address: '12 Crescent Avenue, Texas USA',
+  //       dateTime: 'Feb, 28, 12:00',
+  //       type: 'Regular cleaning',
+  //       status: 'Pending'),
+  //   // Add more bookings as needed
+  // ];
+  //
+  // final List<Booking> activeBookings = [
+  //   Booking(
+  //       sqft: '4000',
+  //       price: '\$300',
+  //       address: '13 Albert McCauley, Texas USA',
+  //       dateTime: 'Sept, 29, 10:00',
+  //       type: 'Deep cleaning',
+  //       status: 'Ongoing'),
+  //   Booking(
+  //       sqft: '3000',
+  //       price: '\$60',
+  //       address: '12 Crescent Avenue, Texas USA',
+  //       dateTime: 'Feb, 28, 12:00',
+  //       type: 'Regular cleaning',
+  //       status: 'Active Booking'),
+  //   // Add more bookings as needed
+  // ];
 
   final List<String> cleaningTypes = [
     'Regular cleaning ',
@@ -136,169 +131,198 @@ class DashboardView extends StackedView<DashboardViewModel> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Card(
-                        color: kcPrimaryColor,
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: AssetImage(
-                                        'assets/images/man.png'), // Replace with dynamic data
-                                  ),
-                                  horizontalSpaceSmall,
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Adamu Isha",
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await viewModel.refreshData();
+                        },
+                        child: Card(
+                          color: kcPrimaryColor,
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16.0,
+                                top: 8.0,
+                                right: 16.0,
+                                bottom: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: AssetImage(
+                                          'assets/images/man.png'), // Replace with dynamic data
+                                    ),
+                                    horizontalSpaceSmall,
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    RatingBarIndicator(
+                                                      rating: 4.5,
+                                                      // Replace with dynamic rating
+                                                      itemBuilder:
+                                                          (context, index) =>
+                                                              Icon(
+                                                        Icons.star,
+                                                        color: Colors.amber,
+                                                      ),
+                                                      itemCount: 5,
+                                                      itemSize: 10.0,
+                                                    ),
+                                                    horizontalSpaceTiny,
+                                                    Text(
+                                                      "4.5",
+                                                      style: TextStyle(
+                                                        color: Colors.amber,
+                                                        fontSize: 10,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Text(
+                                                  '${profile.value.firstName ?? ''} ${profile.value.lastName ?? ''}',
+                                                  style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          horizontalSpaceTiny,
-                                          RatingBarIndicator(
-                                            rating:
-                                                4.5, // Replace with dynamic rating
-                                            itemBuilder: (context, index) =>
-                                                Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
-                                            ),
-                                            itemCount: 5,
-                                            itemSize: 14.0,
-                                          ),
-                                          horizontalSpaceTiny,
-                                          Text(
-                                            "4.5",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        "Cleaner",
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white70,
+                                            horizontalSpaceTiny,
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  IconButton(
-                                    onPressed:
-                                        () {}, // Define navigation or action
-                                    icon: Icon(
-                                      Icons.location_on_outlined,
-                                      color: Colors.white,
+                                        Text(
+                                          "${profile.value.role ?? ''}",
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              verticalSpaceSmall,
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 12.0, vertical: 6.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text(
-                                      "Current Work:",
-                                      style: TextStyle(
-                                        fontSize: 14,
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed:
+                                          () {}, // Define navigation or action
+                                      icon: Icon(
+                                        Icons.location_on_outlined,
                                         color: Colors.white,
                                       ),
                                     ),
-                                  ),
-                                  horizontalSpaceSmall,
-                                  GestureDetector(
-                                    onTap: () {}, // Define edit job action
-                                    child: Container(
+                                  ],
+                                ),
+                                verticalSpaceSmall,
+                                Row(
+                                  children: [
+                                    Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 12.0, vertical: 6.0),
                                       decoration: BoxDecoration(
-                                        color: Colors.orange,
+                                        color: Colors.green,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Text(
-                                        "Edit Job",
+                                        "Current Work:",
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.white,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              verticalSpaceSmall,
-                              Text(
-                                "Address: 8 Magodo, California USA",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
+                                    horizontalSpaceSmall,
+                                    viewModel.activeAssignment != null
+                                        ? GestureDetector(
+                                            onTap:
+                                                () {}, // Define edit job action
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12.0,
+                                                  vertical: 6.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.orange,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Text(
+                                                "Edit Job",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                  ],
                                 ),
-                              ),
-                              verticalSpaceSmall,
-                              Row(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_today,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                      horizontalSpaceTiny,
-                                      Text(
-                                        "Sunday, 12 June",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
+                                verticalSpaceSmall,
+                                Text(
+                                  viewModel.activeAssignment != null
+                                      ? "Address: ${viewModel.activeAssignment?.booking.property.address}, ${viewModel.activeAssignment?.booking.property.country}"
+                                      : "No Active work...",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
                                   ),
-                                  horizontalSpaceMedium,
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.access_time,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                      horizontalSpaceTiny,
-                                      Text(
-                                        "11:00 - 12:00 AM",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                verticalSpaceSmall,
+                                viewModel.activeAssignment != null
+                                    ? Row(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.calendar_today,
+                                                color: Colors.white,
+                                                size: 14,
+                                              ),
+                                              horizontalSpaceTiny,
+                                              Text(
+                                                "${profile.value.availability?.join(", ") ?? ''}",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          horizontalSpaceMedium,
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.access_time,
+                                                color: Colors.white,
+                                                size: 14,
+                                              ),
+                                              horizontalSpaceTiny,
+                                              Text(
+                                                "${profile.value.availabilityTime?.join(", ") ?? ''}",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -344,29 +368,76 @@ class DashboardView extends StackedView<DashboardViewModel> {
                         ),
                       ),
                       SizedBox(
-                        height: 800, // Adjust height as necessary
+                        height: MediaQuery.of(context).size.height -
+                            460, // Adjust height as necessary
                         child: TabBarView(
                           physics: const BouncingScrollPhysics(),
                           children: [
-                            ListView.builder(
+                            viewModel.isBusy
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(
+                                      height: 50, // Search bar height
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                  )
+                                : viewModel.pendingAssignments.isEmpty && !viewModel.isBusy
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 26.0, right: 16.0),
+                                        child: Image.asset(
+                                          "assets/images/no_booking.png",
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount:
+                                            viewModel.pendingAssignments.length,
+                                        itemBuilder: (context, index) {
+                                          return BookingAssignmentCard(
+                                            bookingAssignment: viewModel
+                                                .pendingAssignments[index],
+                                            context: context,
+                                              viewModel: viewModel,
+                                          );
+                                        },
+                                      ),
+                            viewModel.isBusy
+                                ? Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                height: 50, // Search bar height
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            )
+                                : viewModel.pendingAssignments.isEmpty && !viewModel.isBusy
+                                ? Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 26.0, right: 16.0),
+                              child: Image.asset(
+                                "assets/images/no_booking.png",
+                                fit: BoxFit.scaleDown,
+                              ),
+                            )
+                                : ListView.builder(
                               shrinkWrap: true,
-                              itemCount: bookings.length,
+                              itemCount:
+                              viewModel.activeAssignments.length,
                               itemBuilder: (context, index) {
-                                return BookingCard(
-                                  booking: bookings[index],
+                                return BookingAssignmentCard(
+                                  bookingAssignment: viewModel
+                                      .activeAssignments[index],
                                   context: context,
-                                  isActiveBooking: true,
-                                );
-                              },
-                            ),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: activeBookings.length,
-                              itemBuilder: (context, index) {
-                                return BookingCard(
-                                  booking: activeBookings[index],
-                                  context: context,
-                                  isActiveBooking: false,
+                                  viewModel: viewModel,
                                 );
                               },
                             ),
@@ -455,8 +526,8 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                                       ),
                                                       horizontalSpaceLarge,
                                                       RatingBar.builder(
-                                                        initialRating:
-                                                            4.5, // Replace with the user's average rating
+                                                        initialRating: 4.5,
+                                                        // Replace with the user's average rating
                                                         minRating: 1,
                                                         direction:
                                                             Axis.horizontal,
@@ -943,8 +1014,8 @@ class DashboardView extends StackedView<DashboardViewModel> {
       DashboardViewModel();
 }
 
-
-Widget _notificationIcon(int unreadCount, BuildContext context, DashboardViewModel viewModel) {
+Widget _notificationIcon(
+    int unreadCount, BuildContext context, DashboardViewModel viewModel) {
   print('notif count is $unreadCount');
   return Stack(
     children: [
@@ -952,9 +1023,13 @@ Widget _notificationIcon(int unreadCount, BuildContext context, DashboardViewMod
           icon: SvgPicture.asset(
             uiMode.value == AppUiModes.dark
                 ? "assets/images/dashboard_otification_white.svg" // Dark mode logo
-                : "assets/images/dashboard_otification.svg", width: 22, height: 22,),
-          onPressed: (){_showNotificationSheet(context, viewModel);}
-      ),
+                : "assets/images/dashboard_otification.svg",
+            width: 22,
+            height: 22,
+          ),
+          onPressed: () {
+            _showNotificationSheet(context, viewModel);
+          }),
       if (unreadCount > 0)
         Positioned(
           right: 10,
@@ -977,8 +1052,8 @@ Widget _notificationIcon(int unreadCount, BuildContext context, DashboardViewMod
   );
 }
 
-void _showNotificationSheet(BuildContext context, DashboardViewModel viewModel) {
-
+void _showNotificationSheet(
+    BuildContext context, DashboardViewModel viewModel) {
   TopModalSheet.show(
       context: context,
       isShowCloseButton: true,
@@ -990,7 +1065,8 @@ void _showNotificationSheet(BuildContext context, DashboardViewModel viewModel) 
         height: MediaQuery.of(context).size.height * 0.5,
         child: Column(
           children: [
-            Text("Notifications", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text("Notifications",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             Expanded(
               child: ListView.builder(
                 itemCount: notifications.value.length,
@@ -1024,7 +1100,9 @@ void _showNotificationSheet(BuildContext context, DashboardViewModel viewModel) 
                         ),
                       ),
                     ),
-                    trailing: notification.unread ? Icon(Icons.circle, color: Colors.red, size: 10) : null,
+                    trailing: notification.unread
+                        ? Icon(Icons.circle, color: Colors.red, size: 10)
+                        : null,
                   );
                 },
               ),
@@ -1033,7 +1111,6 @@ void _showNotificationSheet(BuildContext context, DashboardViewModel viewModel) 
         ),
       ));
 }
-
 
 class Profile {
   final String name;

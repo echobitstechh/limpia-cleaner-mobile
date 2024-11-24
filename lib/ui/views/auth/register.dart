@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/components/submit_button.dart';
 import 'package:limpia/ui/components/text_field_widget.dart';
+import 'package:limpia/ui/views/auth/auth_view.dart';
 import 'package:limpia/ui/views/auth/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -478,13 +479,15 @@ class _RegisterState extends State<Register> {
                   child: SubmitButton(
                     isLoading: model.isBusy,
                     label: "Save",
-                    submit: () {
-                      model.register();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeView()),
-                      );
+                    submit: () async {
+                      RegistrationResult registrationResult = await model.register();
+                      if (registrationResult == RegistrationResult.success) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AuthView(isLogin: true)),
+                        );
+                      }
                     },
                     color: kcPrimaryColor,
                     boldText: true,
