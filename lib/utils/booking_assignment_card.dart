@@ -3,9 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:limpia/ui/common/ui_helpers.dart';
 import 'package:limpia/ui/views/dashboard/dashboard_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
-
-
 import '../app/app.locator.dart';
+import '../core/data/models/booking.dart';
 import '../ui/common/helper.dart';
 import 'booking_success.dart';
 
@@ -13,13 +12,13 @@ import 'booking_success.dart';
 class BookingAssignmentCard extends StatelessWidget {
   final BookingAssignment bookingAssignment;
   final BuildContext context;
-  final DashboardViewModel viewModel;
+  final bool isBusy;
 
   const BookingAssignmentCard({
     Key? key,
     required this.bookingAssignment,
     required this.context,
-    required this.viewModel,
+    required this.isBusy,
   }) : super(key: key);
 
   
@@ -110,7 +109,7 @@ class BookingAssignmentCard extends StatelessWidget {
                       horizontalSpaceTiny,
                       InkWell(
                         onTap: () {
-                          showAcceptBottomSheet(context, bookingAssignment,viewModel);
+                          showAcceptBottomSheet(context, bookingAssignment,isBusy);
                         },
                         child: Container(
                           height: 30,
@@ -216,7 +215,7 @@ void showSuccessDialog(BuildContext context) {
   );
 }
 
-void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssignment,DashboardViewModel viewModel) {
+void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssignment,bool isBusy) {
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
@@ -327,7 +326,7 @@ void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssign
                       locator<SnackbarService>().showSnackbar(message: "Booking Rejected successfully");
 
                     },
-                    child: viewModel.isBusy
+                    child: isBusy
                         ? CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     )
@@ -354,7 +353,7 @@ void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssign
                       await DashboardViewModel().updateCleanerAssignments(bookingAssignment.id, "accept");
                       showSuccessDialog(context);
                     },
-                    child: viewModel.isBusy
+                    child: isBusy
                         ? CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     )

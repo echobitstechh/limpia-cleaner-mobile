@@ -39,41 +39,6 @@ class DashboardView extends StackedView<DashboardViewModel> {
     ),
   ];
 
-  // final List<Booking> bookings = [
-  //   Booking(
-  //       sqft: '2500',
-  //       price: '\$50',
-  //       address: '8 Magodo, California USA',
-  //       dateTime: 'Feb, 27, 10:00',
-  //       type: 'Deep cleaning',
-  //       status: 'Pending'),
-  //   Booking(
-  //       sqft: '3000',
-  //       price: '\$60',
-  //       address: '12 Crescent Avenue, Texas USA',
-  //       dateTime: 'Feb, 28, 12:00',
-  //       type: 'Regular cleaning',
-  //       status: 'Pending'),
-  //   // Add more bookings as needed
-  // ];
-  //
-  // final List<Booking> activeBookings = [
-  //   Booking(
-  //       sqft: '4000',
-  //       price: '\$300',
-  //       address: '13 Albert McCauley, Texas USA',
-  //       dateTime: 'Sept, 29, 10:00',
-  //       type: 'Deep cleaning',
-  //       status: 'Ongoing'),
-  //   Booking(
-  //       sqft: '3000',
-  //       price: '\$60',
-  //       address: '12 Crescent Avenue, Texas USA',
-  //       dateTime: 'Feb, 28, 12:00',
-  //       type: 'Regular cleaning',
-  //       status: 'Active Booking'),
-  //   // Add more bookings as needed
-  // ];
 
   final List<String> cleaningTypes = [
     'Regular cleaning ',
@@ -155,7 +120,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                     CircleAvatar(
                                       radius: 30,
                                       backgroundImage: AssetImage(
-                                          'assets/images/man.png'), // Replace with dynamic data
+                                          'assets/images/man.png'),
                                     ),
                                     horizontalSpaceSmall,
                                     Column(
@@ -403,7 +368,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                             bookingAssignment: viewModel
                                                 .pendingAssignments[index],
                                             context: context,
-                                              viewModel: viewModel,
+                                              isBusy: viewModel.isBusy,
                                           );
                                         },
                                       ),
@@ -437,7 +402,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                   bookingAssignment: viewModel
                                       .activeAssignments[index],
                                   context: context,
-                                  viewModel: viewModel,
+                                  isBusy: viewModel.isBusy,
                                 );
                               },
                             ),

@@ -53,14 +53,14 @@ class BookingCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "SQFT: ${booking.sqft}",
+                        "SQFT: ${booking.property.numberOfUnit}",
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        "Price: ${booking.price}/hr",
+                        "Price: /hr",
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class BookingCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   // Address
                   Text(
-                    booking.address,
+                    booking.property.country + booking.property.state + booking.property.city,
                     style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 8),
@@ -147,7 +147,7 @@ class BookingCard extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      booking.dateTime,
+                      booking.date.first,
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -233,7 +233,7 @@ void showAcceptBottomSheet(BuildContext context, Booking booking) {
               const SizedBox(height: 8),
               // Booking Title
               Text(
-                booking.type,
+                booking.cleaningType,
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -247,7 +247,7 @@ void showAcceptBottomSheet(BuildContext context, Booking booking) {
                 ),
               ),
               Text(
-                "SQFT: ${booking.sqft}",
+                "SQFT: ",
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   color: Colors.black54,
@@ -282,17 +282,17 @@ void showAcceptBottomSheet(BuildContext context, Booking booking) {
                   ),
                   _buildDetailItem(
                     icon: Icons.location_on_outlined,
-                    title: booking.address,
+                    title: booking.property.country + booking.property.state + booking.property.city,
                     subtitle: "Location",
                   ),
                   _buildDetailItem(
                     icon: Icons.calendar_today_outlined,
-                    title: booking.dateTime,
+                    title: booking.date.first,
                     subtitle: "Date",
                   ),
                   _buildDetailItem(
                     icon: Icons.monetization_on_outlined,
-                    title: "${booking.price} per hour",
+                    title: "per hour",
                     subtitle: "Price",
                   ),
                 ],

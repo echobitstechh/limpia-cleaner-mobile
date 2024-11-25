@@ -7,7 +7,6 @@ import 'package:limpia/core/data/repositories/repository.dart';
 import 'package:limpia/core/network/api_response.dart';
 import 'package:limpia/state.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'package:path/path.dart' as path;
@@ -38,25 +37,7 @@ class ProfileViewModel extends BaseViewModel {
     File inputFile = File(oldPath);
     File outputFile = File(newPath);
 
-    XFile? result = await FlutterImageCompress.compressAndGetFile(
-      inputFile.path,
-      outputFile.path,
-      format: CompressFormat.png,
-    );
 
-    log.i(result!.path);
-
-    try {
-      ApiResponse res = await locator<Repository>().updateProfilePicture({
-        "picture": await MultipartFile.fromFile(File(result.path).path),
-      });
-      if (res.statusCode == 200) {
-        snackBar.showSnackbar(message: res.data["message"]);
-        getProfile();
-      }
-    } catch (e) {
-      throw Exception(e);
-    }
     setBusy(false);
   }
 

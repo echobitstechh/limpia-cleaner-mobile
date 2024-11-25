@@ -2,12 +2,9 @@
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:limpia/state.dart';
 import 'package:limpia/ui/common/ui_helpers.dart';
-import 'package:limpia/ui/components/empty_state.dart';
-import 'package:limpia/ui/views/notification/projectDetailsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';

@@ -11,7 +11,6 @@ import 'package:limpia/core/utils/local_stotage.dart';
 import 'package:limpia/state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/phone_number.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:multi_date_picker/multi_date_picker.dart';
 import 'package:stacked/stacked.dart';
@@ -51,7 +50,6 @@ class AuthViewModel extends BaseViewModel {
 
   String? selectedJobType;
   late String phoneValue = "";
-  late PhoneNumber phoneNumber;
   late String countryId = "";
   final password = TextEditingController();
   final cPassword = TextEditingController();
