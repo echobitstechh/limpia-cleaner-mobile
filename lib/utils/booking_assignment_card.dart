@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:limpia/ui/common/ui_helpers.dart';
 import 'package:limpia/ui/views/dashboard/dashboard_viewmodel.dart';
+import 'package:limpia/utils/date_time_utils.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 
@@ -11,13 +12,13 @@ import 'booking_success.dart';
 
 
 class BookingAssignmentCard extends StatelessWidget {
-  final BookingAssignment bookingAssignment;
+  final BookingInfo bookingInfo;
   final BuildContext context;
   final DashboardViewModel viewModel;
 
   const BookingAssignmentCard({
     Key? key,
-    required this.bookingAssignment,
+    required this.bookingInfo,
     required this.context,
     required this.viewModel,
   }) : super(key: key);
@@ -76,16 +77,17 @@ class BookingAssignmentCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   // Address
                   Text(
-                    "Address: ${bookingAssignment.booking.property.address ?? ""}",
-                    style: const TextStyle(fontSize: 14),
+                    "Address: ${bookingInfo?.booking.property?.address ?? bookingInfo?.booking.address},"
+                        " ${bookingInfo?.booking.property?.state ?? bookingInfo?.booking?.state}",
+                      style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 8),
-                  bookingAssignment.status == "Pending"
+                  bookingInfo.booking.isTaken == false
                       ? Row(
                     children: [
                       InkWell(
                         onTap: () {
-                          showRejectDialog(context, bookingAssignment.id);
+                          showRejectDialog(context, bookingInfo.booking.id);
                         },
                         child: Container(
                           height: 30,
@@ -110,7 +112,7 @@ class BookingAssignmentCard extends StatelessWidget {
                       horizontalSpaceTiny,
                       InkWell(
                         onTap: () {
-                          showAcceptBottomSheet(context, bookingAssignment,viewModel);
+                          showAcceptBottomSheet(context, bookingInfo,viewModel);
                         },
                         child: Container(
                           height: 30,
@@ -141,7 +143,7 @@ class BookingAssignmentCard extends StatelessWidget {
                       color: Colors.green,
                     ),
                     child: Text(
-                      bookingAssignment.status,
+                      bookingInfo.booking.status,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -153,7 +155,7 @@ class BookingAssignmentCard extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      '${formatDate(bookingAssignment.booking.date?.firstOrNull) ?? ""} ${bookingAssignment.booking.time?.firstOrNull ?? ""}',
+                      '${formatDateString(bookingInfo.booking.date?.firstOrNull) ?? ""} ${bookingInfo.booking.time?.firstOrNull ?? ""}',
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -216,7 +218,7 @@ void showSuccessDialog(BuildContext context) {
   );
 }
 
-void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssignment,DashboardViewModel viewModel) {
+void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo,DashboardViewModel viewModel) {
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
@@ -241,21 +243,21 @@ void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssign
               const SizedBox(height: 8),
               // Booking Title
               Text(
-                bookingAssignment.booking.cleaningType,
+                bookingInfo.booking.cleaningType,
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
-                "${bookingAssignment.booking.property.nameOfProperty ?? ""}",
+                "${bookingInfo.booking.property?.nameOfProperty ?? ""}",
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   color: Colors.black87,
                 ),
               ),
               Text(
-                "${bookingAssignment.booking.property.type ?? ""}",
+                "${bookingInfo.booking.property?.type ?? ""}",
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   color: Colors.black54,
@@ -290,12 +292,12 @@ void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssign
                   ),
                   _buildDetailItem(
                     icon: Icons.location_on_outlined,
-                    title: '${bookingAssignment.booking.property.address ?? ""}, ${bookingAssignment.booking.property.country ?? ""}',
+                    title: "${bookingInfo?.booking.property?.address ?? bookingInfo?.booking.address}, ${bookingInfo?.booking.property?.state ?? bookingInfo?.booking.state}",
                     subtitle: "Location",
                   ),
                   _buildDetailItem(
                     icon: Icons.calendar_today_outlined,
-                    title:'${formatDate(bookingAssignment.booking.date?.firstOrNull) ?? ""} ${bookingAssignment.booking.time?.firstOrNull ?? ""}',
+                    title:'${formatDateString(bookingInfo.booking.date?.firstOrNull) ?? ""} ${bookingInfo.booking.time?.firstOrNull ?? ""}',
                     subtitle: "Date",
                   ),
                   _buildDetailItem(
@@ -322,7 +324,7 @@ void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssign
                       ),
                     ),
                     onPressed: () async {
-                      await DashboardViewModel().updateCleanerAssignments(bookingAssignment.id, "reject");
+                      await DashboardViewModel().updateCleanerAssignments(bookingInfo.booking.id, "reject");
                       Navigator.pop(context);
                       locator<SnackbarService>().showSnackbar(message: "Booking Rejected successfully");
 
@@ -351,8 +353,12 @@ void showAcceptBottomSheet(BuildContext context, BookingAssignment bookingAssign
                       ),
                     ),
                     onPressed: () async {
-                      await DashboardViewModel().updateCleanerAssignments(bookingAssignment.id, "accept");
-                      showSuccessDialog(context);
+                      var bool = await DashboardViewModel().acceptBooking(bookingInfo.booking.id);
+                      if(bool){
+                        showSuccessDialog(context);
+                      } else {
+                        locator<SnackbarService>().showSnackbar(message: "Oops! Something went wrong");
+                      }
                     },
                     child: viewModel.isBusy
                         ? CircularProgressIndicator(

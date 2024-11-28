@@ -48,7 +48,7 @@ class HomeView extends StackedView<HomeViewModel> {
   @override
   void onViewModelReady(HomeViewModel viewModel) {
     if(userLoggedIn.value == true){
-      viewModel.fetchOnlineCart();
+      // viewModel.fetchOnlineCart();
     }
     super.onViewModelReady(viewModel);
   }

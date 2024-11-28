@@ -13,6 +13,7 @@ import 'package:top_bottom_sheet_flutter/top_bottom_sheet_flutter.dart';
 import '../../../core/data/models/booking.dart';
 import '../../../state.dart';
 import '../../../utils/bookings_card.dart';
+import '../../../utils/date_time_utils.dart';
 import '../../components/empty_state.dart';
 import 'dashboard_viewmodel.dart';
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
@@ -244,7 +245,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                       ),
                                     ),
                                     horizontalSpaceSmall,
-                                    viewModel.activeAssignment != null
+                                    viewModel.activebookingInfo != null
                                         ? GestureDetector(
                                             onTap:
                                                 () {}, // Define edit job action
@@ -271,8 +272,9 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 ),
                                 verticalSpaceSmall,
                                 Text(
-                                  viewModel.activeAssignment != null
-                                      ? "Address: ${viewModel.activeAssignment?.booking.property.address}, ${viewModel.activeAssignment?.booking.property.country}"
+                                  viewModel.activebookingInfo != null
+                                      ? "Address: "
+                                      "${viewModel.activebookingInfo?.booking.property?.address ?? viewModel.activebookingInfo?.booking.address}, ${viewModel.activebookingInfo?.booking.property?.state ?? viewModel.activebookingInfo?.booking?.state}"
                                       : "No Active work...",
                                   style: TextStyle(
                                     color: Colors.white,
@@ -280,7 +282,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                   ),
                                 ),
                                 verticalSpaceSmall,
-                                viewModel.activeAssignment != null
+                                viewModel.activebookingInfo != null
                                     ? Row(
                                         children: [
                                           Row(
@@ -292,8 +294,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                               ),
                                               horizontalSpaceTiny,
                                               Text(
-                                                "${profile.value.availability?.join(", ") ?? ''}",
-                                                style: TextStyle(
+                                                "${formatDateString(viewModel.activebookingInfo?.booking.date[0]) ?? ''}",                                                style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
                                                 ),
@@ -310,7 +311,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                               ),
                                               horizontalSpaceTiny,
                                               Text(
-                                                "${profile.value.availabilityTime?.join(", ") ?? ''}",
+                                                "${viewModel.activebookingInfo?.booking.time[0] ?? ''}",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
@@ -385,7 +386,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                       ),
                                     ),
                                   )
-                                : viewModel.pendingAssignments.isEmpty && !viewModel.isBusy
+                                : viewModel.pendingBookinginfos.isEmpty && !viewModel.isBusy
                                     ? Padding(
                                         padding: const EdgeInsets.only(
                                             left: 26.0, right: 16.0),
@@ -397,11 +398,11 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                     : ListView.builder(
                                         shrinkWrap: true,
                                         itemCount:
-                                            viewModel.pendingAssignments.length,
+                                            viewModel.pendingBookinginfos.length,
                                         itemBuilder: (context, index) {
                                           return BookingAssignmentCard(
-                                            bookingAssignment: viewModel
-                                                .pendingAssignments[index],
+                                            bookingInfo: viewModel
+                                                .pendingBookinginfos[index],
                                             context: context,
                                               viewModel: viewModel,
                                           );
@@ -419,7 +420,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 ),
                               ),
                             )
-                                : viewModel.pendingAssignments.isEmpty && !viewModel.isBusy
+                                : viewModel.pendingBookinginfos.isEmpty && !viewModel.isBusy
                                 ? Padding(
                               padding: const EdgeInsets.only(
                                   left: 26.0, right: 16.0),
@@ -431,11 +432,11 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 : ListView.builder(
                               shrinkWrap: true,
                               itemCount:
-                              viewModel.activeAssignments.length,
+                              viewModel.activebookingInfos.length,
                               itemBuilder: (context, index) {
                                 return BookingAssignmentCard(
-                                  bookingAssignment: viewModel
-                                      .activeAssignments[index],
+                                  bookingInfo: viewModel
+                                      .activebookingInfos[index],
                                   context: context,
                                   viewModel: viewModel,
                                 );

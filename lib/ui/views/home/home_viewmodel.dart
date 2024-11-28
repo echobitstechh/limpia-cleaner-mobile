@@ -194,33 +194,5 @@ class HomeViewModel extends BaseViewModel {
       throw 'Could not launch $url';
     }
   }
-
-  Future<void> fetchOnlineCart() async {
-    setBusy(true);
-    try {
-      ApiResponse res = await repo.cartList();
-      if (res.statusCode == 200) {
-        // Access the 'items' from the response 'data'
-        List<dynamic> items = res.data["data"]["items"];
-
-        print('online cart is:  $items');
-
-        // Map the items list to List<RaffleCartItem>
-        List<RaffleCartItem> onlineItems = items
-            .map((item) => RaffleCartItem.fromJson(Map<String, dynamic>.from(item)))
-            .toList();
-
-        // Sync online items with the local cart
-        raffleCart.value = onlineItems;
-
-        // Update local storage
-        List<Map<String, dynamic>> storedList = raffleCart.value.map((e) => e.toJson()).toList();
-        await locator<LocalStorage>().save(LocalStorageDir.raffleCart, storedList);
-      }
-    } catch (e) {
-      locator<SnackbarService>().showSnackbar(message: "Failed to load cart from server: $e");
-    } finally {
-      setBusy(false);
-    }
-  }
+  
 }

@@ -637,6 +637,16 @@ class Repository extends IRepository {
   }
 
   @override
+  Future<ApiResponse> displayAllNearByBookings() async {
+    ApiResponse response = await api.call(
+      method: HttpMethod.get,
+      endpoint: "/user/cleaner/bookings",
+    );
+
+    return response;
+  }
+
+  @override
   Future<ApiResponse> updateCleanerAssignments(String cleanerAssignmentId, String action) async {
     Map<String, dynamic> reqParams = {
       'action': action,
@@ -647,7 +657,16 @@ class Repository extends IRepository {
       endpoint: "/cleaner-assignments/$cleanerAssignmentId",
         reqBody: reqParams
     );
+    return response;
+  }
 
+  @override
+  Future<ApiResponse> acceptBooking(String bookingId) async {
+  
+    ApiResponse response = await api.call(
+      method: HttpMethod.post,
+      endpoint: "/user/cleaner/bookings/$bookingId/accept",
+    );
     return response;
   }
 
