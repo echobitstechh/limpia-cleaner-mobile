@@ -115,7 +115,7 @@ class BookingView extends StatelessWidget {
                                 ),
                               ),
                             )
-                                : viewModel.pendingAssignments.isEmpty && !viewModel.isBusy
+                                : viewModel.pendingBookinginfos.isEmpty && !viewModel.isBusy
                                 ? Padding(
                               padding: const EdgeInsets.only(
                                   left: 26.0, right: 16.0),
@@ -127,11 +127,11 @@ class BookingView extends StatelessWidget {
                                 : ListView.builder(
                               shrinkWrap: true,
                               itemCount:
-                              viewModel.pendingAssignments.length,
+                              viewModel.pendingBookinginfos.length,
                               itemBuilder: (context, index) {
                                 return BookingAssignmentCard(
-                                  bookingAssignment: viewModel
-                                      .pendingAssignments[index],
+                                  bookingInfo: viewModel
+                                      .pendingBookinginfos[index],
                                   context: context,
                                   isBusy: viewModel.isBusy,
                                 );
@@ -149,7 +149,7 @@ class BookingView extends StatelessWidget {
                                 ),
                               ),
                             )
-                                : viewModel.pendingAssignments.isEmpty && !viewModel.isBusy
+                                : viewModel.pendingBookinginfos.isEmpty && !viewModel.isBusy
                                 ? Padding(
                               padding: const EdgeInsets.only(
                                   left: 26.0, right: 16.0),
@@ -161,11 +161,11 @@ class BookingView extends StatelessWidget {
                                 : ListView.builder(
                               shrinkWrap: true,
                               itemCount:
-                              viewModel.activeAssignments.length,
+                              viewModel.activebookingInfos.length,
                               itemBuilder: (context, index) {
                                 return BookingAssignmentCard(
-                                  bookingAssignment: viewModel
-                                      .activeAssignments[index],
+                                  bookingInfo: viewModel
+                                      .activebookingInfos[index],
                                   context: context,
                                   isBusy: viewModel.isBusy,
                                 );
