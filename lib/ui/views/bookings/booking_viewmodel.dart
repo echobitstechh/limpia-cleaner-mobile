@@ -5,19 +5,21 @@ import '../../../app/app.logger.dart';
 import '../../../core/data/models/booking.dart';
 import '../../../core/data/repositories/repository.dart';
 import '../../../core/network/api_response.dart';
+import '../dashboard/dashboard_viewmodel.dart';
 
 class BookingsViewModel extends BaseViewModel {
   final repo = locator<Repository>();
   final log = getLogger("BookingsViewModel");
 
-  List<BookingAssignment> pendingAssignments = [];
-  List<BookingAssignment> assignments = [];
-  List<BookingAssignment> activeAssignments = [];
-  BookingAssignment? activeAssignment;
+  List<BookingInfo> pendingBookinginfos = [];
+  List<BookingInfo> bookingInfos = [];
+  List<BookingInfo> activebookingInfos = [];
+  BookingInfo? activebookingInfo;
+
 
 
   String searchQuery = '';
-  List<BookingAssignment> filteredAssignments = [];
+  List<BookingInfo> filteredBookingInfos = [];
 
 
 
@@ -46,7 +48,7 @@ class BookingsViewModel extends BaseViewModel {
 
   Future<void> init() async {
     setBusy(true);
-    await fetchAssignments();
+    await displayAllNearByBookings();
     setBusy(false);
     notifyListeners();
   }
@@ -63,7 +65,7 @@ class BookingsViewModel extends BaseViewModel {
   }
 
   void getResourceList(){
-    fetchAssignments();
+    displayAllNearByBookings();
   }
 
   Future<void> updateCleanerAssignments(String cleanerAssignmentId,String action) async {
@@ -86,43 +88,50 @@ class BookingsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> fetchAssignments() async {
+  Future<void> displayAllNearByBookings() async {
     setBusy(true);
     notifyListeners();
     try {
-      ApiResponse response = await repo.fetchAssignments();
+      ApiResponse response = await repo.displayAllNearByBookings();
       if (response.statusCode == 200) {
         final data = response.data;
 
-        if (data != null && data['assignments'] != null && data['assignments'] is List) {
+        print('Before Bookings::: $data');
+        if (data != null && data['bookings'] != null && data['bookings'] is List) {
 
-          assignments = (data['assignments'] as List)
-              .map((assignment) => BookingAssignment.fromJson(assignment))
+          print("bookings::: ${data['bookings']}");
+
+          bookingInfos = (data['bookings'] as List)
+              .map((assignment) => BookingInfo.fromJson(assignment))
               .toList();
 
           // Sort assignments by the first date in descending order
-          assignments.sort((a, b) {
+          bookingInfos.sort((a, b) {
             DateTime dateA = DateTime.parse(a.booking.date.first);
             DateTime dateB = DateTime.parse(b.booking.date.first);
             return dateB.compareTo(dateA);
           });
 
-          pendingAssignments = assignments
-              .where((assignment) => assignment.status == 'Pending')
+          pendingBookinginfos = bookingInfos
+              .where((assignment) => assignment.booking.isTaken == false)
               .toList();
 
-          activeAssignments = assignments
-              .where((assignment) => assignment.status == 'Active')
+          activebookingInfos = bookingInfos
+              .where((assignment) => assignment.booking.status == 'Active')
               .toList();
 
-          activeAssignment = activeAssignments.isNotEmpty ? activeAssignments.first : null;
+          print('Active Bookings::: $activebookingInfos');
+
+          activebookingInfo = bookingInfos.isNotEmpty && bookingInfos.any((info) => info.booking.isTaken)
+              ? bookingInfos.firstWhere((info) => info.booking.isTaken)
+              : null;
 
 
         } else {
-          pendingAssignments = [];
-          assignments = [];
-          activeAssignment = null;
-          activeAssignments = [];
+          pendingBookinginfos = [];
+          bookingInfos = [];
+          activebookingInfo = null;
+          activebookingInfos = [];
         }
       } else {
         throw Exception('Failed to load assignments');
@@ -138,16 +147,27 @@ class BookingsViewModel extends BaseViewModel {
 
   void updateSearchQuery(String query) {
     searchQuery = query;
+
     if (searchQuery.isEmpty) {
-      filteredAssignments = assignments;
+      filteredBookingInfos = bookingInfos;
     } else {
-      filteredAssignments = assignments.where((service) {
-        return service.booking.property.nameOfProperty.toLowerCase().contains(searchQuery.toLowerCase()) ||
-            service.booking.property.city.toLowerCase().contains(searchQuery.toLowerCase());
+      filteredBookingInfos = bookingInfos.where((service) {
+        final propertyName = service.booking.property?.nameOfProperty?.toLowerCase() ?? '';
+        final bookingCity = service.booking.city?.toLowerCase() ?? '';
+        final bookingState = service.booking.state?.toLowerCase() ?? '';
+        final propertyCity = service.booking.property?.city?.toLowerCase() ?? '';
+
+        // Check if the search query matches any of the fields
+        return propertyName.contains(searchQuery.toLowerCase()) ||
+            bookingCity.contains(searchQuery.toLowerCase()) ||
+            bookingState.contains(searchQuery.toLowerCase()) ||
+            propertyCity.contains(searchQuery.toLowerCase());
       }).toList();
     }
+
     notifyListeners();
   }
+
 
 
 

@@ -22,16 +22,16 @@ class DashboardViewModel extends BaseViewModel {
 
 
 
-  List<BookingAssignment> pendingAssignments = [];
-  List<BookingAssignment> assignments = [];
-  List<BookingAssignment> activeAssignments = [];
-  BookingAssignment? activeAssignment;
+  List<BookingInfo> pendingBookinginfos = [];
+  List<BookingInfo> bookingInfos = [];
+  List<BookingInfo> activebookingInfos = [];
+  BookingInfo? activebookingInfo;
 
 
 
   Future<void> init() async {
     setBusy(true);
-    await fetchAssignments();
+    await displayAllNearByBookings();
     setBusy(false);
     notifyListeners();
   }
@@ -48,7 +48,8 @@ class DashboardViewModel extends BaseViewModel {
   }
 
   void getResourceList(){
-    fetchAssignments();
+    // fetchAssignments();
+    displayAllNearByBookings();
   }
 
   Future<void> updateCleanerAssignments(String cleanerAssignmentId,String action) async {
@@ -65,49 +66,121 @@ class DashboardViewModel extends BaseViewModel {
     }
   }
 
+ Future<bool> acceptBooking(String bookingId) async {
+    setBusy(true);
+    try {
+      ApiResponse res = await repo.acceptBooking(bookingId);
+      if (res.statusCode == 200) {
+        notifyListeners();
+        return true;
+      }
+    } catch (e) {
+      log.e(e);
+    } finally {
+      setBusy(false);
+    }
+    return false;
+  }
+
   void onEnd() {
     print('onEnd');
     //TODO SEND USER NOTIFICATION OF AVAILABILITY OF PRODUCT
     notifyListeners();
   }
 
-  Future<void> fetchAssignments() async {
+  // Future<void> fetchAssignments() async {
+  //   setBusy(true);
+  //   notifyListeners();
+  //   try {
+  //     ApiResponse response = await repo.fetchAssignments();
+  //     if (response.statusCode == 200) {
+  //       final data = response.data;
+  //
+  //       if (data != null && data['assignments'] != null && data['assignments'] is List) {
+  //        
+  //         assignments = (data['assignments'] as List)
+  //             .map((assignment) => BookingAssignment.fromJson(assignment))
+  //             .toList();
+  //
+  //         // Sort assignments by the first date in descending order
+  //         assignments.sort((a, b) {
+  //           DateTime dateA = DateTime.parse(a.booking.date.first);
+  //           DateTime dateB = DateTime.parse(b.booking.date.first);
+  //           return dateB.compareTo(dateA);
+  //         });
+  //        
+  //         pendingBookinginfo = assignments
+  //             .where((assignment) => assignment.status == 'Pending')
+  //             .toList();
+  //
+  //         activeAssignments = assignments
+  //             .where((assignment) => assignment.status == 'Active')
+  //             .toList();
+  //        
+  //         activeAssignment = activeAssignments.isNotEmpty ? activeAssignments.first : null;
+  //
+  //
+  //       } else {
+  //         pendingBookinginfo = [];
+  //         assignments = [];
+  //         activeAssignment = null;
+  //         activeAssignments = [];
+  //       }
+  //     } else {
+  //       throw Exception('Failed to load assignments');
+  //     }
+  //   } catch (e) {
+  //     log.e(e);
+  //   } finally {
+  //     setBusy(false);
+  //     notifyListeners();
+  //   }
+  // }
+  
+  Future<void> displayAllNearByBookings() async {
     setBusy(true);
     notifyListeners();
     try {
-      ApiResponse response = await repo.fetchAssignments();
+      ApiResponse response = await repo.displayAllNearByBookings();
       if (response.statusCode == 200) {
         final data = response.data;
 
-        if (data != null && data['assignments'] != null && data['assignments'] is List) {
+        print('Before Bookings::: $data');
+        if (data != null && data['bookings'] != null && data['bookings'] is List) {
+
+          print("bookings::: ${data['bookings']}");
           
-          assignments = (data['assignments'] as List)
-              .map((assignment) => BookingAssignment.fromJson(assignment))
+          bookingInfos = (data['bookings'] as List)
+              .map((assignment) => BookingInfo.fromJson(assignment))
               .toList();
 
           // Sort assignments by the first date in descending order
-          assignments.sort((a, b) {
+          bookingInfos.sort((a, b) {
             DateTime dateA = DateTime.parse(a.booking.date.first);
             DateTime dateB = DateTime.parse(b.booking.date.first);
             return dateB.compareTo(dateA);
           });
           
-          pendingAssignments = assignments
-              .where((assignment) => assignment.status == 'Pending')
+          pendingBookinginfos = bookingInfos
+              .where((assignment) => assignment.booking.isTaken == false)
               .toList();
 
-          activeAssignments = assignments
-              .where((assignment) => assignment.status == 'Active')
+          activebookingInfos = bookingInfos
+              .where((assignment) => assignment.booking.status == 'Active')
               .toList();
           
-          activeAssignment = activeAssignments.isNotEmpty ? activeAssignments.first : null;
+          print('Active Bookings::: $activebookingInfos');
+
+          activebookingInfo = bookingInfos.isNotEmpty && bookingInfos.any((info) => info.booking.isTaken)
+              ? bookingInfos.firstWhere((info) => info.booking.isTaken)
+              : null;
 
 
         } else {
-          pendingAssignments = [];
-          assignments = [];
-          activeAssignment = null;
-          activeAssignments = [];
+          pendingBookinginfos = [];
+          bookingInfos = [];
+          activebookingInfo = null;
+          activebookingInfos = [];
         }
       } else {
         throw Exception('Failed to load assignments');
@@ -120,4 +193,144 @@ class DashboardViewModel extends BaseViewModel {
     }
   }
 
+}
+
+class BookingAssignment {
+  final String id;
+  final String cleanerId;
+  final String status;
+  final List<String> newDate;
+  final List<String> newTime;
+  final Booking booking;
+
+  BookingAssignment({
+    required this.id,
+    required this.cleanerId,
+    required this.status,
+    required this.newDate,
+    required this.newTime,
+    required this.booking,
+  });
+
+  factory BookingAssignment.fromJson(Map<String, dynamic> json) {
+    return BookingAssignment(
+      id: json['id'] ?? '',
+      cleanerId: json['cleanerId'] ?? '',
+      status: json['status'] ?? '',
+      newDate: json['newDate'] != null ? List<String>.from(json['newDate']) : [],
+      newTime: json['newTime'] != null ? List<String>.from(json['newTime']) : [],
+      booking: json['Booking'] != null ? Booking.fromJson(json['Booking']) : Booking(id: '', date: [], time: [], cleaningType: '', property: null, status: '', isTaken: false, country: '', state: '', city: '', address: ''),
+    );
+  }
+}
+
+
+class Property {
+  final String id;
+  final String type;
+  final String nameOfProperty;
+  final String numberOfUnit;
+  final String numberOfRoom;
+  final String country;
+  final String state;
+  final String city;
+  final String address;
+  final String? zipCode;
+  final List<String>? images;
+  final String? cleanerPreferences;
+  
+
+  Property({
+    required this.id,
+    required this.type,
+    required this.nameOfProperty,
+    required this.numberOfUnit,
+    required this.numberOfRoom,
+    required this.country,
+    required this.state,
+    required this.city,
+    required this.address,
+    this.zipCode,
+    this.images,
+    this.cleanerPreferences,
+  });
+
+  factory Property.fromJson(Map<String, dynamic> json) {
+    return Property(
+      id: json['id'],
+      type: json['type'],
+      nameOfProperty: json['nameOfProperty'],
+      numberOfUnit: json['numberOfUnit'],
+      numberOfRoom: json['numberOfRoom'],
+      country: json['country'],
+      state: json['state'],
+      city: json['city'],
+      address: json['address'],
+      zipCode: json['zipCode'],
+      images: List<String>.from(json['images'] ?? []),
+      cleanerPreferences: json['cleanerPreferences'],
+    );
+  }
+}
+
+
+class Booking {
+  final String id;
+  final List<String> date;
+  final List<String> time;
+  final String cleaningType;
+  final bool isTaken;
+  final String status;
+  final String? country;
+  final String? state;
+  final String? city;
+  final String? address;
+  final Property? property;
+
+  Booking({
+    required this.id,
+    required this.date,
+    required this.time,
+    required this.cleaningType,
+    required this.property,
+    required this.status,
+    required this.isTaken,
+    required this.country,
+    required this.state,
+    required this.city,
+    required this.address,
+  });
+
+  factory Booking.fromJson(Map<String, dynamic> json) {
+    return Booking(
+      id: json['id'],
+      date: List<String>.from(json['date']?? []),
+      time: List<String>.from(json['time']?? []),
+      cleaningType: json['cleaningType'],
+      isTaken: json['isTaken'],
+      status: json['status'],
+      country: json['country'],
+      state: json['state'],
+      address: json['address'],
+      city: json['city'],
+      property: json['Property'] != null ? Property.fromJson(json['Property']) : null,
+    );
+  }
+}
+
+class BookingInfo {
+  final String type; // HomeOwnerBooking or PropertyManagerBooking
+  final Booking booking;
+
+  BookingInfo({
+    required this.type,
+    required this.booking,
+  });
+
+  factory BookingInfo.fromJson(Map<String, dynamic> json) {
+    return BookingInfo(
+      type: json['type'],
+      booking: Booking.fromJson(json['booking']),
+    );
+  }
 }
