@@ -1,17 +1,11 @@
 import 'dart:ui';
-
-import 'package:limpia/app/app.router.dart';
 import 'package:limpia/state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:limpia/ui/common/app_colors.dart';
-import 'package:stacked_services/stacked_services.dart';
-
-import '../../../app/app.locator.dart';
 import 'home_viewmodel.dart';
-import 'module_switch.dart';
 
 class HomeView extends StackedView<HomeViewModel> {
   const HomeView({Key? key}) : super(key: key);
@@ -22,7 +16,6 @@ class HomeView extends StackedView<HomeViewModel> {
       HomeViewModel viewModel,
       Widget? child,
       ) {
-    viewModel.checkForUpdates(context);
 
     return ValueListenableBuilder<AppModules>(
       valueListenable: currentModuleNotifier, // Your ValueNotifier
@@ -47,9 +40,6 @@ class HomeView extends StackedView<HomeViewModel> {
 
   @override
   void onViewModelReady(HomeViewModel viewModel) {
-    if(userLoggedIn.value == true){
-      // viewModel.fetchOnlineCart();
-    }
     super.onViewModelReady(viewModel);
   }
 }

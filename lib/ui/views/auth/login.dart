@@ -6,9 +6,6 @@ import 'package:limpia/ui/components/submit_button.dart';
 import 'package:limpia/ui/components/text_field_widget.dart';
 import 'package:limpia/ui/views/auth/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 

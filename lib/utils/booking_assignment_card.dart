@@ -4,23 +4,21 @@ import 'package:limpia/ui/common/ui_helpers.dart';
 import 'package:limpia/ui/views/dashboard/dashboard_viewmodel.dart';
 import 'package:limpia/utils/date_time_utils.dart';
 import 'package:stacked_services/stacked_services.dart';
-
-
 import '../app/app.locator.dart';
-import '../ui/common/helper.dart';
+import '../core/data/models/booking.dart';
 import 'booking_success.dart';
 
 
 class BookingAssignmentCard extends StatelessWidget {
   final BookingInfo bookingInfo;
   final BuildContext context;
-  final DashboardViewModel viewModel;
+  final bool isBusy;
 
   const BookingAssignmentCard({
     Key? key,
     required this.bookingInfo,
     required this.context,
-    required this.viewModel,
+    required this.isBusy,
   }) : super(key: key);
 
   
@@ -112,7 +110,7 @@ class BookingAssignmentCard extends StatelessWidget {
                       horizontalSpaceTiny,
                       InkWell(
                         onTap: () {
-                          showAcceptBottomSheet(context, bookingInfo,viewModel);
+                          showAcceptBottomSheet(context, bookingInfo, isBusy);
                         },
                         child: Container(
                           height: 30,
@@ -218,7 +216,7 @@ void showSuccessDialog(BuildContext context) {
   );
 }
 
-void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo,DashboardViewModel viewModel) {
+void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo, bool isBusy) {
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
@@ -329,7 +327,7 @@ void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo,Dashboa
                       locator<SnackbarService>().showSnackbar(message: "Booking Rejected successfully");
 
                     },
-                    child: viewModel.isBusy
+                    child: isBusy
                         ? CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     )
@@ -360,7 +358,7 @@ void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo,Dashboa
                         locator<SnackbarService>().showSnackbar(message: "Oops! Something went wrong");
                       }
                     },
-                    child: viewModel.isBusy
+                    child: isBusy
                         ? CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     )

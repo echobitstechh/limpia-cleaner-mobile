@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:path/path.dart' as path;
@@ -14,7 +12,6 @@ import '../../../state.dart';
 import '../../common/app_colors.dart';
 import '../../common/ui_helpers.dart';
 import '../../components/profile_picture.dart';
-import '../cart/add_shipping.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -53,57 +50,6 @@ class _ProfileScreen extends State<ProfileScreen> {
     print('Selected image path: ${image.path}');
     print('Selected image length: ${await File(image.path).length()} bytes');
 
-    try {
-      // Compress the image and convert to .png
-      final compressedImage = await FlutterImageCompress.compressAndGetFile(
-        image.path, // original file path
-        '${path.withoutExtension(image.path)}.png', // output path
-        format: CompressFormat.png, // compress to PNG format
-        quality: 85, // adjust compression quality (1-100)
-      );
-
-      if (compressedImage == null) {
-        throw Exception('Image compression failed');
-      }
-
-      print('Compressed image path: ${compressedImage.path}');
-      print('Compressed image size: ${await compressedImage.length()} bytes');
-
-      // Now upload the compressed image
-      ApiResponse res = await locator<Repository>().updateMedia({
-        "file": await MultipartFile.fromFile(compressedImage.path),
-      });
-
-      print('Media upload response: ${res.statusCode}');
-
-      if (res.statusCode == 201) {
-        String mediaId = res.data["media_id"];
-        print('Media ID received: $mediaId');
-
-        // Now update the profile picture with the media_id
-        ApiResponse updateProfileRes = await locator<Repository>().updateProfilePicture({
-          "media_id": mediaId,
-        });
-
-        print('Profile update response: ${updateProfileRes.statusCode}');
-
-        if (updateProfileRes.statusCode == 200) {
-          snackBar.showSnackbar(message: "Profile picture updated successfully!");
-          getProfile();
-        } else {
-          snackBar.showSnackbar(message: "Failed to update profile picture.");
-        }
-      } else {
-        snackBar.showSnackbar(message: "Failed to upload media.");
-      }
-    } catch (e) {
-      print('Error during upload or update: $e');
-      snackBar.showSnackbar(message: "An error occurred: $e");
-    } finally {
-      setState(() {
-        isUpdating = false;
-      });
-    }
   }
 
 
