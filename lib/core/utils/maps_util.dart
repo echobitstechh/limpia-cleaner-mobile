@@ -75,20 +75,58 @@ class MapsUtils {
   }
 
   Future<PlacePrediction?> getPlaceDetails(PlacePrediction prediction) async {
-    final String url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=${prediction.placeId}&fields=geometry&key=${AppConfig.mapsApiKey}';
-    final response = await NetworkUtil.fetchUrl(Uri.parse(url));
-    if (response != null) {
-      final data = jsonDecode(response);
+    final String url =
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=${prediction.placeId}&fields=geometry,address_components&key=${AppConfig.mapsApiKey}';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
       if (data['status'] == 'OK') {
         final result = data['result'];
-        print("map result is $result");
+        final geometry = result['geometry'];
+        final addressComponents = result['address_components'];
+
+        // Initialize variables to hold address components
+        String? streetNumber;
+        String? route;
+        String? city;
+        String? state;
+        String? country;
+        String? postalCode;
+
+        // Parse address components
+        for (var component in addressComponents) {
+          final types = component['types'] as List<dynamic>;
+          if (types.contains('street_number')) {
+            streetNumber = component['long_name'];
+          } else if (types.contains('route')) {
+            route = component['long_name'];
+          } else if (types.contains('locality')) {
+            city = component['long_name'];
+          } else if (types.contains('administrative_area_level_1')) {
+            state = component['short_name'];
+          } else if (types.contains('country')) {
+            country = component['long_name'];
+          } else if (types.contains('postal_code')) {
+            postalCode = component['long_name'];
+          }
+        }
+
+        // Combine street number and route to form the street address
+        final street = [streetNumber, route].where((e) => e != null).join(' ');
+
         return PlacePrediction(
           description: prediction.description,
           placeId: prediction.placeId,
           mainText: prediction.mainText,
           secondaryText: prediction.secondaryText,
-          latitude: result['geometry']['location']['lat'],
-          longitude: result['geometry']['location']['lng'],
+          latitude: geometry['location']['lat'],
+          longitude: geometry['location']['lng'],
+          streetNumber: streetNumber,
+          route: route,
+          city: city,
+          state: state,
+          country: country,
+          postalCode: postalCode,
         );
       }
     }

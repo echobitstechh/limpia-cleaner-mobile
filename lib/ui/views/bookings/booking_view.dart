@@ -30,7 +30,7 @@ class BookingView extends StatelessWidget {
       },
       builder: (context, viewModel, child) => Scaffold(
         appBar: AppBar(
-          leading: null, 
+          leading: null,
           automaticallyImplyLeading: false,
           title: Container(
             child: Image.asset(
@@ -99,7 +99,7 @@ class BookingView extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 700, // Adjust height as necessary
-              
+
                         child: TabBarView(
                           physics: const BouncingScrollPhysics(),
                           children: [
@@ -115,7 +115,7 @@ class BookingView extends StatelessWidget {
                                 ),
                               ),
                             )
-                                : viewModel.pendingBookinginfos.isEmpty && !viewModel.isBusy
+                                : viewModel.pendingBookings.isEmpty && !viewModel.isBusy
                                 ? Padding(
                               padding: const EdgeInsets.only(
                                   left: 26.0, right: 16.0),
@@ -127,11 +127,11 @@ class BookingView extends StatelessWidget {
                                 : ListView.builder(
                               shrinkWrap: true,
                               itemCount:
-                              viewModel.pendingBookinginfos.length,
+                              viewModel.pendingBookings.length,
                               itemBuilder: (context, index) {
                                 return BookingAssignmentCard(
-                                  bookingInfo: viewModel
-                                      .pendingBookinginfos[index],
+                                  booking: viewModel
+                                      .pendingBookings[index],
                                   context: context,
                                   isBusy: viewModel.isBusy,
                                 );
@@ -149,7 +149,7 @@ class BookingView extends StatelessWidget {
                                 ),
                               ),
                             )
-                                : viewModel.pendingBookinginfos.isEmpty && !viewModel.isBusy
+                                : viewModel.pendingBookings.isEmpty && !viewModel.isBusy
                                 ? Padding(
                               padding: const EdgeInsets.only(
                                   left: 26.0, right: 16.0),
@@ -161,11 +161,11 @@ class BookingView extends StatelessWidget {
                                 : ListView.builder(
                               shrinkWrap: true,
                               itemCount:
-                              viewModel.activebookingInfos.length,
+                              viewModel.activebookings.length,
                               itemBuilder: (context, index) {
                                 return BookingAssignmentCard(
-                                  bookingInfo: viewModel
-                                      .activebookingInfos[index],
+                                  booking: viewModel
+                                      .activebookings[index],
                                   context: context,
                                   isBusy: viewModel.isBusy,
                                 );
@@ -235,7 +235,7 @@ class BookingView extends StatelessWidget {
                                                         itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                                                         itemBuilder: (context, _) => Icon(
                                                           Icons.star,
-              
+
                                                           color: Colors.amber,
                                                         ),
                                                         onRatingUpdate: (rating)

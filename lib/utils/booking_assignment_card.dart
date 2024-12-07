@@ -10,18 +10,18 @@ import 'booking_success.dart';
 
 
 class BookingAssignmentCard extends StatelessWidget {
-  final BookingInfo bookingInfo;
+  final Booking booking;
   final BuildContext context;
   final bool isBusy;
 
   const BookingAssignmentCard({
     Key? key,
-    required this.bookingInfo,
+    required this.booking,
     required this.context,
     required this.isBusy,
   }) : super(key: key);
 
-  
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -75,17 +75,17 @@ class BookingAssignmentCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   // Address
                   Text(
-                    "Address: ${bookingInfo?.booking.property?.address ?? bookingInfo?.booking.address},"
-                        " ${bookingInfo?.booking.property?.state ?? bookingInfo?.booking?.state}",
+                    "Address: ${booking.property?.address ?? '' },"
+                        " ${booking.property?.address?.state ?? ''}",
                       style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 8),
-                  bookingInfo.booking.isTaken == false
+                  booking.isTaken == false
                       ? Row(
                     children: [
                       InkWell(
                         onTap: () {
-                          showRejectDialog(context, bookingInfo.booking.id);
+                          showRejectDialog(context, booking.id);
                         },
                         child: Container(
                           height: 30,
@@ -110,7 +110,7 @@ class BookingAssignmentCard extends StatelessWidget {
                       horizontalSpaceTiny,
                       InkWell(
                         onTap: () {
-                          showAcceptBottomSheet(context, bookingInfo, isBusy);
+                          showAcceptBottomSheet(context, booking, isBusy);
                         },
                         child: Container(
                           height: 30,
@@ -141,7 +141,7 @@ class BookingAssignmentCard extends StatelessWidget {
                       color: Colors.green,
                     ),
                     child: Text(
-                      bookingInfo.booking.status,
+                      booking?.status ?? '',
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -153,7 +153,7 @@ class BookingAssignmentCard extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      '${formatDateString(bookingInfo.booking.date?.firstOrNull) ?? ""} ${bookingInfo.booking.time?.firstOrNull ?? ""}',
+                      formatDateTime(booking.cleaningTime)  ?? "",
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -216,7 +216,7 @@ void showSuccessDialog(BuildContext context) {
   );
 }
 
-void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo, bool isBusy) {
+void showAcceptBottomSheet(BuildContext context, Booking booking, bool isBusy) {
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
@@ -241,21 +241,21 @@ void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo, bool i
               const SizedBox(height: 8),
               // Booking Title
               Text(
-                bookingInfo.booking.cleaningType,
+                booking.cleaningType,
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
-                "${bookingInfo.booking.property?.nameOfProperty ?? ""}",
+                "${booking.property?.address?.street ?? ""}",
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   color: Colors.black87,
                 ),
               ),
               Text(
-                "${bookingInfo.booking.property?.type ?? ""}",
+                "${'Apartment' ?? ""}",
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   color: Colors.black54,
@@ -290,12 +290,12 @@ void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo, bool i
                   ),
                   _buildDetailItem(
                     icon: Icons.location_on_outlined,
-                    title: "${bookingInfo?.booking.property?.address ?? bookingInfo?.booking.address}, ${bookingInfo?.booking.property?.state ?? bookingInfo?.booking.state}",
+                    title: "${booking.property?.address?.street ?? ''}, ${booking.property?.address?.state ?? ''}",
                     subtitle: "Location",
                   ),
                   _buildDetailItem(
                     icon: Icons.calendar_today_outlined,
-                    title:'${formatDateString(bookingInfo.booking.date?.firstOrNull) ?? ""} ${bookingInfo.booking.time?.firstOrNull ?? ""}',
+                    title:'${formatDateTime(booking.cleaningTime) ?? ""}',
                     subtitle: "Date",
                   ),
                   _buildDetailItem(
@@ -322,7 +322,7 @@ void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo, bool i
                       ),
                     ),
                     onPressed: () async {
-                      await DashboardViewModel().updateCleanerAssignments(bookingInfo.booking.id, "reject");
+                      await DashboardViewModel().updateCleanerAssignments(booking.id, "reject");
                       Navigator.pop(context);
                       locator<SnackbarService>().showSnackbar(message: "Booking Rejected successfully");
 
@@ -351,7 +351,7 @@ void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo, bool i
                       ),
                     ),
                     onPressed: () async {
-                      var bool = await DashboardViewModel().acceptBooking(bookingInfo.booking.id);
+                      var bool = await DashboardViewModel().acceptBooking(booking.id);
                       if(bool){
                         showSuccessDialog(context);
                       } else {

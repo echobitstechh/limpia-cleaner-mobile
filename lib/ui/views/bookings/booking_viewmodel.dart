@@ -11,15 +11,15 @@ class BookingsViewModel extends BaseViewModel {
   final repo = locator<Repository>();
   final log = getLogger("BookingsViewModel");
 
-  List<BookingInfo> pendingBookinginfos = [];
-  List<BookingInfo> bookingInfos = [];
-  List<BookingInfo> activebookingInfos = [];
-  BookingInfo? activebookingInfo;
+  List<Booking> pendingBookings = [];
+  List<Booking> bookings = [];
+  List<Booking> activebookings = [];
+  Booking? activebooking;
 
 
 
   String searchQuery = '';
-  List<BookingInfo> filteredBookingInfos = [];
+  List<Booking> filteredBookings = [];
 
 
 
@@ -92,7 +92,7 @@ class BookingsViewModel extends BaseViewModel {
     setBusy(true);
     notifyListeners();
     try {
-      ApiResponse response = await repo.displayAllNearByBookings();
+      ApiResponse response = await repo.getNearByBookings();
       if (response.statusCode == 200) {
         final data = response.data;
 
@@ -101,37 +101,36 @@ class BookingsViewModel extends BaseViewModel {
 
           print("bookings::: ${data['bookings']}");
 
-          bookingInfos = (data['bookings'] as List)
-              .map((assignment) => BookingInfo.fromJson(assignment))
+          bookings = (data['bookings'] as List)
+              .map((assignment) => Booking.fromJson(assignment))
               .toList();
 
           // Sort assignments by the first date in descending order
-          bookingInfos.sort((a, b) {
-            DateTime dateA = DateTime.parse(a.booking.date.first);
-            DateTime dateB = DateTime.parse(b.booking.date.first);
-            return dateB.compareTo(dateA);
+          bookings.sort((a, b) {
+            return b.cleaningTime?.compareTo(a.cleaningTime ?? DateTime(0)) ?? 0;
           });
 
-          pendingBookinginfos = bookingInfos
-              .where((assignment) => assignment.booking.isTaken == false)
+          pendingBookings = bookings
+              .where((x) => x.isTaken == false)
               .toList();
 
-          activebookingInfos = bookingInfos
-              .where((assignment) => assignment.booking.status == 'Active')
-              .toList();
+          activebooking = bookings?.first;
+              // .where((x) => x.booking.status == 'Active')
+              // .toList()
+          ;
 
-          print('Active Bookings::: $activebookingInfos');
+          print('Active Bookings::: $activebookings');
 
-          activebookingInfo = bookingInfos.isNotEmpty && bookingInfos.any((info) => info.booking.isTaken)
-              ? bookingInfos.firstWhere((info) => info.booking.isTaken)
+          activebooking = bookings.isNotEmpty && bookings.any((info) => info.isTaken)
+              ? bookings.firstWhere((info) => info.isTaken)
               : null;
 
 
         } else {
-          pendingBookinginfos = [];
-          bookingInfos = [];
-          activebookingInfo = null;
-          activebookingInfos = [];
+          pendingBookings = [];
+          bookings = [];
+          activebooking = null;
+          activebookings = [];
         }
       } else {
         throw Exception('Failed to load assignments');
@@ -149,19 +148,15 @@ class BookingsViewModel extends BaseViewModel {
     searchQuery = query;
 
     if (searchQuery.isEmpty) {
-      filteredBookingInfos = bookingInfos;
+      filteredBookings = bookings;
     } else {
-      filteredBookingInfos = bookingInfos.where((service) {
-        final propertyName = service.booking.property?.nameOfProperty?.toLowerCase() ?? '';
-        final bookingCity = service.booking.city?.toLowerCase() ?? '';
-        final bookingState = service.booking.state?.toLowerCase() ?? '';
-        final propertyCity = service.booking.property?.city?.toLowerCase() ?? '';
+      filteredBookings = bookings.where((service) {
+        final bookingStreet = service.property?.address.street.toLowerCase() ?? '';
+        final bookingCity = service.property?.address.city.toLowerCase() ?? '';
 
         // Check if the search query matches any of the fields
-        return propertyName.contains(searchQuery.toLowerCase()) ||
-            bookingCity.contains(searchQuery.toLowerCase()) ||
-            bookingState.contains(searchQuery.toLowerCase()) ||
-            propertyCity.contains(searchQuery.toLowerCase());
+        return bookingStreet.contains(searchQuery.toLowerCase()) ||
+            bookingCity.contains(searchQuery.toLowerCase());
       }).toList();
     }
 

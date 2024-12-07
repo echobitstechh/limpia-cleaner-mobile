@@ -11,7 +11,7 @@ class Repository extends IRepository {
   Future<ApiResponse> login(Map<String, dynamic> req) async {
     ApiResponse response = await api.call(
       method: HttpMethod.post,
-      endpoint: "user/cleaner/signIn",
+      endpoint: "auth/signin",
       reqBody: req,
     );
 
@@ -41,7 +41,7 @@ class Repository extends IRepository {
   Future<ApiResponse> register(Map<String, dynamic> req) async {
     ApiResponse response = await api.call(
       method: HttpMethod.post,
-      endpoint: "user/cleaner/signup",
+      endpoint: "auth/signup",
       reqBody: req,
     );
 
@@ -637,10 +637,10 @@ class Repository extends IRepository {
   }
 
   @override
-  Future<ApiResponse> displayAllNearByBookings() async {
+  Future<ApiResponse> getNearByBookings() async {
     ApiResponse response = await api.call(
       method: HttpMethod.get,
-      endpoint: "/user/cleaner/bookings",
+      endpoint: "/booking/nearby",
     );
 
     return response;
@@ -662,7 +662,7 @@ class Repository extends IRepository {
 
   @override
   Future<ApiResponse> acceptBooking(String bookingId) async {
-  
+
     ApiResponse response = await api.call(
       method: HttpMethod.post,
       endpoint: "/user/cleaner/bookings/$bookingId/accept",

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:limpia/core/data/models/country.dart';
 import 'package:limpia/core/data/models/discount.dart';
 import 'package:limpia/core/data/models/product.dart';
@@ -23,13 +25,11 @@ class Profile {
   String? updatedAt;
   String? lastActivity;
   NotificationPreferences? notificationPreferences;
-
-  List<String>? preferredLocations;
+  RoleDetails? roleDetails;
+  String? role;
   List<String>? services;
   List<String>? availability;
   List<String>? availabilityTime;
-  String? preferredJobType;
-  String? role;
 
   Profile({
     this.id,
@@ -52,15 +52,13 @@ class Profile {
     this.updatedAt,
     this.lastActivity,
     this.notificationPreferences,
-    this.preferredLocations,
+    this.roleDetails,
+    this.role,
     this.services,
     this.availability,
     this.availabilityTime,
-    this.preferredJobType,
-    this.role,
   });
 
-  // Updated Profile.fromJson method
   Profile.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     firstName = json['firstName'];
@@ -71,32 +69,24 @@ class Profile {
     address = json['address'];
     city = json['city'];
     countryAndState = json['countryAndState'];
-    // Country object handling
     country = json['country'] != null ? Country.fromJson(json['country']) : null;
-    profilePic = json['profile_pic'] != null ? Media.fromJson(json['profile_pic']) : null; // Handle profile_pic
+    profilePic = json['profile_pic'] != null ? Media.fromJson(json['profile_pic']) : null;
     isUserVerified = json['is_user_verified'];
     status = json['status'];
     accountType = json['account_type'];
     accountPoints = json['account_points'];
     accountPointsLocal = json['account_points_local'];
-
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    lastActivity = json['last_activity']; // New field added
-
-    // Notification preferences object handling
+    lastActivity = json['last_activity'];
     notificationPreferences = json['notification_preferences'] != null
         ? NotificationPreferences.fromJson(json['notification_preferences'])
         : null;
-  
-    preferredLocations = List<String>.from(json['preferredLocations']);
-    services = List<String>.from(json['services']);
-    availability = List<String>.from(json['availability']);
-    availabilityTime = List<String>.from(json['availabilityTime']);
-    preferredJobType = json['preferredJobType'];
+    roleDetails = json['roleDetails'] != null ? RoleDetails.fromJson(json['roleDetails']) : null;
     role = json['role'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+    // services = List<String>.from(json['services']);
+    // availability = List<String>.from(json['availability']);
+    // availabilityTime = List<String>.from(json['availabilityTime']);
   }
 
   Map<String, dynamic> toJson() {
@@ -107,15 +97,15 @@ class Profile {
     data['email'] = email;
     data['username'] = username;
     data['phone'] = phone;
-
-    // Country object serialization
+    data['address'] = address;
+    data['city'] = city;
+    data['countryAndState'] = countryAndState;
     if (country != null) {
       data['country'] = country!.toJson();
     }
     if (profilePic != null) {
       data['profile_pic'] = profilePic!.toJson();
     }
-
     data['is_user_verified'] = isUserVerified;
     data['status'] = status;
     data['account_type'] = accountType;
@@ -124,27 +114,67 @@ class Profile {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['last_activity'] = lastActivity;
-
-    // Notification preferences serialization
     if (notificationPreferences != null) {
       data['notification_preferences'] = notificationPreferences!.toJson();
     }
+    if (roleDetails != null) {
+      data['roleDetails'] = roleDetails!.toJson();
+    }
+    data['role'] = role;
+    data['services'] = services;
+    data['availability'] = availability;
+    data['availabilityTime'] = availabilityTime;
+    return data;
+  }
+}
 
-    data['address'] = address;
-    data['city'] = city;
-    data['countryAndState'] = countryAndState;
+class RoleDetails {
+  String? id;
+  String? userId;
+  List<String>? preferredLocations;
+  List<String>? services;
+  List<String>? availability;
+  List<String>? availabilityTime;
+  String? preferredJobType;
+  String? createdAt;
+  String? updatedAt;
+
+  RoleDetails({
+    this.id,
+    this.userId,
+    this.preferredLocations,
+    this.services,
+    this.availability,
+    this.availabilityTime,
+    this.preferredJobType,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  RoleDetails.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['userId'];
+    preferredLocations = List<String>.from(json['preferredLocations']);
+    services = List<String>.from(json['services']);
+    availability = List<String>.from(json['availability']);
+    availabilityTime = List<String>.from(json['availabilityTime']);
+    preferredJobType = json['preferredJobType'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['userId'] = userId;
     data['preferredLocations'] = preferredLocations;
     data['services'] = services;
     data['availability'] = availability;
     data['availabilityTime'] = availabilityTime;
     data['preferredJobType'] = preferredJobType;
-    data['role'] = role;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
-
     return data;
-    
-    
   }
 }
 

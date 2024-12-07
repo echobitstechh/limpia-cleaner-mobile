@@ -100,7 +100,7 @@ class _RegisterState extends State<Register> {
                       ),
                     ],
                   ),
-            
+
                   verticalSpaceMedium,
                   verticalSpaceMedium,
                   TextFieldWidget(
@@ -224,7 +224,7 @@ class _RegisterState extends State<Register> {
                                 ),
                               ),
                             )
-            
+
                           ]
                       ),
                     ],
@@ -312,6 +312,11 @@ class _RegisterState extends State<Register> {
                   model.cityValue = secondaryTextParts.first.trim();
                   model.countryValue = secondaryTextParts.last.trim();
                   model.addressValue = updatedPrediction.mainText;
+                  model.zipValue = updatedPrediction.postalCode;
+                  model.stateValue = updatedPrediction.state;
+                  model.streetValue = updatedPrediction.streetNumber;
+                  model.locationLatValue = updatedPrediction.latitude;
+                  model.locationLongValue = updatedPrediction.longitude;
                 }
 
                 setState(() {

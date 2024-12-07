@@ -47,7 +47,6 @@ class AuthViewModel extends BaseViewModel {
   final cityController = TextEditingController();
 
 
-
   String? selectedJobType;
   late String phoneValue = "";
   late String countryId = "";
@@ -63,6 +62,11 @@ class AuthViewModel extends BaseViewModel {
   String? countryValue;
   String? addressValue;
   String? cityValue;
+  String? zipValue;
+  String? stateValue;
+  String? streetValue;
+  num? locationLatValue;
+  num? locationLongValue;
 
   bool isSpecificDateSelected = false;
   List<DateTime> selectedDates = [];
@@ -83,32 +87,30 @@ class AuthViewModel extends BaseViewModel {
   List<String> selectedServices = [];
 
 
-
   init() async {
-
-
-    String? token = await locator<LocalStorage>().fetch(LocalStorageDir.authToken);
-    String? lastEmail = await locator<LocalStorage>().fetch(LocalStorageDir.lastEmail);
-
+    String? token = await locator<LocalStorage>().fetch(
+        LocalStorageDir.authToken);
+    String? lastEmail = await locator<LocalStorage>().fetch(
+        LocalStorageDir.lastEmail);
 
 
     // If remember me is true and we have a token, validate it
     if (token != null && JwtDecoder.isExpired(token)) {
       // bool isValidToken = await validateToken(token);
       // if (isValidToken) {
-        userLoggedIn.value = true;
-        // Retrieve and set user profile from saved JSON in local storage
-        String? userJson =
-        await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
-        if (userJson != null) {
-          profile.value = Profile.fromJson(jsonDecode(userJson));
-        }
-        locator<NavigationService>().clearStackAndShow(Routes.homeView);
-        return;
+      userLoggedIn.value = true;
+      // Retrieve and set user profile from saved JSON in local storage
+      String? userJson =
+      await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
+      if (userJson != null) {
+        profile.value = Profile.fromJson(jsonDecode(userJson));
+      }
+      locator<NavigationService>().clearStackAndShow(Routes.homeView);
+      return;
       // }
     }
 
-    if( token != null && !JwtDecoder.isExpired(token)){
+    if (token != null && !JwtDecoder.isExpired(token)) {
       await locator<LocalStorage>()
           .delete(LocalStorageDir.authToken);
       userLoggedIn.value = false;
@@ -220,8 +222,10 @@ class AuthViewModel extends BaseViewModel {
                               fontSize: 14,
                             ),
                             textAlign: TextAlign.center,
-                            softWrap: true, // Ensure wrapping
-                            maxLines: 2, // Limit to 2 lines
+                            softWrap: true,
+                            // Ensure wrapping
+                            maxLines: 2,
+                            // Limit to 2 lines
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -246,7 +250,7 @@ class AuthViewModel extends BaseViewModel {
         );
       },
     ).then((_) {
-     notifyListeners();
+      notifyListeners();
     });
   }
 
@@ -267,12 +271,11 @@ class AuthViewModel extends BaseViewModel {
               calendarEndDate: DateTime(2100),
               enableMultiSelect: true,
               onDateSelected: (List<DateTime> dates) {
-
-                  isSpecificDateSelected = true;
-                  selectedDates = dates;
-                  selectedDays.clear();
-                  selectedTimes.clear();
-                  notifyListeners();
+                isSpecificDateSelected = true;
+                selectedDates = dates;
+                selectedDays.clear();
+                selectedTimes.clear();
+                notifyListeners();
               },
             ),
           ),
@@ -310,15 +313,20 @@ class AuthViewModel extends BaseViewModel {
     try {
       ApiResponse res = await repo.login({
         "email": email.text,
-        "password": password.text
+        "password": password.text,
+        "role":"Cleaner"
       });
       if (res.statusCode == 200) {
-        print('login response: ${res.data['cleaner']}');
+        print('login response: ${res.data['user']}');
         userLoggedIn.value = true;
-        profile.value = Profile.fromJson(Map<String, dynamic>.from(res.data['cleaner']));
-        locator<LocalStorage>().save(LocalStorageDir.authToken, res.data['token']);
-        locator<LocalStorage>().save(LocalStorageDir.authRefreshToken, res.data['refreshToken']);
-        locator<LocalStorage>().save(LocalStorageDir.authUser, jsonEncode(res.data['cleaner']));
+        profile.value =
+            Profile.fromJson(Map<String, dynamic>.from(res.data['user']));
+        locator<LocalStorage>().save(
+            LocalStorageDir.authToken, res.data['token']);
+        locator<LocalStorage>().save(
+            LocalStorageDir.authRefreshToken, res.data['refreshToken']);
+        locator<LocalStorage>().save(
+            LocalStorageDir.authUser, jsonEncode(res.data['user']));
         locator<LocalStorage>().save(LocalStorageDir.remember, remember);
 
         if (remember) {
@@ -329,8 +337,10 @@ class AuthViewModel extends BaseViewModel {
         locator<NavigationService>().clearStackAndShow(Routes.homeView);
       } else {
         snackBar.showSnackbar(message: res.data["message"]);
+        setBusy(false);
       }
     } catch (e) {
+      setBusy(false);
       log.i(e);
     }
 
@@ -338,13 +348,12 @@ class AuthViewModel extends BaseViewModel {
   }
 
 
-
   Future<RegistrationResult> register() async {
-
     // if (!terms) {
     //   snackBar.showSnackbar(message: "Accept terms to continue");
     //   return RegistrationResult.failure;
     // }
+    clearToken();
     setBusy(true);
 
     List<String> availabilityTime = [];
@@ -356,7 +365,6 @@ class AuthViewModel extends BaseViewModel {
         return "${date.year}-${date.month}-${date.day}";
       }).toList();
     } else {
-
       if (selectedDays.contains(AvailabilityDay.weekdays)) {
         availability = "weekdays";
       }
@@ -379,44 +387,57 @@ class AuthViewModel extends BaseViewModel {
 
 
     //   {
-  //     "firstName": "Jane",
-  //   "lastName": "Smith",
-  //   "email": "cleaner@domain.com",
-  //   "password": "securePassword456",
-  //   "address": "456 Oak St, Anytown, USA",
-  //   "city": "Anytown",
-  //   "countryAndState": "USA, CA",
-  //   "preferredLocations": [
-  //   "Downtown"
-  //   ],
-  //   "services": [
-  //   "House Cleaning"
-  //   ],
-  //   "availability": "weekdays",
-  //   "availabilityTime": [
-  // {
-  //   "period": "morning",
-  //   "start": "8am",
-  //   "end": "12pm"
-  // }
-  //   ],
-  //   "preferredJobType": "part-time"
-  // }
+    //     "firstName": "Jane",
+    //   "lastName": "Smith",
+    //   "email": "cleaner@domain.com",
+    //   "password": "securePassword456",
+    //   "address": "456 Oak St, Anytown, USA",
+    //   "city": "Anytown",
+    //   "countryAndState": "USA, CA",
+    //   "preferredLocations": [
+    //   "Downtown"
+    //   ],
+    //   "services": [
+    //   "House Cleaning"
+    //   ],
+    //   "availability": "weekdays",
+    //   "availabilityTime": [
+    // {
+    //   "period": "morning",
+    //   "start": "8am",
+    //   "end": "12pm"
+    // }
+    //   ],
+    //   "preferredJobType": "part-time"
+    // }
 
     try {
       ApiResponse res = await repo.register({
-        "firstName": firstname.text.split(' ').first,
-        "lastName": firstname.text.split(' ').length > 1 ? firstname.text.split(' ').sublist(1).join(' ') : '',
+        "firstName": firstname.text
+            .split(' ')
+            .first,
+        "lastName": firstname.text
+            .split(' ')
+            .length > 1 ? firstname.text.split(' ').sublist(1).join(' ') : '',
         "email": email.text,
         "password": password.text,
         "address": addressValue,
         "city": cityValue,
         "countryAndState": countryValue,
+        "location": {
+          "long": locationLongValue.toString(),
+          "lat": locationLatValue.toString()
+        },
+        "state": stateValue,
+        "country": countryValue,
+        "zip": zipValue,
+        "street": streetValue,
         "preferredLocations": ["Downtown"], // Placeholder for now
         "services": selectedServices,
         "availability": [availability],
         "availabilityTime": availabilityTime,
-        "preferredJobType": selectedJobType
+        "preferredJobType": selectedJobType,
+        "role": "Cleaner" // Placeholder for now
       });
       if (res.statusCode == 201) {
         snackBar.showSnackbar(message: res.data["message"]);
@@ -435,28 +456,37 @@ class AuthViewModel extends BaseViewModel {
 
         if (res.data["message"] is String) {
           snackBar.showSnackbar(message: res.data["message"]);
-          return RegistrationResult.failure; // Return failure since it's an error message
+          return RegistrationResult
+              .failure; // Return failure since it's an error message
         }
         else if (res.data["message"] is List<String>) {
           snackBar.showSnackbar(message: res.data["message"].join('\n'));
-          return RegistrationResult.failure; // Return failure since it's an error message
+          return RegistrationResult
+              .failure; // Return failure since it's an error message
         }
         else if (res.data["message"] is List) {
           snackBar.showSnackbar(message: res.data["message"].join('\n'));
-          return RegistrationResult.failure; // Return failure since it's an error message
+          return RegistrationResult
+              .failure; // Return failure since it's an error message
         } else {
           // Handle unexpected data type (e.g., it's not a string or list)
           snackBar.showSnackbar(message: "Unexpected response format");
           return RegistrationResult.failure;
         }
-
       }
     } catch (e) {
       log.e(e);
       setBusy(false);
       return RegistrationResult.failure;
-
     }
+  }
 
+  void clearToken() async {
+    // Delete all existing tokens and sessions
+    await locator<LocalStorage>().delete(LocalStorageDir.authToken);
+    await locator<LocalStorage>().delete(LocalStorageDir.authRefreshToken);
+    await locator<LocalStorage>().delete(LocalStorageDir.authUser);
+    await locator<LocalStorage>().delete(LocalStorageDir.lastEmail);
+    await locator<LocalStorage>().delete(LocalStorageDir.remember);
   }
 }

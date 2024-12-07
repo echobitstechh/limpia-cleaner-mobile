@@ -1,6 +1,9 @@
 import 'package:intl/intl.dart';
 
-String formatDate(DateTime date) {
+String formatDate(DateTime? date) {
+  if(date == null) {
+    return '';
+  }
   String daySuffix(int day) {
     if (day >= 11 && day <= 13) {
       return 'th';
@@ -39,6 +42,21 @@ String formatDateString(String? dateString, {String format = 'MMM, dd'}) {
     print('Error parsing date: $e');
     return '';
   }
+}
+
+String formatTimeOnly(DateTime? time){
+  if(time == null) {
+    return '';
+  }
+  //format time
+  return DateFormat('hh:mm a').format(time);
+}
+
+String formatDateTime(DateTime? dateTime) {
+  if(dateTime == null) {
+    return '';
+  }
+  return DateFormat('MM-dd-yy hh:mm a').format(dateTime);
 }
 
 

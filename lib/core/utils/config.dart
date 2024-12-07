@@ -5,9 +5,9 @@
 
 class AppConfig {
   // static const String baseUrl = "https://api.afriprize.com/api/v1/";
-  static const String baseUrl = "https://limpia-backend.onrender.com/api/v1/";
+  // static const String baseUrl = "https://limpia-backend.onrender.com/api/v1/";
 
-  // static const String baseUrl = "http://192.168.0.179:3001/api/v1/";
+  static const String baseUrl = "http://10.0.2.2:3000/api/v1/";
 
 
   static const String flutterWaveBaseUrl = 'https://api.flutterwave.com/v3';

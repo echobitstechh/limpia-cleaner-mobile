@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:limpia/ui/common/ui_helpers.dart';
 
 import '../core/data/models/booking.dart';
+import '../ui/views/dashboard/dashboard_viewmodel.dart';
 import 'booking_success.dart';
 
 
@@ -53,7 +54,7 @@ class BookingCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "SQFT: ${booking.property.numberOfUnit}",
+                        "SQFT: ${booking.numberOfRooms}",
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
@@ -71,7 +72,7 @@ class BookingCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   // Address
                   Text(
-                    booking.property.country + booking.property.state + booking.property.city,
+                    booking.property!.address.street + ' ' + booking.property!.address.city + ' ' +booking.property!.address.state,
                     style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 8),
@@ -136,7 +137,7 @@ class BookingCard extends StatelessWidget {
                       color: Colors.orangeAccent,
                     ),
                     child: Text(
-                      booking.status,
+                      booking?.status ?? '',
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -147,7 +148,7 @@ class BookingCard extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      booking.date.first,
+                      booking.cleaningTime.toString(),
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -282,12 +283,12 @@ void showAcceptBottomSheet(BuildContext context, Booking booking) {
                   ),
                   _buildDetailItem(
                     icon: Icons.location_on_outlined,
-                    title: booking.property.country + booking.property.state + booking.property.city,
+                    title: booking.property!.address.country + booking.property!.address.state + booking.property!.address.city,
                     subtitle: "Location",
                   ),
                   _buildDetailItem(
                     icon: Icons.calendar_today_outlined,
-                    title: booking.date.first,
+                    title: booking.cleaningTime.toString(),
                     subtitle: "Date",
                   ),
                   _buildDetailItem(

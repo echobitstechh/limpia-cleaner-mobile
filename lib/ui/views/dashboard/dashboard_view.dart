@@ -210,7 +210,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                       ),
                                     ),
                                     horizontalSpaceSmall,
-                                    viewModel.activebookingInfo != null
+                                    viewModel.activebooking != null
                                         ? GestureDetector(
                                             onTap:
                                                 () {}, // Define edit job action
@@ -237,9 +237,9 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 ),
                                 verticalSpaceSmall,
                                 Text(
-                                  viewModel.activebookingInfo != null
+                                  viewModel.activebooking != null
                                       ? "Address: "
-                                      "${viewModel.activebookingInfo?.booking.property?.address ?? viewModel.activebookingInfo?.booking.address}, ${viewModel.activebookingInfo?.booking.property?.state ?? viewModel.activebookingInfo?.booking?.state}"
+                                      "${viewModel.activebooking?.property?.address.street ?? ''}, ${viewModel.activebooking?.property?.address?.state ?? viewModel.activebooking?.property?.address?.state}"
                                       : "No Active work...",
                                   style: TextStyle(
                                     color: Colors.white,
@@ -247,7 +247,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                   ),
                                 ),
                                 verticalSpaceSmall,
-                                viewModel.activebookingInfo != null
+                                viewModel.activebooking != null
                                     ? Row(
                                         children: [
                                           Row(
@@ -259,7 +259,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                               ),
                                               horizontalSpaceTiny,
                                               Text(
-                                                "${formatDateString(viewModel.activebookingInfo?.booking.date[0]) ?? ''}",                                                style: TextStyle(
+                                                "${formatDate(viewModel.activebooking!.cleaningTime) ?? ''}",                                                style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
                                                 ),
@@ -276,7 +276,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                               ),
                                               horizontalSpaceTiny,
                                               Text(
-                                                "${viewModel.activebookingInfo?.booking.time[0] ?? ''}",
+                                                "${formatTimeOnly(viewModel.activebooking!.cleaningTime) ?? ''}",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
@@ -351,7 +351,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                       ),
                                     ),
                                   )
-                                : viewModel.pendingBookinginfos.isEmpty && !viewModel.isBusy
+                                : viewModel.pendingBookings.isEmpty && !viewModel.isBusy
                                     ? Padding(
                                         padding: const EdgeInsets.only(
                                             left: 26.0, right: 16.0),
@@ -363,11 +363,11 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                     : ListView.builder(
                                         shrinkWrap: true,
                                         itemCount:
-                                            viewModel.pendingBookinginfos.length,
+                                            viewModel.pendingBookings.length,
                                         itemBuilder: (context, index) {
                                           return BookingAssignmentCard(
-                                            bookingInfo: viewModel
-                                                .pendingBookinginfos[index],
+                                            booking: viewModel
+                                                .pendingBookings[index],
                                             context: context,
                                               isBusy: viewModel.isBusy,
                                           );
@@ -385,7 +385,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 ),
                               ),
                             )
-                                : viewModel.pendingBookinginfos.isEmpty && !viewModel.isBusy
+                                : viewModel.pendingBookings.isEmpty && !viewModel.isBusy
                                 ? Padding(
                               padding: const EdgeInsets.only(
                                   left: 26.0, right: 16.0),
@@ -397,11 +397,11 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 : ListView.builder(
                               shrinkWrap: true,
                               itemCount:
-                              viewModel.activebookingInfos.length,
+                              viewModel.activebookings.length,
                               itemBuilder: (context, index) {
                                 return BookingAssignmentCard(
-                                  bookingInfo: viewModel
-                                      .activebookingInfos[index],
+                                  booking: viewModel
+                                      .activebookings[index],
                                   context: context,
                                   isBusy: viewModel.isBusy,
                                 );

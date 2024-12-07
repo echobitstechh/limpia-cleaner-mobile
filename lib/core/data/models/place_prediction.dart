@@ -6,6 +6,14 @@ class PlacePrediction {
   final num longitude;
   final num latitude;
 
+  // Address components
+  final String? streetNumber;
+  final String? route;
+  final String? city;
+  final String? state;
+  final String? country;
+  final String? postalCode;
+
   PlacePrediction({
     required this.description,
     required this.placeId,
@@ -13,6 +21,12 @@ class PlacePrediction {
     required this.secondaryText,
     required this.latitude,
     required this.longitude,
+    this.streetNumber,
+    this.route,
+    this.city,
+    this.state,
+    this.country,
+    this.postalCode,
   });
 
   factory PlacePrediction.fromJson(Map<String, dynamic> json) {
@@ -30,11 +44,40 @@ class PlacePrediction {
     final Map<String, dynamic>? location = geometry?['location'];
 
     // Log the location object and its data
-    print('Location object: ${json}');
+    print('Location object: $json');
 
     // Extract the latitude and longitude if they are present
     final double? latitude = location?['lat'];
     final double? longitude = location?['lng'];
+
+    // Initialize variables to hold address components
+    String? streetNumber;
+    String? route;
+    String? city;
+    String? state;
+    String? country;
+    String? postalCode;
+
+    // Parse address components
+    if (json.containsKey('address_components')) {
+      final addressComponents = json['address_components'] as List<dynamic>;
+      for (var component in addressComponents) {
+        final types = component['types'] as List<dynamic>;
+        if (types.contains('street_number')) {
+          streetNumber = component['long_name'];
+        } else if (types.contains('route')) {
+          route = component['long_name'];
+        } else if (types.contains('locality')) {
+          city = component['long_name'];
+        } else if (types.contains('administrative_area_level_1')) {
+          state = component['short_name'];
+        } else if (types.contains('country')) {
+          country = component['long_name'];
+        } else if (types.contains('postal_code')) {
+          postalCode = component['long_name'];
+        }
+      }
+    }
 
     return PlacePrediction(
       placeId: json['place_id'] ?? '', // Provide a default empty string if null
@@ -43,6 +86,12 @@ class PlacePrediction {
       secondaryText: secondaryText,
       latitude: latitude ?? 0, // Use a default value if latitude is null
       longitude: longitude ?? 0, // Use a default value if longitude is null
+      streetNumber: streetNumber,
+      route: route,
+      city: city,
+      state: state,
+      country: country,
+      postalCode: postalCode,
     );
   }
 }

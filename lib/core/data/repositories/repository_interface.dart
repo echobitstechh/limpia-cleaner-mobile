@@ -109,7 +109,7 @@ abstract class IRepository {
   });
 
   Future<ApiResponse> fetchAssignments();
-  Future<ApiResponse> displayAllNearByBookings();
+  Future<ApiResponse> getNearByBookings();
   Future<ApiResponse> updateCleanerAssignments(String cleanerAssignmentId, String action);
   Future<ApiResponse> acceptBooking(String bookingId);
 
