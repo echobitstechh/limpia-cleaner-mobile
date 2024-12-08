@@ -645,6 +645,15 @@ class Repository extends IRepository {
 
     return response;
   }
+  @override
+  Future<ApiResponse> getCleanerBookings() async {
+    ApiResponse response = await api.call(
+      method: HttpMethod.get,
+      endpoint: "/booking/cleaner-bookings",
+    );
+
+    return response;
+  }
 
   @override
   Future<ApiResponse> updateBooking(String bookingId, String action) async {

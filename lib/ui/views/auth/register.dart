@@ -468,7 +468,7 @@ class _RegisterState extends State<Register> {
               children: [
                 Expanded(
                   child: SubmitButton(
-                    isLoading: model.isBusy,
+                    isLoading: false,
                     label: "Go back",
                     submit: () {
                       setState(() {

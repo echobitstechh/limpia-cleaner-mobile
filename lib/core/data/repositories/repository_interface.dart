@@ -110,6 +110,7 @@ abstract class IRepository {
 
   Future<ApiResponse> fetchAssignments();
   Future<ApiResponse> getNearByBookings();
+  Future<ApiResponse> getCleanerBookings();
   Future<ApiResponse> getEnums(String? enumType);
   Future<ApiResponse> updateBooking(String cleanerAssignmentId, String action);
   Future<ApiResponse> acceptBooking(String bookingId);

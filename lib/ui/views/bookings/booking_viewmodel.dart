@@ -50,6 +50,7 @@ class BookingsViewModel extends BaseViewModel {
   Future<void> init() async {
     setBusy(true);
     await displayAllNearByBookings();
+    await getCleanerBookings();
     setBusy(false);
     notifyListeners();
   }
@@ -67,6 +68,7 @@ class BookingsViewModel extends BaseViewModel {
 
   void getResourceList(){
     displayAllNearByBookings();
+    getCleanerBookings();
   }
 
   Future<void> updateCleanerAssignments(String cleanerAssignmentId,String action) async {
@@ -136,6 +138,45 @@ class BookingsViewModel extends BaseViewModel {
           pendingBookings = [];
           completedBookings = [];
           bookings = [];
+          activeBooking = null;
+          activeBookings = [];
+        }
+      } else {
+        throw Exception('Failed to load assignments');
+      }
+    } catch (e) {
+      log.e(e);
+    } finally {
+      setBusy(false);
+      notifyListeners();
+    }
+  }
+  Future<void> getCleanerBookings() async {
+    setBusy(true);
+    notifyListeners();
+    try {
+      ApiResponse response = await repo.getCleanerBookings();
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data != null && data['bookings'] != null && data['bookings'] is List) {
+
+          activeBookings = (data['bookings'] as List)
+              .map((x) => Booking.fromJson(x))
+              .toList();
+
+          // Sort assignments by the first date in descending order
+          activeBookings.sort((a, b) {
+            return b.cleaningTime?.compareTo(a.cleaningTime ?? DateTime(0)) ?? 0;
+          });
+
+
+          //TODO: Update this to be only current booking in progress
+          activeBookings.sort((a, b) => a.cleaningTime?.compareTo(b.cleaningTime ?? DateTime(0)) ?? 0);
+          activeBooking = activeBookings.isNotEmpty ? activeBookings.first : null;
+
+
+        } else {
           activeBooking = null;
           activeBookings = [];
         }
