@@ -24,8 +24,8 @@ class DashboardViewModel extends BaseViewModel {
 
   List<Booking> pendingBookings = [];
   List<Booking> bookings = [];
-  List<Booking> activebookings = [];
-  Booking? activebooking;
+  List<Booking> activeBookings = [];
+  Booking? activeBooking;
 
 
 
@@ -52,15 +52,20 @@ class DashboardViewModel extends BaseViewModel {
     getNearByBookings();
   }
 
-  Future<void> updateCleanerAssignments(String cleanerAssignmentId,String action) async {
+  Future<bool> updateBooking(String cleanerAssignmentId,String action) async {
     setBusy(true);
     try {
-      ApiResponse res = await repo.updateCleanerAssignments(cleanerAssignmentId, action);
+      ApiResponse res = await repo.updateBooking(cleanerAssignmentId, action);
       if (res.statusCode == 200) {
+        DashboardViewModel().refreshData();
+        locator<SnackbarService>().showSnackbar(message: 'Booking Status Updated Successfully!');
         notifyListeners();
+        return true;
       }
+      return false;
     } catch (e) {
-      throw Exception(e);
+      print(e);
+      return false;
     } finally{
       setBusy(false);
     }
@@ -102,36 +107,37 @@ class DashboardViewModel extends BaseViewModel {
 
           print("bookings::: ${data['bookings']}");
 
+
           bookings = (data['bookings'] as List)
-              .map((b) => Booking.fromJson(b))
+              .map((assignment) => Booking.fromJson(assignment))
               .toList();
 
           // Sort assignments by the first date in descending order
-          // bookings.sort((a, b) {
-          //   return b.cleaningTime?.compareTo(a.cleaningTime);
-          // });
+          bookings.sort((a, b) {
+            return b.cleaningTime?.compareTo(a.cleaningTime ?? DateTime(0)) ?? 0;
+          });
 
           pendingBookings = bookings
-              // .where((assignment) => assignment.booking.isTaken == false)
-              // .toList()
-          ;
+              .where((x) => x.bookingStatus == 'PENDING')
+              .toList();
 
-          activebooking = bookings.firstOrNull;
-              // .where((b) => b.status == 'Active')
-              // .toList();
+          activeBookings = bookings.where((x) => x.bookingStatus != 'PENDING').toList();
 
-          print('Active Bookings::: $activebooking');
+          print('Active Bookings::: $activeBookings');
 
-          // activebookingInfo = bookingInfos.isNotEmpty && bookingInfos.any((info) => info.booking.isTaken)
-          //     ? bookingInfos.firstWhere((info) => info.booking.isTaken)
-          //     : null;
-
+          //TODO: Update this to be only current booking in progress
+          activeBooking = bookings.isNotEmpty && bookings.any((x) => x.bookingStatus == 'CONFIRMED' || x.bookingStatus == 'IN_PROGRESS')
+              ? (bookings.where((x) => x.bookingStatus == 'CONFIRMED' || x.bookingStatus == 'IN_PROGRESS')
+              .toList()
+            ..sort((a, b) => a.cleaningTime?.compareTo(b.cleaningTime ?? DateTime(0)) ?? 0))
+              .first
+              : null;
 
         } else {
           pendingBookings = [];
           bookings = [];
-          activebooking = null;
-          activebookings = [];
+          activeBooking = null;
+          activeBookings = [];
         }
       } else {
         throw Exception('Failed to load assignments');
@@ -183,6 +189,7 @@ class Booking {
   final String cleaningType;
   final bool isTaken;
   final String? status;
+  final String? bookingStatus;
   final int numberOfRooms;
   final int numberOfBathrooms;
   final Property? property;
@@ -195,6 +202,7 @@ class Booking {
     required this.cleaningType,
     required this.isTaken,
     this.status,
+    this.bookingStatus,
     required this.numberOfRooms,
     required this.numberOfBathrooms,
     this.property,
@@ -209,6 +217,7 @@ class Booking {
       cleaningType: json['cleaningType'],
       isTaken: json['isTaken'] ?? false,
       status: json['status'],
+      bookingStatus: json['bookingStatus'],
       numberOfRooms: int.parse(json['numberOfRooms']),
       numberOfBathrooms: int.parse(json['numberOfBathrooms']),
       property: json['property'] != null ? Property.fromJson(json['property']) : null,

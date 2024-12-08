@@ -647,14 +647,15 @@ class Repository extends IRepository {
   }
 
   @override
-  Future<ApiResponse> updateCleanerAssignments(String cleanerAssignmentId, String action) async {
+  Future<ApiResponse> updateBooking(String bookingId, String action) async {
     Map<String, dynamic> reqParams = {
       'action': action,
+      'bookingId': bookingId,
       'reason': 'Cleaner Updated'
     };
     ApiResponse response = await api.call(
-      method: HttpMethod.put,
-      endpoint: "/cleaner-assignments/$cleanerAssignmentId",
+      method: HttpMethod.post,
+      endpoint: "/booking/action",
         reqBody: reqParams
     );
     return response;
@@ -670,6 +671,18 @@ class Repository extends IRepository {
     return response;
   }
 
+  @override
+  Future<ApiResponse> getEnums(String? enumType) async {
+    ApiResponse response = await api.call(
+      method: HttpMethod.get,
+      endpoint: "enum/enums",
+      reqParams: {
+        "enumType": enumType,
+      },
+    );
+
+    return response;
+  }
 
 
 }

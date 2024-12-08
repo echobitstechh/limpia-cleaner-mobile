@@ -40,7 +40,6 @@ class DashboardView extends StackedView<DashboardViewModel> {
     ),
   ];
 
-
   final List<String> cleaningTypes = [
     'Regular cleaning ',
     'Standard cleaning',
@@ -120,8 +119,8 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                   children: [
                                     CircleAvatar(
                                       radius: 30,
-                                      backgroundImage: AssetImage(
-                                          'assets/images/man.png'),
+                                      backgroundImage:
+                                          AssetImage('assets/images/man.png'),
                                     ),
                                     horizontalSpaceSmall,
                                     Column(
@@ -210,7 +209,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                       ),
                                     ),
                                     horizontalSpaceSmall,
-                                    viewModel.activebooking != null
+                                    viewModel.activeBooking != null
                                         ? GestureDetector(
                                             onTap:
                                                 () {}, // Define edit job action
@@ -237,9 +236,9 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 ),
                                 verticalSpaceSmall,
                                 Text(
-                                  viewModel.activebooking != null
+                                  viewModel.activeBooking != null
                                       ? "Address: "
-                                      "${viewModel.activebooking?.property?.address.street ?? ''}, ${viewModel.activebooking?.property?.address?.state ?? viewModel.activebooking?.property?.address?.state}"
+                                          "${viewModel.activeBooking?.property?.address.street ?? ''}, ${viewModel.activeBooking?.property?.address?.state ?? viewModel.activeBooking?.property?.address?.state}"
                                       : "No Active work...",
                                   style: TextStyle(
                                     color: Colors.white,
@@ -247,7 +246,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                   ),
                                 ),
                                 verticalSpaceSmall,
-                                viewModel.activebooking != null
+                                viewModel.activeBooking != null
                                     ? Row(
                                         children: [
                                           Row(
@@ -259,7 +258,8 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                               ),
                                               horizontalSpaceTiny,
                                               Text(
-                                                "${formatDate(viewModel.activebooking!.cleaningTime) ?? ''}",                                                style: TextStyle(
+                                                "${formatDate(viewModel.activeBooking!.cleaningTime) ?? ''}",
+                                                style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
                                                 ),
@@ -276,7 +276,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                               ),
                                               horizontalSpaceTiny,
                                               Text(
-                                                "${formatTimeOnly(viewModel.activebooking!.cleaningTime) ?? ''}",
+                                                "${formatTimeOnly(viewModel.activeBooking!.cleaningTime) ?? ''}",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
@@ -299,663 +299,680 @@ class DashboardView extends StackedView<DashboardViewModel> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: DefaultTabController(
-                  length: 3,
-                  child: Column(
-                    children: [
-                      verticalSpaceTiny,
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: SegmentedTabControl(
-                          splashColor: Colors.transparent,
-                          indicatorDecoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: kcPrimaryColor,
-                                width: 2.0,
-                              ),
-                            ),
-                          ),
-                          tabTextColor: Colors.black,
-                          selectedTabTextColor: Colors.black,
-                          tabs: [
-                            SegmentTab(
-                              backgroundColor: Colors.transparent,
-                              label: 'Bookings',
-                            ),
-                            SegmentTab(
-                              backgroundColor: Colors.transparent,
-                              label: 'Active Bookings',
-                            ),
-                            SegmentTab(
-                              backgroundColor: Colors.transparent,
-                              label: 'Combo Jobs',
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height -
-                            460, // Adjust height as necessary
-                        child: TabBarView(
-                          physics: const BouncingScrollPhysics(),
-                          children: [
-                            viewModel.isBusy
-                                ? Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      height: 50, // Search bar height
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ),
-                                  )
-                                : viewModel.pendingBookings.isEmpty && !viewModel.isBusy
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 26.0, right: 16.0),
-                                        child: Image.asset(
-                                          "assets/images/no_booking.png",
-                                          fit: BoxFit.scaleDown,
-                                        ),
-                                      )
-                                    : ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount:
-                                            viewModel.pendingBookings.length,
-                                        itemBuilder: (context, index) {
-                                          return BookingAssignmentCard(
-                                            booking: viewModel
-                                                .pendingBookings[index],
-                                            context: context,
-                                              isBusy: viewModel.isBusy,
-                                          );
-                                        },
-                                      ),
-                            viewModel.isBusy
-                                ? Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                height: 50, // Search bar height
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
+                  length: 2,
+                  child: DefaultTabController(
+                    length: 2,
+                    child: Builder(builder: (context) {
+                      final TabController tabController =
+                          DefaultTabController.of(context)!;
+                      tabController.addListener(() {
+                        if (!tabController.indexIsChanging) {
+                          viewModel
+                              .refreshData(); // Call viewModel.refresh() on tab switch
+                        }
+                      });
+                      return Column(
+                        children: [
+                          verticalSpaceTiny,
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: SegmentedTabControl(
+                              splashColor: Colors.transparent,
+                              indicatorDecoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: kcPrimaryColor,
+                                    width: 2.0,
+                                  ),
                                 ),
                               ),
-                            )
-                                : viewModel.pendingBookings.isEmpty && !viewModel.isBusy
-                                ? Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 26.0, right: 16.0),
-                              child: Image.asset(
-                                "assets/images/no_booking.png",
-                                fit: BoxFit.scaleDown,
-                              ),
-                            )
-                                : ListView.builder(
-                              shrinkWrap: true,
-                              itemCount:
-                              viewModel.activebookings.length,
-                              itemBuilder: (context, index) {
-                                return BookingAssignmentCard(
-                                  booking: viewModel
-                                      .activebookings[index],
-                                  context: context,
-                                  isBusy: viewModel.isBusy,
-                                );
-                              },
-                            ),
-                            Column(
-                              children: [
-                                Card(
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 16),
-                                  elevation: 5,
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Container(
-                                                width: 60,
-                                                height: 70,
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                      width: 1),
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.1),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 3,
-                                                      offset: Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Image.asset(
-                                                    fit: BoxFit.cover,
-                                                    'assets/images/rectangle.png'),
-                                              ),
-                                            ),
-                                            SizedBox(width: 16),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  // Row(
-                                                  //   mainAxisAlignment: MainAxisAlignment.end,
-                                                  //   crossAxisAlignment: CrossAxisAlignment.end,
-                                                  //   children: [
-                                                  //     Container(
-                                                  //       padding: const EdgeInsets.symmetric(
-                                                  //         horizontal: 12.0,
-                                                  //       ),
-                                                  //       decoration: BoxDecoration(
-                                                  //           borderRadius:
-                                                  //           BorderRadius.circular(10.0),
-                                                  //           color: Colors.yellow),
-                                                  //       child: const Text(
-                                                  //         "processing",
-                                                  //         style: TextStyle(
-                                                  //             fontSize: 16,
-                                                  //             color: kcWhiteColor),
-                                                  //       ),
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "James Team Request",
-                                                        style: TextStyle(
-                                                          fontSize: 9,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      horizontalSpaceLarge,
-                                                      RatingBar.builder(
-                                                        initialRating: 4.5,
-                                                        // Replace with the user's average rating
-                                                        minRating: 1,
-                                                        direction:
-                                                            Axis.horizontal,
-                                                        itemCount: 5,
-                                                        itemSize: 7.0,
-                                                        itemPadding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    4.0),
-                                                        itemBuilder:
-                                                            (context, _) =>
-                                                                Icon(
-                                                          Icons.star,
-                                                          color: Colors.amber,
-                                                        ),
-                                                        onRatingUpdate:
-                                                            (rating) {
-                                                          // Handle rating update, if needed
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 2),
-                                                  Text(
-                                                    "Address: 8 Magodo, Califona USA",
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  verticalSpaceTiny,
-                                                  Row(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 12.0,
-                                                            ),
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                                color:
-                                                                    Colors.red),
-                                                            child: const Text(
-                                                              "Reject",
-                                                              style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  color:
-                                                                      kcWhiteColor),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      horizontalSpaceSmall,
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 12.0,
-                                                            ),
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                                color: Colors
-                                                                    .green),
-                                                            child: const Text(
-                                                              "Accepted",
-                                                              style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  color:
-                                                                      kcWhiteColor),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    alignment:
-                                                        Alignment.bottomRight,
-                                                    child: Text(
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                        'Feb, 27, 10:00'),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                              tabTextColor: Colors.black,
+                              selectedTabTextColor: Colors.black,
+                              tabs: [
+                                SegmentTab(
+                                  backgroundColor: Colors.transparent,
+                                  label: 'Bookings',
                                 ),
-                                Card(
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 16),
-                                  elevation: 5,
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Container(
-                                                width: 60,
-                                                height: 70,
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                      width: 1),
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.1),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 3,
-                                                      offset: Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Image.asset(
-                                                    fit: BoxFit.cover,
-                                                    'assets/images/rectangle.png'),
-                                              ),
-                                            ),
-                                            SizedBox(width: 16),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  // Row(
-                                                  //   mainAxisAlignment: MainAxisAlignment.end,
-                                                  //   crossAxisAlignment: CrossAxisAlignment.end,
-                                                  //   children: [
-                                                  //     Container(
-                                                  //       padding: const EdgeInsets.symmetric(
-                                                  //         horizontal: 12.0,
-                                                  //       ),
-                                                  //       decoration: BoxDecoration(
-                                                  //           borderRadius:
-                                                  //           BorderRadius.circular(10.0),
-                                                  //           color: Colors.yellow),
-                                                  //       child: const Text(
-                                                  //         "processing",
-                                                  //         style: TextStyle(
-                                                  //             fontSize: 16,
-                                                  //             color: kcWhiteColor),
-                                                  //       ),
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "Tosin Team Job offer",
-                                                        style: TextStyle(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      horizontalSpaceLarge,
-                                                      Text(
-                                                        "Price:50\$/hr",
-                                                        style: TextStyle(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 2),
-                                                  Text(
-                                                    "Address: 8 Magodo, Califona USA",
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  verticalSpaceTiny,
-                                                  Row(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 12.0,
-                                                            ),
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                                color:
-                                                                    Colors.red),
-                                                            child: const Text(
-                                                              "Reject",
-                                                              style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  color:
-                                                                      kcWhiteColor),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      horizontalSpaceSmall,
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 12.0,
-                                                            ),
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                                color: Colors
-                                                                    .green),
-                                                            child: const Text(
-                                                              "Accepted",
-                                                              style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  color:
-                                                                      kcWhiteColor),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    alignment:
-                                                        Alignment.bottomRight,
-                                                    child: Text(
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                        'Feb, 27, 10:00'),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                SegmentTab(
+                                  backgroundColor: Colors.transparent,
+                                  label: 'Active Bookings',
                                 ),
-                                Card(
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 16),
-                                  elevation: 5,
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Container(
-                                                width: 60,
-                                                height: 70,
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                      width: 1),
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.1),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 3,
-                                                      offset: Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Image.asset(
-                                                    fit: BoxFit.cover,
-                                                    'assets/images/rectangle.png'),
-                                              ),
-                                            ),
-                                            SizedBox(width: 16),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  // Row(
-                                                  //   mainAxisAlignment: MainAxisAlignment.end,
-                                                  //   crossAxisAlignment: CrossAxisAlignment.end,
-                                                  //   children: [
-                                                  //     Container(
-                                                  //       padding: const EdgeInsets.symmetric(
-                                                  //         horizontal: 12.0,
-                                                  //       ),
-                                                  //       decoration: BoxDecoration(
-                                                  //           borderRadius:
-                                                  //           BorderRadius.circular(10.0),
-                                                  //           color: Colors.yellow),
-                                                  //       child: const Text(
-                                                  //         "processing",
-                                                  //         style: TextStyle(
-                                                  //             fontSize: 16,
-                                                  //             color: kcWhiteColor),
-                                                  //       ),
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "Tosin Team Next Job",
-                                                        style: TextStyle(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      horizontalSpaceLarge,
-                                                      Text(
-                                                        "Price:50\$/hr",
-                                                        style: TextStyle(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 2),
-                                                  Text(
-                                                    "Address: 8 Magodo, Califona USA",
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  verticalSpaceTiny,
-                                                  Row(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 12.0,
-                                                            ),
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                                color: Colors
-                                                                    .orangeAccent),
-                                                            child: const Text(
-                                                              "Currently Working",
-                                                              style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  color:
-                                                                      kcWhiteColor),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    alignment:
-                                                        Alignment.bottomRight,
-                                                    child: Text(
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                        'Feb, 27, 10:00'),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                // SegmentTab(
+                                //   backgroundColor: Colors.transparent,
+                                //   label: 'Combo Jobs',
+                                // ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height -
+                                460, // Adjust height as necessary
+                            child: TabBarView(
+                              physics: const BouncingScrollPhysics(),
+                              children: [
+                                viewModel.isBusy
+                                    ? Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Container(
+                                          height: 50, // Search bar height
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                      )
+                                    : viewModel.pendingBookings.isEmpty &&
+                                            !viewModel.isBusy
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 26.0, right: 16.0),
+                                            child: Image.asset(
+                                              "assets/images/no_booking.png",
+                                              fit: BoxFit.scaleDown,
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: viewModel
+                                                .pendingBookings.length,
+                                            itemBuilder: (context, index) {
+                                              return BookingAssignmentCard(
+                                                booking: viewModel
+                                                    .pendingBookings[index],
+                                                context: context,
+                                                isBusy: viewModel.isBusy,
+                                              );
+                                            },
+                                          ),
+                                viewModel.isBusy
+                                    ? Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Container(
+                                          height: 50, // Search bar height
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                      )
+                                    : viewModel.activeBookings.isEmpty &&
+                                            !viewModel.isBusy
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 26.0, right: 16.0),
+                                            child: Image.asset(
+                                              "assets/images/no_booking.png",
+                                              fit: BoxFit.scaleDown,
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount:
+                                                viewModel.activeBookings.length,
+                                            itemBuilder: (context, index) {
+                                              return BookingAssignmentCard(
+                                                booking: viewModel
+                                                    .activeBookings[index],
+                                                context: context,
+                                                isBusy: viewModel.isBusy,
+                                              );
+                                            },
+                                          ),
+                                // Column(
+                                //   children: [
+                                //     Card(
+                                //       margin: EdgeInsets.symmetric(
+                                //           vertical: 10, horizontal: 16),
+                                //       elevation: 5,
+                                //       color: Colors.white,
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(15),
+                                //       ),
+                                //       child: Padding(
+                                //         padding: const EdgeInsets.all(16.0),
+                                //         child: Column(
+                                //           children: [
+                                //             Row(
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.start,
+                                //               children: [
+                                //                 ClipRRect(
+                                //                   borderRadius:
+                                //                       BorderRadius.circular(8),
+                                //                   child: Container(
+                                //                     width: 60,
+                                //                     height: 70,
+                                //                     decoration: BoxDecoration(
+                                //                       border: Border.all(
+                                //                           color:
+                                //                               Colors.grey.shade300,
+                                //                           width: 1),
+                                //                       borderRadius:
+                                //                           BorderRadius.circular(8),
+                                //                       boxShadow: [
+                                //                         BoxShadow(
+                                //                           color: Colors.black
+                                //                               .withOpacity(0.1),
+                                //                           spreadRadius: 1,
+                                //                           blurRadius: 3,
+                                //                           offset: Offset(0, 2),
+                                //                         ),
+                                //                       ],
+                                //                     ),
+                                //                     child: Image.asset(
+                                //                         fit: BoxFit.cover,
+                                //                         'assets/images/rectangle.png'),
+                                //                   ),
+                                //                 ),
+                                //                 SizedBox(width: 16),
+                                //                 Expanded(
+                                //                   child: Column(
+                                //                     crossAxisAlignment:
+                                //                         CrossAxisAlignment.start,
+                                //                     children: [
+                                //                       // Row(
+                                //                       //   mainAxisAlignment: MainAxisAlignment.end,
+                                //                       //   crossAxisAlignment: CrossAxisAlignment.end,
+                                //                       //   children: [
+                                //                       //     Container(
+                                //                       //       padding: const EdgeInsets.symmetric(
+                                //                       //         horizontal: 12.0,
+                                //                       //       ),
+                                //                       //       decoration: BoxDecoration(
+                                //                       //           borderRadius:
+                                //                       //           BorderRadius.circular(10.0),
+                                //                       //           color: Colors.yellow),
+                                //                       //       child: const Text(
+                                //                       //         "processing",
+                                //                       //         style: TextStyle(
+                                //                       //             fontSize: 16,
+                                //                       //             color: kcWhiteColor),
+                                //                       //       ),
+                                //                       //     ),
+                                //                       //   ],
+                                //                       // ),
+                                //                       Row(
+                                //                         children: [
+                                //                           Text(
+                                //                             "James Team Request",
+                                //                             style: TextStyle(
+                                //                               fontSize: 9,
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                           ),
+                                //                           horizontalSpaceLarge,
+                                //                           RatingBar.builder(
+                                //                             initialRating: 4.5,
+                                //                             // Replace with the user's average rating
+                                //                             minRating: 1,
+                                //                             direction:
+                                //                                 Axis.horizontal,
+                                //                             itemCount: 5,
+                                //                             itemSize: 7.0,
+                                //                             itemPadding: EdgeInsets
+                                //                                 .symmetric(
+                                //                                     horizontal:
+                                //                                         4.0),
+                                //                             itemBuilder:
+                                //                                 (context, _) =>
+                                //                                     Icon(
+                                //                               Icons.star,
+                                //                               color: Colors.amber,
+                                //                             ),
+                                //                             onRatingUpdate:
+                                //                                 (rating) {
+                                //                               // Handle rating update, if needed
+                                //                             },
+                                //                           ),
+                                //                         ],
+                                //                       ),
+                                //                       SizedBox(height: 2),
+                                //                       Text(
+                                //                         "Address: 8 Magodo, Califona USA",
+                                //                         style: TextStyle(
+                                //                           fontSize: 14,
+                                //                         ),
+                                //                       ),
+                                //                       verticalSpaceTiny,
+                                //                       Row(
+                                //                         children: [
+                                //                           Row(
+                                //                             mainAxisAlignment:
+                                //                                 MainAxisAlignment
+                                //                                     .spaceBetween,
+                                //                             crossAxisAlignment:
+                                //                                 CrossAxisAlignment
+                                //                                     .end,
+                                //                             children: [
+                                //                               Container(
+                                //                                 padding:
+                                //                                     const EdgeInsets
+                                //                                         .symmetric(
+                                //                                   horizontal: 12.0,
+                                //                                 ),
+                                //                                 decoration: BoxDecoration(
+                                //                                     borderRadius:
+                                //                                         BorderRadius
+                                //                                             .circular(
+                                //                                                 10.0),
+                                //                                     color:
+                                //                                         Colors.red),
+                                //                                 child: const Text(
+                                //                                   "Reject",
+                                //                                   style: TextStyle(
+                                //                                       fontSize: 16,
+                                //                                       color:
+                                //                                           kcWhiteColor),
+                                //                                 ),
+                                //                               ),
+                                //                             ],
+                                //                           ),
+                                //                           horizontalSpaceSmall,
+                                //                           Row(
+                                //                             mainAxisAlignment:
+                                //                                 MainAxisAlignment
+                                //                                     .spaceBetween,
+                                //                             crossAxisAlignment:
+                                //                                 CrossAxisAlignment
+                                //                                     .end,
+                                //                             children: [
+                                //                               Container(
+                                //                                 padding:
+                                //                                     const EdgeInsets
+                                //                                         .symmetric(
+                                //                                   horizontal: 12.0,
+                                //                                 ),
+                                //                                 decoration: BoxDecoration(
+                                //                                     borderRadius:
+                                //                                         BorderRadius
+                                //                                             .circular(
+                                //                                                 10.0),
+                                //                                     color: Colors
+                                //                                         .green),
+                                //                                 child: const Text(
+                                //                                   "Accepted",
+                                //                                   style: TextStyle(
+                                //                                       fontSize: 16,
+                                //                                       color:
+                                //                                           kcWhiteColor),
+                                //                                 ),
+                                //                               ),
+                                //                             ],
+                                //                           ),
+                                //                         ],
+                                //                       ),
+                                //                       Container(
+                                //                         alignment:
+                                //                             Alignment.bottomRight,
+                                //                         child: Text(
+                                //                             style: TextStyle(
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                             'Feb, 27, 10:00'),
+                                //                       )
+                                //                     ],
+                                //                   ),
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     Card(
+                                //       margin: EdgeInsets.symmetric(
+                                //           vertical: 10, horizontal: 16),
+                                //       elevation: 5,
+                                //       color: Colors.white,
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(15),
+                                //       ),
+                                //       child: Padding(
+                                //         padding: const EdgeInsets.all(16.0),
+                                //         child: Column(
+                                //           children: [
+                                //             Row(
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.start,
+                                //               children: [
+                                //                 ClipRRect(
+                                //                   borderRadius:
+                                //                       BorderRadius.circular(8),
+                                //                   child: Container(
+                                //                     width: 60,
+                                //                     height: 70,
+                                //                     decoration: BoxDecoration(
+                                //                       border: Border.all(
+                                //                           color:
+                                //                               Colors.grey.shade300,
+                                //                           width: 1),
+                                //                       borderRadius:
+                                //                           BorderRadius.circular(8),
+                                //                       boxShadow: [
+                                //                         BoxShadow(
+                                //                           color: Colors.black
+                                //                               .withOpacity(0.1),
+                                //                           spreadRadius: 1,
+                                //                           blurRadius: 3,
+                                //                           offset: Offset(0, 2),
+                                //                         ),
+                                //                       ],
+                                //                     ),
+                                //                     child: Image.asset(
+                                //                         fit: BoxFit.cover,
+                                //                         'assets/images/rectangle.png'),
+                                //                   ),
+                                //                 ),
+                                //                 SizedBox(width: 16),
+                                //                 Expanded(
+                                //                   child: Column(
+                                //                     crossAxisAlignment:
+                                //                         CrossAxisAlignment.start,
+                                //                     children: [
+                                //                       // Row(
+                                //                       //   mainAxisAlignment: MainAxisAlignment.end,
+                                //                       //   crossAxisAlignment: CrossAxisAlignment.end,
+                                //                       //   children: [
+                                //                       //     Container(
+                                //                       //       padding: const EdgeInsets.symmetric(
+                                //                       //         horizontal: 12.0,
+                                //                       //       ),
+                                //                       //       decoration: BoxDecoration(
+                                //                       //           borderRadius:
+                                //                       //           BorderRadius.circular(10.0),
+                                //                       //           color: Colors.yellow),
+                                //                       //       child: const Text(
+                                //                       //         "processing",
+                                //                       //         style: TextStyle(
+                                //                       //             fontSize: 16,
+                                //                       //             color: kcWhiteColor),
+                                //                       //       ),
+                                //                       //     ),
+                                //                       //   ],
+                                //                       // ),
+                                //                       Row(
+                                //                         children: [
+                                //                           Text(
+                                //                             "Tosin Team Job offer",
+                                //                             style: TextStyle(
+                                //                               fontSize: 10,
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                           ),
+                                //                           horizontalSpaceLarge,
+                                //                           Text(
+                                //                             "Price:50\$/hr",
+                                //                             style: TextStyle(
+                                //                               fontSize: 10,
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                           ),
+                                //                         ],
+                                //                       ),
+                                //                       SizedBox(height: 2),
+                                //                       Text(
+                                //                         "Address: 8 Magodo, Califona USA",
+                                //                         style: TextStyle(
+                                //                           fontSize: 14,
+                                //                         ),
+                                //                       ),
+                                //                       verticalSpaceTiny,
+                                //                       Row(
+                                //                         children: [
+                                //                           Row(
+                                //                             mainAxisAlignment:
+                                //                                 MainAxisAlignment
+                                //                                     .spaceBetween,
+                                //                             crossAxisAlignment:
+                                //                                 CrossAxisAlignment
+                                //                                     .end,
+                                //                             children: [
+                                //                               Container(
+                                //                                 padding:
+                                //                                     const EdgeInsets
+                                //                                         .symmetric(
+                                //                                   horizontal: 12.0,
+                                //                                 ),
+                                //                                 decoration: BoxDecoration(
+                                //                                     borderRadius:
+                                //                                         BorderRadius
+                                //                                             .circular(
+                                //                                                 10.0),
+                                //                                     color:
+                                //                                         Colors.red),
+                                //                                 child: const Text(
+                                //                                   "Reject",
+                                //                                   style: TextStyle(
+                                //                                       fontSize: 16,
+                                //                                       color:
+                                //                                           kcWhiteColor),
+                                //                                 ),
+                                //                               ),
+                                //                             ],
+                                //                           ),
+                                //                           horizontalSpaceSmall,
+                                //                           Row(
+                                //                             mainAxisAlignment:
+                                //                                 MainAxisAlignment
+                                //                                     .spaceBetween,
+                                //                             crossAxisAlignment:
+                                //                                 CrossAxisAlignment
+                                //                                     .end,
+                                //                             children: [
+                                //                               Container(
+                                //                                 padding:
+                                //                                     const EdgeInsets
+                                //                                         .symmetric(
+                                //                                   horizontal: 12.0,
+                                //                                 ),
+                                //                                 decoration: BoxDecoration(
+                                //                                     borderRadius:
+                                //                                         BorderRadius
+                                //                                             .circular(
+                                //                                                 10.0),
+                                //                                     color: Colors
+                                //                                         .green),
+                                //                                 child: const Text(
+                                //                                   "Accepted",
+                                //                                   style: TextStyle(
+                                //                                       fontSize: 16,
+                                //                                       color:
+                                //                                           kcWhiteColor),
+                                //                                 ),
+                                //                               ),
+                                //                             ],
+                                //                           ),
+                                //                         ],
+                                //                       ),
+                                //                       Container(
+                                //                         alignment:
+                                //                             Alignment.bottomRight,
+                                //                         child: Text(
+                                //                             style: TextStyle(
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                             'Feb, 27, 10:00'),
+                                //                       )
+                                //                     ],
+                                //                   ),
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     Card(
+                                //       margin: EdgeInsets.symmetric(
+                                //           vertical: 10, horizontal: 16),
+                                //       elevation: 5,
+                                //       color: Colors.white,
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(15),
+                                //       ),
+                                //       child: Padding(
+                                //         padding: const EdgeInsets.all(16.0),
+                                //         child: Column(
+                                //           children: [
+                                //             Row(
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.start,
+                                //               children: [
+                                //                 ClipRRect(
+                                //                   borderRadius:
+                                //                       BorderRadius.circular(8),
+                                //                   child: Container(
+                                //                     width: 60,
+                                //                     height: 70,
+                                //                     decoration: BoxDecoration(
+                                //                       border: Border.all(
+                                //                           color:
+                                //                               Colors.grey.shade300,
+                                //                           width: 1),
+                                //                       borderRadius:
+                                //                           BorderRadius.circular(8),
+                                //                       boxShadow: [
+                                //                         BoxShadow(
+                                //                           color: Colors.black
+                                //                               .withOpacity(0.1),
+                                //                           spreadRadius: 1,
+                                //                           blurRadius: 3,
+                                //                           offset: Offset(0, 2),
+                                //                         ),
+                                //                       ],
+                                //                     ),
+                                //                     child: Image.asset(
+                                //                         fit: BoxFit.cover,
+                                //                         'assets/images/rectangle.png'),
+                                //                   ),
+                                //                 ),
+                                //                 SizedBox(width: 16),
+                                //                 Expanded(
+                                //                   child: Column(
+                                //                     crossAxisAlignment:
+                                //                         CrossAxisAlignment.start,
+                                //                     children: [
+                                //                       // Row(
+                                //                       //   mainAxisAlignment: MainAxisAlignment.end,
+                                //                       //   crossAxisAlignment: CrossAxisAlignment.end,
+                                //                       //   children: [
+                                //                       //     Container(
+                                //                       //       padding: const EdgeInsets.symmetric(
+                                //                       //         horizontal: 12.0,
+                                //                       //       ),
+                                //                       //       decoration: BoxDecoration(
+                                //                       //           borderRadius:
+                                //                       //           BorderRadius.circular(10.0),
+                                //                       //           color: Colors.yellow),
+                                //                       //       child: const Text(
+                                //                       //         "processing",
+                                //                       //         style: TextStyle(
+                                //                       //             fontSize: 16,
+                                //                       //             color: kcWhiteColor),
+                                //                       //       ),
+                                //                       //     ),
+                                //                       //   ],
+                                //                       // ),
+                                //                       Row(
+                                //                         children: [
+                                //                           Text(
+                                //                             "Tosin Team Next Job",
+                                //                             style: TextStyle(
+                                //                               fontSize: 10,
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                           ),
+                                //                           horizontalSpaceLarge,
+                                //                           Text(
+                                //                             "Price:50\$/hr",
+                                //                             style: TextStyle(
+                                //                               fontSize: 10,
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                           ),
+                                //                         ],
+                                //                       ),
+                                //                       SizedBox(height: 2),
+                                //                       Text(
+                                //                         "Address: 8 Magodo, Califona USA",
+                                //                         style: TextStyle(
+                                //                           fontSize: 14,
+                                //                         ),
+                                //                       ),
+                                //                       verticalSpaceTiny,
+                                //                       Row(
+                                //                         children: [
+                                //                           Row(
+                                //                             mainAxisAlignment:
+                                //                                 MainAxisAlignment
+                                //                                     .spaceBetween,
+                                //                             crossAxisAlignment:
+                                //                                 CrossAxisAlignment
+                                //                                     .end,
+                                //                             children: [
+                                //                               Container(
+                                //                                 padding:
+                                //                                     const EdgeInsets
+                                //                                         .symmetric(
+                                //                                   horizontal: 12.0,
+                                //                                 ),
+                                //                                 decoration: BoxDecoration(
+                                //                                     borderRadius:
+                                //                                         BorderRadius
+                                //                                             .circular(
+                                //                                                 10.0),
+                                //                                     color: Colors
+                                //                                         .orangeAccent),
+                                //                                 child: const Text(
+                                //                                   "Currently Working",
+                                //                                   style: TextStyle(
+                                //                                       fontSize: 16,
+                                //                                       color:
+                                //                                           kcWhiteColor),
+                                //                                 ),
+                                //                               ),
+                                //                             ],
+                                //                           ),
+                                //                         ],
+                                //                       ),
+                                //                       Container(
+                                //                         alignment:
+                                //                             Alignment.bottomRight,
+                                //                         child: Text(
+                                //                             style: TextStyle(
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                             'Feb, 27, 10:00'),
+                                //                       )
+                                //                     ],
+                                //                   ),
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 ),
               ),

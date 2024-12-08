@@ -15,6 +15,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'core/data/repositories/repository.dart';
+import 'core/network/api_response.dart';
+import 'core/utils/enums.dart';
+
 /// @author George David
 /// email: georgequin19@gmail.com
 /// Feb, 2024
@@ -22,6 +26,7 @@ import 'package:rxdart/rxdart.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+final repo = locator<Repository>();
 
 void main() async{
 
@@ -49,6 +54,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     fetchUiState();
+    _fetchEnums();
     super.initState();
   }
 
@@ -63,6 +69,22 @@ class _MyAppState extends State<MyApp> {
         case "dark":
           uiMode.value = AppUiModes.dark;
       }
+    }
+  }
+
+
+  void _fetchEnums() async {
+    print(' >>>>>>>>>>>> fetching enums');
+    try {
+      ApiResponse response = await repo.getEnums(null);
+      if (response.statusCode == 200) {
+        Enums.setEnums((response.data['enums'] as Map<String, dynamic>).map((key, value) => MapEntry(key, List<String>.from(value))));
+        print(' >>>>>>>>>>>> fetched total of ${Enums.enums.length} enums');
+
+      }
+    }
+    catch (e) {
+      print(e);
     }
   }
 

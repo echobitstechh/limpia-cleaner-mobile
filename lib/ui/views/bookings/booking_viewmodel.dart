@@ -12,9 +12,10 @@ class BookingsViewModel extends BaseViewModel {
   final log = getLogger("BookingsViewModel");
 
   List<Booking> pendingBookings = [];
+  List<Booking> completedBookings = [];
   List<Booking> bookings = [];
-  List<Booking> activebookings = [];
-  Booking? activebooking;
+  List<Booking> activeBookings = [];
+  Booking? activeBooking;
 
 
 
@@ -71,7 +72,7 @@ class BookingsViewModel extends BaseViewModel {
   Future<void> updateCleanerAssignments(String cleanerAssignmentId,String action) async {
     setBusy(true);
     try {
-      ApiResponse res = await repo.updateCleanerAssignments(cleanerAssignmentId, action);
+      ApiResponse res = await repo.updateBooking(cleanerAssignmentId, action);
       if (res.statusCode == 200) {
         notifyListeners();
       }
@@ -111,26 +112,32 @@ class BookingsViewModel extends BaseViewModel {
           });
 
           pendingBookings = bookings
-              .where((x) => x.isTaken == false)
+              .where((x) => x.bookingStatus == 'PENDING')
               .toList();
 
-          activebooking = bookings?.first;
-              // .where((x) => x.booking.status == 'Active')
-              // .toList()
-          ;
+          completedBookings = bookings
+              .where((x) => x.bookingStatus == 'COMPLETED')
+              .toList();
 
-          print('Active Bookings::: $activebookings');
+          activeBookings = bookings.where((x) => x.bookingStatus == 'CONFIRMED').toList();
 
-          activebooking = bookings.isNotEmpty && bookings.any((info) => info.isTaken)
-              ? bookings.firstWhere((info) => info.isTaken)
+          print('Active Bookings::: $activeBookings');
+
+          //TODO: Update this to be only current booking in progress
+          activeBooking = bookings.isNotEmpty && bookings.any((x) => x.bookingStatus == 'CONFIRMED' || x.bookingStatus == 'IN_PROGRESS')
+              ? (bookings.where((x) => x.bookingStatus == 'CONFIRMED' || x.bookingStatus == 'IN_PROGRESS')
+              .toList()
+            ..sort((a, b) => a.cleaningTime?.compareTo(b.cleaningTime ?? DateTime(0)) ?? 0))
+              .first
               : null;
 
 
         } else {
           pendingBookings = [];
+          completedBookings = [];
           bookings = [];
-          activebooking = null;
-          activebookings = [];
+          activeBooking = null;
+          activeBookings = [];
         }
       } else {
         throw Exception('Failed to load assignments');

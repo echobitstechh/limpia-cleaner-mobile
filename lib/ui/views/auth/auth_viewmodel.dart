@@ -29,9 +29,9 @@ import '../../common/app_colors.dart';
 
 enum RegistrationResult { success, failure }
 
-enum AvailabilityDay { weekdays, weekends }
+enum AvailabilityDay { Weekdays, Weekends }
 
-enum AvailabilityTime { morning, afternoon, evening }
+enum AvailabilityTime { Morning, Afternoon, Evening }
 
 class AuthViewModel extends BaseViewModel {
   final log = getLogger("AuthViewModel");
@@ -365,21 +365,21 @@ class AuthViewModel extends BaseViewModel {
         return "${date.year}-${date.month}-${date.day}";
       }).toList();
     } else {
-      if (selectedDays.contains(AvailabilityDay.weekdays)) {
+      if (selectedDays.contains(AvailabilityDay.Weekdays)) {
         availability = "weekdays";
       }
-      if (selectedDays.contains(AvailabilityDay.weekends)) {
+      if (selectedDays.contains(AvailabilityDay.Weekends)) {
         availability = availability.isEmpty ? "weekends" : "both";
       }
 
       // Handle time slots (morning, afternoon, evening)
       availabilityTime = selectedTimes.map((time) {
         switch (time) {
-          case AvailabilityTime.morning:
+          case AvailabilityTime.Morning:
             return "morning";
-          case AvailabilityTime.afternoon:
+          case AvailabilityTime.Afternoon:
             return "afternoon";
-          case AvailabilityTime.evening:
+          case AvailabilityTime.Evening:
             return "evening";
         }
       }).toList();

@@ -75,12 +75,12 @@ class BookingAssignmentCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   // Address
                   Text(
-                    "Address: ${booking.property?.address ?? '' },"
-                        " ${booking.property?.address?.state ?? ''}",
+                    "Address: ${booking.property?.address.street ?? '' }, ${booking.property?.address.city ?? '' },"
+                        " ${booking.property?.address.state ?? ''}",
                       style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 8),
-                  booking.isTaken == false
+                  booking.bookingStatus == 'PENDING'
                       ? Row(
                     children: [
                       InkWell(
@@ -92,12 +92,12 @@ class BookingAssignmentCard extends StatelessWidget {
                           padding:
                           const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            color: Color(0xFFC7A11E),
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Center(
                             child: Text(
-                              "Reject",
+                              "Ignore",
                               textAlign: TextAlign.center,
                               style: GoogleFonts.inter(
                                 fontSize: 12,
@@ -141,7 +141,7 @@ class BookingAssignmentCard extends StatelessWidget {
                       color: Colors.green,
                     ),
                     child: Text(
-                      booking?.status ?? '',
+                      booking?.bookingStatus?.replaceAll('_', ' ') ?? '',
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -178,7 +178,7 @@ void showRejectDialog(BuildContext context, String id) {
     builder: (context) => AlertDialog(
       title: const Text("Warning"),
       content: const Text(
-          "Are you sure? You won’t be able to see this job again if you reject it."),
+          "Are you sure? You won’t be able to see this job again if you ignore it."),
       actions: [
         TextButton(
           onPressed: () {
@@ -188,12 +188,14 @@ void showRejectDialog(BuildContext context, String id) {
         ),
         ElevatedButton(
           onPressed: () async{
-            await DashboardViewModel().updateCleanerAssignments(id, "reject");
-            Navigator.pop(context);
-           locator<SnackbarService>().showSnackbar(message: "Booking Rejected successfully");
-            // Handle rejection logic here
+            var bool = await DashboardViewModel().updateBooking(id, "IGNORE");
+            if(bool){
+              locator<SnackbarService>().showSnackbar(message: "Booking Ignored successfully");
+            } else {
+              locator<SnackbarService>().showSnackbar(message: "Oops! Something went wrong, please try again later");
+            }
           },
-          child: const Text("Reject"),
+          child: const Text("Ignore"),
         ),
       ],
     ),
@@ -312,7 +314,7 @@ void showAcceptBottomSheet(BuildContext context, Booking booking, bool isBusy) {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Color(0xFFC7A11E),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -322,9 +324,13 @@ void showAcceptBottomSheet(BuildContext context, Booking booking, bool isBusy) {
                       ),
                     ),
                     onPressed: () async {
-                      await DashboardViewModel().updateCleanerAssignments(booking.id, "reject");
-                      Navigator.pop(context);
-                      locator<SnackbarService>().showSnackbar(message: "Booking Rejected successfully");
+                      var bool = await DashboardViewModel().updateBooking(booking.id, "IGNORE");
+                      if(bool){
+                        Navigator.pop(context);
+                        locator<SnackbarService>().showSnackbar(message: "Booking Ignored successfully");
+                      } else {
+                        locator<SnackbarService>().showSnackbar(message: "Oops! Something went wrong, please try again later");
+                      }
 
                     },
                     child: isBusy
@@ -332,7 +338,7 @@ void showAcceptBottomSheet(BuildContext context, Booking booking, bool isBusy) {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     )
                         : Text(
-                      "Reject",
+                      "Ignore",
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         color: Colors.white,
@@ -351,7 +357,7 @@ void showAcceptBottomSheet(BuildContext context, Booking booking, bool isBusy) {
                       ),
                     ),
                     onPressed: () async {
-                      var bool = await DashboardViewModel().acceptBooking(booking.id);
+                      var bool = await DashboardViewModel().updateBooking(booking.id,"ACCEPT");
                       if(bool){
                         showSuccessDialog(context);
                       } else {

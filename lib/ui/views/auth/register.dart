@@ -529,10 +529,10 @@ class _RegisterState extends State<Register> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      if (model.selectedDays.contains(AvailabilityDay.weekdays)) {
-                        model.selectedDays.remove(AvailabilityDay.weekdays);
+                      if (model.selectedDays.contains(AvailabilityDay.Weekdays)) {
+                        model.selectedDays.remove(AvailabilityDay.Weekdays);
                       } else {
-                        model.selectedDays.add(AvailabilityDay.weekdays);
+                        model.selectedDays.add(AvailabilityDay.Weekdays);
                       }
                     });
                   },
@@ -543,7 +543,7 @@ class _RegisterState extends State<Register> {
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: model.selectedDays.contains(AvailabilityDay.weekdays)
+                        color: model.selectedDays.contains(AvailabilityDay.Weekdays)
                             ? kcPrimaryColor
                             : Colors.grey,
                       ),
@@ -553,7 +553,7 @@ class _RegisterState extends State<Register> {
                       "Weekdays",
                       style: TextStyle(
                         fontSize: 16,
-                        color: model.selectedDays.contains(AvailabilityDay.weekdays)
+                        color: model.selectedDays.contains(AvailabilityDay.Weekdays)
                             ? kcPrimaryColor
                             : Colors.black,
                       ),
@@ -566,10 +566,10 @@ class _RegisterState extends State<Register> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      if (model.selectedDays.contains(AvailabilityDay.weekends)) {
-                        model.selectedDays.remove(AvailabilityDay.weekends);
+                      if (model.selectedDays.contains(AvailabilityDay.Weekends)) {
+                        model.selectedDays.remove(AvailabilityDay.Weekends);
                       } else {
-                        model.selectedDays.add(AvailabilityDay.weekends);
+                        model.selectedDays.add(AvailabilityDay.Weekends);
                       }
                     });
                   },
@@ -580,7 +580,7 @@ class _RegisterState extends State<Register> {
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: model.selectedDays.contains(AvailabilityDay.weekends)
+                        color: model.selectedDays.contains(AvailabilityDay.Weekends)
                             ? kcPrimaryColor
                             : Colors.grey,
                       ),
@@ -590,7 +590,7 @@ class _RegisterState extends State<Register> {
                       "Weekends",
                       style: TextStyle(
                         fontSize: 16,
-                        color: model.selectedDays.contains(AvailabilityDay.weekends)
+                        color: model.selectedDays.contains(AvailabilityDay.Weekends)
                             ? kcPrimaryColor
                             : Colors.black,
                       ),
@@ -610,10 +610,10 @@ class _RegisterState extends State<Register> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      if (model.selectedTimes.contains(AvailabilityTime.morning)) {
-                        model.selectedTimes.remove(AvailabilityTime.morning);
+                      if (model.selectedTimes.contains(AvailabilityTime.Morning)) {
+                        model.selectedTimes.remove(AvailabilityTime.Morning);
                       } else {
-                        model.selectedTimes.add(AvailabilityTime.morning);
+                        model.selectedTimes.add(AvailabilityTime.Morning);
                       }
                     });
                   },
@@ -624,7 +624,7 @@ class _RegisterState extends State<Register> {
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: model.selectedTimes.contains(AvailabilityTime.morning)
+                        color: model.selectedTimes.contains(AvailabilityTime.Morning)
                             ? kcPrimaryColor
                             : Colors.grey,
                       ),
@@ -637,7 +637,7 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(
                             fontSize: 16,
                             color:
-                            model.selectedTimes.contains(AvailabilityTime.morning)
+                            model.selectedTimes.contains(AvailabilityTime.Morning)
                                 ? kcPrimaryColor
                                 : Colors.black,
                           ),
@@ -647,7 +647,7 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(
                             fontSize: 14,
                             color:
-                            model.selectedTimes.contains(AvailabilityTime.morning)
+                            model.selectedTimes.contains(AvailabilityTime.Morning)
                                 ? kcPrimaryColor
                                 : Colors.black,
                           ),
@@ -662,10 +662,10 @@ class _RegisterState extends State<Register> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      if (model.selectedTimes.contains(AvailabilityTime.afternoon)) {
-                        model.selectedTimes.remove(AvailabilityTime.afternoon);
+                      if (model.selectedTimes.contains(AvailabilityTime.Afternoon)) {
+                        model.selectedTimes.remove(AvailabilityTime.Afternoon);
                       } else {
-                        model.selectedTimes.add(AvailabilityTime.afternoon);
+                        model.selectedTimes.add(AvailabilityTime.Afternoon);
                       }
                     });
                   },
@@ -677,7 +677,7 @@ class _RegisterState extends State<Register> {
                     decoration: BoxDecoration(
                       border: Border.all(
                         color:
-                        model.selectedTimes.contains(AvailabilityTime.afternoon)
+                        model.selectedTimes.contains(AvailabilityTime.Afternoon)
                             ? kcPrimaryColor
                             : Colors.grey,
                       ),
@@ -690,7 +690,7 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(
                             fontSize: 16,
                             color: model.selectedTimes
-                                .contains(AvailabilityTime.afternoon)
+                                .contains(AvailabilityTime.Afternoon)
                                 ? kcPrimaryColor
                                 : Colors.black,
                           ),
@@ -700,7 +700,7 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(
                             fontSize: 14,
                             color: model.selectedTimes
-                                .contains(AvailabilityTime.afternoon)
+                                .contains(AvailabilityTime.Afternoon)
                                 ? kcPrimaryColor
                                 : Colors.black,
                           ),
@@ -715,10 +715,10 @@ class _RegisterState extends State<Register> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      if (model.selectedTimes.contains(AvailabilityTime.evening)) {
-                        model.selectedTimes.remove(AvailabilityTime.evening);
+                      if (model.selectedTimes.contains(AvailabilityTime.Evening)) {
+                        model.selectedTimes.remove(AvailabilityTime.Evening);
                       } else {
-                        model.selectedTimes.add(AvailabilityTime.evening);
+                        model.selectedTimes.add(AvailabilityTime.Evening);
                       }
                     });
                   },
@@ -729,7 +729,7 @@ class _RegisterState extends State<Register> {
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: model.selectedTimes.contains(AvailabilityTime.evening)
+                        color: model.selectedTimes.contains(AvailabilityTime.Evening)
                             ? kcPrimaryColor
                             : Colors.grey,
                       ),
@@ -742,7 +742,7 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(
                             fontSize: 16,
                             color:
-                            model.selectedTimes.contains(AvailabilityTime.evening)
+                            model.selectedTimes.contains(AvailabilityTime.Evening)
                                 ? kcPrimaryColor
                                 : Colors.black,
                           ),
@@ -752,7 +752,7 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(
                             fontSize: 14,
                             color:
-                            model.selectedTimes.contains(AvailabilityTime.evening)
+                            model.selectedTimes.contains(AvailabilityTime.Evening)
                                 ? kcPrimaryColor
                                 : Colors.black,
                           ),
