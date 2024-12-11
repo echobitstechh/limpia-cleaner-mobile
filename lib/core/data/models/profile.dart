@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:limpia/core/data/models/country.dart';
 import 'package:limpia/core/data/models/discount.dart';
 import 'package:limpia/core/data/models/product.dart';
@@ -88,10 +90,12 @@ class Profile {
     notificationPreferences = json['notification_preferences'] != null
         ? NotificationPreferences.fromJson(json['notification_preferences'])
         : null;
-  
-    preferredLocations = List<String>.from(json['preferredLocations']);
+
+    preferredLocations = json['preferredLocations'] is String
+        ? List<String>.from(jsonDecode(json['preferredLocations'] ?? '[]'))
+        : List<String>.from(json['preferredLocations'] ?? []);
     services = List<String>.from(json['services']);
-    availability = List<String>.from(json['availability']);
+    availability = List<String>.from(jsonDecode(json['availability'] ?? '[]'));
     availabilityTime = List<String>.from(json['availabilityTime']);
     preferredJobType = json['preferredJobType'];
     role = json['role'];

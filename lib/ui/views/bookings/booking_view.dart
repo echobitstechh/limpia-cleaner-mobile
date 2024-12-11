@@ -64,7 +64,7 @@ class BookingView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: DefaultTabController(
-                  length: 3,
+                  length: 2,
                   child: Column(
                     children: [
                       verticalSpaceTiny,
@@ -75,6 +75,7 @@ class BookingView extends StatelessWidget {
                           indicatorDecoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
+                                color: kcPrimaryColor,
                                 width: 2.0,
                               ),
                             ),
@@ -90,10 +91,10 @@ class BookingView extends StatelessWidget {
                               backgroundColor: Colors.transparent,
                               label: 'History',
                             ),
-                            SegmentTab(
-                              backgroundColor: Colors.transparent,
-                              label: 'Combo Jobs',
-                            ),
+                            // SegmentTab(
+                            //   backgroundColor: Colors.transparent,
+                            //   label: 'Combo Jobs',
+                            // ),
                           ],
                         ),
                       ),

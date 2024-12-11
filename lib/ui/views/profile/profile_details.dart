@@ -111,8 +111,8 @@ class _ProfileScreen extends State<ProfileScreen> {
         backgroundColor: kcPrimaryColor,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25.0),
-                topRight: Radius.circular(25.0),
+                topLeft: Radius.circular(0.0),
+                topRight: Radius.circular(0.0),
                 bottomLeft: Radius.circular(25.0),
                 bottomRight: Radius.circular(25.0)
             )

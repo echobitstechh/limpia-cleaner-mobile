@@ -85,7 +85,7 @@ class OtpView extends StackedView<OtpViewModel> {
                               "Click here to resend",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: kcSecondaryColor,
+                                color: kcPrimaryColor,
                               ),
                             ),
                           )
