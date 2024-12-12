@@ -299,7 +299,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: DefaultTabController(
-                  length: 3,
+                  length: 2,
                   child: Column(
                     children: [
                       verticalSpaceTiny,
@@ -326,10 +326,10 @@ class DashboardView extends StackedView<DashboardViewModel> {
                               backgroundColor: Colors.transparent,
                               label: 'Active Bookings',
                             ),
-                            SegmentTab(
-                              backgroundColor: Colors.transparent,
-                              label: 'Combo Jobs',
-                            ),
+                            // SegmentTab(
+                            //   backgroundColor: Colors.transparent,
+                            //   label: 'Combo Jobs',
+                            // ),
                           ],
                         ),
                       ),

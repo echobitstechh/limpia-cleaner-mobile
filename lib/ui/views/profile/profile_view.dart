@@ -62,6 +62,7 @@ class ProfileView extends StatelessWidget {
                 ? const Center(child: CircularProgressIndicator())
                 : ListView(
                     children: [
+                      verticalSpaceSmall,
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Card(
@@ -168,7 +169,7 @@ class ProfileView extends StatelessWidget {
                                 ),
                                 verticalSpaceSmall,
                                 ProfileMenuItem(
-                                  icon: 'assets/images/settings.svg',
+                                  icon: 'assets/icons/settings.svg',
                                   label: 'Settings',
                                   onTap: () {
                                     Navigator.of(context)

@@ -82,7 +82,7 @@ class _LoginState extends State<Login> {
                             width: 20,
                             decoration: BoxDecoration(
                                 color: model.remember
-                                    ? kcSecondaryColor
+                                    ? kcPrimaryColor
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(

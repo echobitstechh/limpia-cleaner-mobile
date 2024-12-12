@@ -332,6 +332,10 @@ class AuthViewModel extends BaseViewModel {
       }
     } catch (e) {
       log.i(e);
+    }finally{
+      print('Login call ended');
+      setBusy(false);
+      notifyListeners();
     }
 
     setBusy(false);

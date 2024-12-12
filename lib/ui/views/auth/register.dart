@@ -431,7 +431,7 @@ class _RegisterState extends State<Register> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide:
-                  const BorderSide(color: Color(0xFFCC9933)),
+                  const BorderSide(color: Colors.grey),
                 ),
               ),
               value: model.selectedJobType,
