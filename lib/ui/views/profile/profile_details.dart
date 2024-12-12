@@ -108,6 +108,8 @@ class _ProfileScreen extends State<ProfileScreen> {
           ? kcDarkGreyColor
           : kcWhiteColor,
       appBar: AppBar(
+        leading: null,
+        automaticallyImplyLeading: false,
         backgroundColor: kcPrimaryColor,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
