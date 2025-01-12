@@ -2,8 +2,6 @@ import 'package:limpia/core/utils/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_paystack/flutter_paystack.dart';
-import 'package:flutterwave_standard/models/responses/charge_response.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'dart:io';
@@ -12,7 +10,6 @@ import '../app/app.locator.dart';
 import '../core/data/repositories/repository.dart';
 import '../core/network/api_response.dart';
 import '../state.dart';
-import 'flutterwave-service.dart';
 
 class MoneyUtils extends TextInputFormatter {
 
@@ -106,30 +103,6 @@ class MoneyUtils extends TextInputFormatter {
     //   }
     // }
 
-    // Handle flutterwave payment
-    if (paymentMethod == PaymentMethod.flutterwave) {
-      // Assuming amount, currency, and customer email are passed as parameters
-      final FlutterwavePaymentService paymentService = FlutterwavePaymentService();
-      ChargeResponse response = await paymentService.makePayment(
-        context: context,
-        amount: amount.toString(),
-        isTestMode: AppConfig.isTestMode,
-        reference: orderId
-      );
-
-      if (response.success == true || response.status == 'completed') {
-        print('flutterwave response was success');
-        var successResponse = Response(
-          requestOptions: RequestOptions(path: ''),
-          data: response.transactionId,
-          statusCode: 200,
-        );
-        return ApiResponse(successResponse);
-      }else{
-        print('flutterwave payment was different ${response.success}');
-        locator<SnackbarService>().showSnackbar(message: response.status ?? 'flutterwave payment failed');
-      }
-    }
 
 
     var defaultResponse = Response(

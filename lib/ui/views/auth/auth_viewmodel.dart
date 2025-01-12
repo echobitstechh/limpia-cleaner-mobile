@@ -11,7 +11,6 @@ import 'package:limpia/core/utils/local_stotage.dart';
 import 'package:limpia/state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/phone_number.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:multi_date_picker/multi_date_picker.dart';
 import 'package:stacked/stacked.dart';
@@ -51,7 +50,6 @@ class AuthViewModel extends BaseViewModel {
 
   String? selectedJobType;
   late String phoneValue = "";
-  late PhoneNumber phoneNumber;
   late String countryId = "";
   final password = TextEditingController();
   final cPassword = TextEditingController();
@@ -312,19 +310,16 @@ class AuthViewModel extends BaseViewModel {
     try {
       ApiResponse res = await repo.login({
         "email": email.text,
-        "password": password.text,
-        "account_type": "CUSTOMER"
+        "password": password.text
       });
-      if (res.statusCode == 201) {
-        print('login response: ${res.data["data"]}');
+      if (res.statusCode == 200) {
+        print('login response: ${res.data['cleaner']}');
         userLoggedIn.value = true;
-        profile.value =
-            Profile.fromJson(Map<String, dynamic>.from(res.data['data']["user"]));
-        locator<LocalStorage>().save(LocalStorageDir.authToken, res.data['data']["accessToken"]);
-        locator<LocalStorage>().save(LocalStorageDir.authRefreshToken, res.data['data']["refreshToken"]);
-        locator<LocalStorage>().save(LocalStorageDir.authUser, jsonEncode(res.data['data']["user"]));
+        profile.value = Profile.fromJson(Map<String, dynamic>.from(res.data['cleaner']));
+        locator<LocalStorage>().save(LocalStorageDir.authToken, res.data['token']);
+        locator<LocalStorage>().save(LocalStorageDir.authRefreshToken, res.data['refreshToken']);
+        locator<LocalStorage>().save(LocalStorageDir.authUser, jsonEncode(res.data['cleaner']));
         locator<LocalStorage>().save(LocalStorageDir.remember, remember);
-
 
         if (remember) {
           locator<LocalStorage>().save(LocalStorageDir.lastEmail, email.text);
@@ -337,6 +332,10 @@ class AuthViewModel extends BaseViewModel {
       }
     } catch (e) {
       log.i(e);
+    }finally{
+      print('Login call ended');
+      setBusy(false);
+      notifyListeners();
     }
 
     setBusy(false);
@@ -410,15 +409,16 @@ class AuthViewModel extends BaseViewModel {
 
     try {
       ApiResponse res = await repo.register({
-        "firstName": firstname.text,
-        "lastName": lastname.text,
+        "firstName": firstname.text.split(' ').first,
+        "lastName": firstname.text.split(' ').length > 1 ? firstname.text.split(' ').sublist(1).join(' ') : '',
         "email": email.text,
         "password": password.text,
         "address": addressValue,
         "city": cityValue,
         "countryAndState": countryValue,
+        "preferredLocations": ["Downtown"], // Placeholder for now
         "services": selectedServices,
-        "availability": availability,
+        "availability": [availability],
         "availabilityTime": availabilityTime,
         "preferredJobType": selectedJobType
       });
@@ -442,6 +442,10 @@ class AuthViewModel extends BaseViewModel {
           return RegistrationResult.failure; // Return failure since it's an error message
         }
         else if (res.data["message"] is List<String>) {
+          snackBar.showSnackbar(message: res.data["message"].join('\n'));
+          return RegistrationResult.failure; // Return failure since it's an error message
+        }
+        else if (res.data["message"] is List) {
           snackBar.showSnackbar(message: res.data["message"].join('\n'));
           return RegistrationResult.failure; // Return failure since it's an error message
         } else {

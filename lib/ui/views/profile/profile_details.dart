@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:path/path.dart' as path;
@@ -52,57 +50,6 @@ class _ProfileScreen extends State<ProfileScreen> {
     print('Selected image path: ${image.path}');
     print('Selected image length: ${await File(image.path).length()} bytes');
 
-    try {
-      // Compress the image and convert to .png
-      final compressedImage = await FlutterImageCompress.compressAndGetFile(
-        image.path, // original file path
-        '${path.withoutExtension(image.path)}.png', // output path
-        format: CompressFormat.png, // compress to PNG format
-        quality: 85, // adjust compression quality (1-100)
-      );
-
-      if (compressedImage == null) {
-        throw Exception('Image compression failed');
-      }
-
-      print('Compressed image path: ${compressedImage.path}');
-      print('Compressed image size: ${await compressedImage.length()} bytes');
-
-      // Now upload the compressed image
-      ApiResponse res = await locator<Repository>().updateMedia({
-        "file": await MultipartFile.fromFile(compressedImage.path),
-      });
-
-      print('Media upload response: ${res.statusCode}');
-
-      if (res.statusCode == 201) {
-        String mediaId = res.data["media_id"];
-        print('Media ID received: $mediaId');
-
-        // Now update the profile picture with the media_id
-        ApiResponse updateProfileRes = await locator<Repository>().updateProfilePicture({
-          "media_id": mediaId,
-        });
-
-        print('Profile update response: ${updateProfileRes.statusCode}');
-
-        if (updateProfileRes.statusCode == 200) {
-          snackBar.showSnackbar(message: "Profile picture updated successfully!");
-          getProfile();
-        } else {
-          snackBar.showSnackbar(message: "Failed to update profile picture.");
-        }
-      } else {
-        snackBar.showSnackbar(message: "Failed to upload media.");
-      }
-    } catch (e) {
-      print('Error during upload or update: $e');
-      snackBar.showSnackbar(message: "An error occurred: $e");
-    } finally {
-      setState(() {
-        isUpdating = false;
-      });
-    }
   }
 
 
@@ -161,11 +108,13 @@ class _ProfileScreen extends State<ProfileScreen> {
           ? kcDarkGreyColor
           : kcWhiteColor,
       appBar: AppBar(
+        leading: null,
+        automaticallyImplyLeading: false,
         backgroundColor: kcPrimaryColor,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25.0),
-                topRight: Radius.circular(25.0),
+                topLeft: Radius.circular(0.0),
+                topRight: Radius.circular(0.0),
                 bottomLeft: Radius.circular(25.0),
                 bottomRight: Radius.circular(25.0)
             )
@@ -280,7 +229,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "${profile.value.firstname} ${profile.value.lastname}",
+                      "${profile.value.firstName} ${profile.value.lastName}",
                       style: const TextStyle(
                         color: kcPrimaryColor,
                         fontSize: 18,
@@ -288,7 +237,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                       ),
                     ),
                     Text(
-                      'Cleaner',
+                      "${profile.value.role}",
                       style: const TextStyle(
                         color: kcPrimaryColor,
                         fontSize: 18,
@@ -330,9 +279,9 @@ class _ProfileScreen extends State<ProfileScreen> {
                                       text: '• ',
                                       style: TextStyle(fontSize: 20, color: Colors.black26),
                                       children: <TextSpan>[
-                                        TextSpan(text: 'Los Angelis -USA'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: '13 banga Distric'),
+                                        TextSpan(text: '${profile.value.address ?? ''}, ${profile.value.countryAndState ?? ''}'),
+                                        // TextSpan(text: '\n• '),
+                                        // TextSpan(text: '13 banga Distric'),
                                       ],
                                     ),
                                   )
@@ -359,18 +308,16 @@ class _ProfileScreen extends State<ProfileScreen> {
                                 children: [
                                   RichText(
                                     text: TextSpan(
-                                      text: '• ',
                                       style: TextStyle(fontSize: 20, color: Colors.black26),
-                                      children: <TextSpan>[
-                                        TextSpan(text: 'Residential Cleaning'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Deep Cleaning'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Move-In/Move-Out Cleaning'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Office Cleaning'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Eco-Friendly Cleaning Services'),
+                                      children: profile.value.services?.asMap().entries.map<TextSpan>((entry) {
+                                        int index = entry.key;
+                                        String service = entry.value;
+                                        return TextSpan(
+                                          text: '• $service${index < profile.value.services!.length - 1 ? '\n' : ''}',
+                                          style: TextStyle(fontSize: 20, color: Colors.black26),
+                                        );
+                                      }).toList() ?? [
+                                        TextSpan(text: '- No services offered -'),
                                       ],
                                     ),
                                   )
@@ -400,9 +347,9 @@ class _ProfileScreen extends State<ProfileScreen> {
                                       text: '• ',
                                       style: TextStyle(fontSize: 20, color: Colors.black26),
                                       children: <TextSpan>[
-                                        TextSpan(text: 'Days: Monday to Friday'),
+                                        TextSpan(text: 'Days: ${profile.value.availability?.join(', ') ?? ''}'),
                                         TextSpan(text: '\n• '),
-                                        TextSpan(text: 'Times: 9 AM - 5 PM'),
+                                        TextSpan(text: 'Times: ${profile.value.availabilityTime?.join(', ') ?? ''}'),
                                       ],
                                     ),
                                   )
@@ -429,12 +376,12 @@ class _ProfileScreen extends State<ProfileScreen> {
                                 children: [
                                   RichText(
                                     text: TextSpan(
-                                      text: '• ',
+                                      // text: '• ',
                                       style: TextStyle(fontSize: 20, color: Colors.black26),
                                       children: <TextSpan>[
-                                        TextSpan(text: '49 Completed'),
-                                        TextSpan(text: '\n• '),
-                                        TextSpan(text: '1 Rejected'),
+                                        TextSpan(text: '- No Completed Jobs Yet -'),
+                                        // TextSpan(text: '\n• '),
+                                        // TextSpan(text: '1 Rejected'),
                                       ],
                                     ),
                                   )

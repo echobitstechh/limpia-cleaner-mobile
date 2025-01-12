@@ -11,7 +11,7 @@ class Repository extends IRepository {
   Future<ApiResponse> login(Map<String, dynamic> req) async {
     ApiResponse response = await api.call(
       method: HttpMethod.post,
-      endpoint: "auth/login",
+      endpoint: "user/cleaner/signIn",
       reqBody: req,
     );
 
@@ -32,7 +32,7 @@ class Repository extends IRepository {
   Future<ApiResponse> refresh() async {
     ApiResponse response = await api.call(
         method: HttpMethod.postRefresh,
-        endpoint: "auth/refresh_tokens"
+        endpoint: "user/propertymanager/refresh-token"
     );
     return response;
   }
@@ -41,7 +41,7 @@ class Repository extends IRepository {
   Future<ApiResponse> register(Map<String, dynamic> req) async {
     ApiResponse response = await api.call(
       method: HttpMethod.post,
-      endpoint: "auth/create_account",
+      endpoint: "user/cleaner/signup",
       reqBody: req,
     );
 
@@ -625,5 +625,51 @@ class Repository extends IRepository {
       // protected: true, // This flag is used to decide if Authorization header should be included
     );
   }
+
+  @override
+  Future<ApiResponse> fetchAssignments() async {
+    ApiResponse response = await api.call(
+      method: HttpMethod.get,
+      endpoint: "/cleaner-assignments",
+    );
+
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> displayAllNearByBookings() async {
+    ApiResponse response = await api.call(
+      method: HttpMethod.get,
+      endpoint: "/user/cleaner/bookings",
+    );
+
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> updateCleanerAssignments(String cleanerAssignmentId, String action) async {
+    Map<String, dynamic> reqParams = {
+      'action': action,
+      'reason': 'Cleaner Updated'
+    };
+    ApiResponse response = await api.call(
+      method: HttpMethod.put,
+      endpoint: "/cleaner-assignments/$cleanerAssignmentId",
+        reqBody: reqParams
+    );
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> acceptBooking(String bookingId) async {
+  
+    ApiResponse response = await api.call(
+      method: HttpMethod.post,
+      endpoint: "/user/cleaner/bookings/$bookingId/accept",
+    );
+    return response;
+  }
+
+
 
 }

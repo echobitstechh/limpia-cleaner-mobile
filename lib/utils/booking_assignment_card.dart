@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:limpia/ui/common/ui_helpers.dart';
-
+import 'package:limpia/ui/views/dashboard/dashboard_viewmodel.dart';
+import 'package:limpia/utils/date_time_utils.dart';
+import 'package:stacked_services/stacked_services.dart';
+import '../app/app.locator.dart';
 import '../core/data/models/booking.dart';
 import 'booking_success.dart';
 
 
-class BookingCard extends StatelessWidget {
-  final Booking booking;
+class BookingAssignmentCard extends StatelessWidget {
+  final BookingInfo bookingInfo;
   final BuildContext context;
-  final bool isActiveBooking;
+  final bool isBusy;
 
-  const BookingCard({
+  const BookingAssignmentCard({
     Key? key,
-    required this.booking,
+    required this.bookingInfo,
     required this.context,
-    required this.isActiveBooking,
+    required this.isBusy,
   }) : super(key: key);
 
+  
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -53,14 +57,14 @@ class BookingCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "SQFT: ${booking.property.numberOfUnit}",
+                        "SQFT: 760",
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        "Price: /hr",
+                        "Price: 55/hr",
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
@@ -71,16 +75,17 @@ class BookingCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   // Address
                   Text(
-                    booking.property.country + booking.property.state + booking.property.city,
-                    style: const TextStyle(fontSize: 14),
+                    "Address: ${bookingInfo?.booking.property?.address ?? bookingInfo?.booking.address},"
+                        " ${bookingInfo?.booking.property?.state ?? bookingInfo?.booking?.state}",
+                      style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 8),
-                  isActiveBooking
+                  bookingInfo.booking.isTaken == false
                       ? Row(
                     children: [
                       InkWell(
                         onTap: () {
-                          showRejectDialog(context);
+                          showRejectDialog(context, bookingInfo.booking.id);
                         },
                         child: Container(
                           height: 30,
@@ -105,7 +110,7 @@ class BookingCard extends StatelessWidget {
                       horizontalSpaceTiny,
                       InkWell(
                         onTap: () {
-                          showAcceptBottomSheet(context, booking);
+                          showAcceptBottomSheet(context, bookingInfo, isBusy);
                         },
                         child: Container(
                           height: 30,
@@ -133,10 +138,10 @@ class BookingCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.orangeAccent,
+                      color: Colors.green,
                     ),
                     child: Text(
-                      booking.status,
+                      bookingInfo.booking.status,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -144,10 +149,11 @@ class BookingCard extends StatelessWidget {
                     ),
                   ),
                   // Date and Time
+                  //TODO: Why is it multiple times && Dates??
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      booking.date.first,
+                      '${formatDateString(bookingInfo.booking.date?.firstOrNull) ?? ""} ${bookingInfo.booking.time?.firstOrNull ?? ""}',
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -166,7 +172,7 @@ class BookingCard extends StatelessWidget {
 }
 
 // Show reject dialog
-void showRejectDialog(BuildContext context) {
+void showRejectDialog(BuildContext context, String id) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -181,8 +187,10 @@ void showRejectDialog(BuildContext context) {
           child: const Text("Cancel"),
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async{
+            await DashboardViewModel().updateCleanerAssignments(id, "reject");
             Navigator.pop(context);
+           locator<SnackbarService>().showSnackbar(message: "Booking Rejected successfully");
             // Handle rejection logic here
           },
           child: const Text("Reject"),
@@ -208,7 +216,7 @@ void showSuccessDialog(BuildContext context) {
   );
 }
 
-void showAcceptBottomSheet(BuildContext context, Booking booking) {
+void showAcceptBottomSheet(BuildContext context, BookingInfo bookingInfo, bool isBusy) {
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
@@ -233,21 +241,21 @@ void showAcceptBottomSheet(BuildContext context, Booking booking) {
               const SizedBox(height: 8),
               // Booking Title
               Text(
-                booking.cleaningType,
+                bookingInfo.booking.cleaningType,
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
-                "John Abraham",
+                "${bookingInfo.booking.property?.nameOfProperty ?? ""}",
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   color: Colors.black87,
                 ),
               ),
               Text(
-                "SQFT: ",
+                "${bookingInfo.booking.property?.type ?? ""}",
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   color: Colors.black54,
@@ -282,17 +290,17 @@ void showAcceptBottomSheet(BuildContext context, Booking booking) {
                   ),
                   _buildDetailItem(
                     icon: Icons.location_on_outlined,
-                    title: booking.property.country + booking.property.state + booking.property.city,
+                    title: "${bookingInfo?.booking.property?.address ?? bookingInfo?.booking.address}, ${bookingInfo?.booking.property?.state ?? bookingInfo?.booking.state}",
                     subtitle: "Location",
                   ),
                   _buildDetailItem(
                     icon: Icons.calendar_today_outlined,
-                    title: booking.date.first,
+                    title:'${formatDateString(bookingInfo.booking.date?.firstOrNull) ?? ""} ${bookingInfo.booking.time?.firstOrNull ?? ""}',
                     subtitle: "Date",
                   ),
                   _buildDetailItem(
                     icon: Icons.monetization_on_outlined,
-                    title: "per hour",
+                    title: "55 per hour",
                     subtitle: "Price",
                   ),
                 ],
@@ -313,10 +321,17 @@ void showAcceptBottomSheet(BuildContext context, Booking booking) {
                         vertical: 12,
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      await DashboardViewModel().updateCleanerAssignments(bookingInfo.booking.id, "reject");
                       Navigator.pop(context);
+                      locator<SnackbarService>().showSnackbar(message: "Booking Rejected successfully");
+
                     },
-                    child: Text(
+                    child: isBusy
+                        ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                        : Text(
                       "Reject",
                       style: GoogleFonts.inter(
                         fontSize: 14,
@@ -335,10 +350,19 @@ void showAcceptBottomSheet(BuildContext context, Booking booking) {
                         vertical: 12,
                       ),
                     ),
-                    onPressed: () {
-                      showSuccessDialog(context);
+                    onPressed: () async {
+                      var bool = await DashboardViewModel().acceptBooking(bookingInfo.booking.id);
+                      if(bool){
+                        showSuccessDialog(context);
+                      } else {
+                        locator<SnackbarService>().showSnackbar(message: "Oops! Something went wrong");
+                      }
                     },
-                    child: Text(
+                    child: isBusy
+                        ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                        : Text(
                       "Accept",
                       style: GoogleFonts.inter(
                         fontSize: 14,

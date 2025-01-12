@@ -8,6 +8,8 @@ import '../../common/app_colors.dart';
 import '../../common/ui_helpers.dart';
 import '../../components/submit_button.dart';
 import '../../components/text_field_widget.dart';
+import '../auth/auth_view.dart';
+import '../onboarding/onboarding_view2.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -272,19 +274,11 @@ class _Settings extends State<Settings> {
                   ),
                   ListTile(
                     onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        // barrierColor: Colors.black.withAlpha(50),
-                        // backgroundColor: Colors.transparent,
-                        backgroundColor: Colors.black.withOpacity(0.7),
-                        builder: (BuildContext context) {
-                          return const FractionallySizedBox(
-                            heightFactor:
-                            1.0, // 70% of the screen's height
-                            child: ProfileScreen(),
-                          );
-                        },
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OnboardingView2(),
+                        ),
                       );
                     },
                     leading: SvgPicture.asset(
