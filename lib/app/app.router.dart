@@ -15,7 +15,6 @@ import 'package:limpia/ui/views/auth/register.dart';
 import 'package:limpia/ui/views/change_password/change_password_view.dart'
     as _i17;
 import 'package:limpia/ui/views/dashboard/dashboard_view.dart' as _i6;
-import 'package:limpia/ui/views/dashboard/booking_detail.dart' as _i12;
 import 'package:limpia/ui/views/delete_account/delete_account_view.dart'
     as _i19;
 import 'package:limpia/ui/views/bookings/booking_view.dart' as _i7;
@@ -159,10 +158,6 @@ class StackedRouter extends _i1.RouterBase {
       Routes.profileView,
       page: _i10.ProfileView,
     ),
-    _i1.RouteDef(
-      Routes.productDetail,
-      page: _i12.RaffleDetail,
-    ),
     // _i1.RouteDef(
     //   Routes.receipt,
     //   page: _i13.Receipt,
@@ -261,14 +256,7 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i12.RaffleDetail: (data) {
-      final args = data.getArgs<RaffleDetailArguments>(nullOk: false);
-      return _i21.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i12.RaffleDetail(raffle: args.raffle, key: args.key),
-        settings: data,
-      );
-    },
+
     _i14.Wallet: (data) {
       return _i21.MaterialPageRoute<dynamic>(
         builder: (context) => const _i14.Wallet(),

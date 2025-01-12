@@ -3,7 +3,6 @@ import 'package:limpia/core/network/api_service.dart';
 import 'package:limpia/core/utils/local_stotage.dart';
 import 'package:limpia/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:limpia/ui/dialogs/info_alert/info_alert_dialog.dart';
-import 'package:limpia/ui/views/dashboard/booking_detail.dart';
 import 'package:limpia/ui/views/home/home_view.dart';
 import 'package:limpia/ui/views/startup/startup_view.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -38,7 +37,6 @@ import 'package:limpia/ui/views/withdraw/withdraw_view.dart';
     MaterialRoute(page: NotificationView),
     MaterialRoute(page: ProfileView),
    // MaterialRoute(page: Checkout),
-    MaterialRoute(page: RaffleDetail),
     // MaterialRoute(page: Receipt),
     MaterialRoute(page: Wallet),
     //MaterialRoute(page: Track),

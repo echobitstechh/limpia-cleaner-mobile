@@ -2,9 +2,7 @@ import 'package:limpia/state.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:open_mail_app/open_mail_app.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app/app.locator.dart';
 
@@ -36,7 +34,7 @@ class _SupportState extends State<Support> {
             title: "Email Us",
             //subtitle: "support@Limpia.com",
             onTap: () async {
-              sendEmail("support@Limpia.com", context);
+              // sendEmail("support@Limpia.com", context);
             },
           ),
           // SupportOption(
@@ -70,30 +68,30 @@ class _SupportState extends State<Support> {
   }
 }
 
-Future<void> sendEmail(String emailAddress, BuildContext context) async {
-  EmailContent email = EmailContent(
-    to: [
-      emailAddress,
-    ],
-    bcc: ['dev@Limpia.com'],
-  );
-
-  OpenMailAppResult result =
-  await OpenMailApp.composeNewEmailInMailApp(
-      nativePickerTitle: 'Select email app to compose',
-      emailContent: email);
-  if (!result.didOpen && !result.canOpen) {
-    showNoMailAppsDialog(context);
-  } else if (!result.didOpen && result.canOpen) {
-    showDialog(
-      context: context,
-      builder: (_) => MailAppPickerDialog(
-        mailApps: result.options,
-        emailContent: email,
-      ),
-    );
-  }
-}
+// Future<void> sendEmail(String emailAddress, BuildContext context) async {
+//   EmailContent email = EmailContent(
+//     to: [
+//       emailAddress,
+//     ],
+//     bcc: ['dev@Limpia.com'],
+//   );
+//
+//   OpenMailAppResult result =
+//   await OpenMailApp.composeNewEmailInMailApp(
+//       nativePickerTitle: 'Select email app to compose',
+//       emailContent: email);
+//   if (!result.didOpen && !result.canOpen) {
+//     showNoMailAppsDialog(context);
+//   } else if (!result.didOpen && result.canOpen) {
+//     showDialog(
+//       context: context,
+//       builder: (_) => MailAppPickerDialog(
+//         mailApps: result.options,
+//         emailContent: email,
+//       ),
+//     );
+//   }
+// }
 
 void showNoMailAppsDialog(BuildContext context) {
   showDialog(
@@ -127,9 +125,9 @@ Future<void> goToFaqs(String url) async {
   final Uri toLaunch =
   Uri(scheme: 'https', host: 'www.Limpia.com', path: '/faq');
 
-  if (!await launchUrl(toLaunch, mode: LaunchMode.inAppBrowserView)) {
-    throw Exception('Could not launch $url');
-  }
+  // if (!await launchUrl(toLaunch, mode: LaunchMode.inAppBrowserView)) {
+  //   throw Exception('Could not launch $url');
+  // }
 }
 
 // Future<void> chatOnWhatsApp(String phoneNumber) async {
@@ -143,9 +141,9 @@ Future<void> goToFaqs(String url) async {
 // }
 
 Future<void> _launch(Uri url) async {
-  await canLaunchUrl(url)
-      ? await launchUrl(url)
-      : locator<SnackbarService>().showSnackbar(message: "No app found");
+  // await canLaunchUrl(url)
+  //     ? await launchUrl(url)
+  //     : locator<SnackbarService>().showSnackbar(message: "No app found");
 }
 
 

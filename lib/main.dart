@@ -3,8 +3,6 @@ import 'package:limpia/core/utils/config.dart';
 import 'package:limpia/core/utils/local_store_dir.dart';
 import 'package:limpia/core/utils/local_stotage.dart';
 import 'package:limpia/state.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:limpia/app/app.bottomsheets.dart';
@@ -12,14 +10,9 @@ import 'package:limpia/app/app.dialogs.dart';
 import 'package:limpia/app/app.locator.dart';
 import 'package:limpia/app/app.router.dart';
 import 'package:limpia/ui/common/app_colors.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:update_available/update_available.dart';
-import 'package:workmanager/workmanager.dart';
-//import 'app/flutter_paystack/lib/flutter_paystack.dart';
-import 'firebase_options.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// @author George David
@@ -28,9 +21,9 @@ import 'package:rxdart/rxdart.dart';
 ///
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final _messageStreamController = BehaviorSubject<RemoteMessage>();
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+// final _messageStreamController = BehaviorSubject<RemoteMessage>();
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+// FlutterLocalNotificationsPlugin();
 
 void main() async{
 
@@ -97,20 +90,20 @@ void main() async{
 
 }
 
-void initializeNotifications() async {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('@mipmap/launcher_icon');
-
-  const InitializationSettings initializationSettings =
-  InitializationSettings(android: initializationSettingsAndroid, );
-
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse: (NotificationResponse? response) async {
-      await onSelectNotification(response?.payload);
-    },
-  );
-}
+// void initializeNotifications() async {
+//   const AndroidInitializationSettings initializationSettingsAndroid =
+//   AndroidInitializationSettings('@mipmap/launcher_icon');
+//
+//   const InitializationSettings initializationSettings =
+//   InitializationSettings(android: initializationSettingsAndroid, );
+//
+//   await flutterLocalNotificationsPlugin.initialize(
+//     initializationSettings,
+//     onDidReceiveNotificationResponse: (NotificationResponse? response) async {
+//       await onSelectNotification(response?.payload);
+//     },
+//   );
+// }
 
 
 Future<void> onSelectNotification(String? payload) async {
@@ -121,48 +114,48 @@ Future<void> onSelectNotification(String? payload) async {
 }
 
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp();
+//
+//   if (kDebugMode) {
+//     print("Handling a background message: ${message.messageId}");
+//     print('Message data: ${message.data}');
+//     print('Message notification: ${message.notification?.title}');
+//     print('Message notification: ${message.notification?.body}');
+//   }
+//
+//   // // Check the message type
+//   // String messageType = message.data['type'] ?? '';
+//   // if (messageType == 'text') {
+//   //   displayTextNotification(message.notification?.title ?? '', message.notification?.body ?? '');
+//   // } else if (messageType == 'image') {
+//   //   displayImageNotification(message.data);
+//   // }
+// }
 
-  if (kDebugMode) {
-    print("Handling a background message: ${message.messageId}");
-    print('Message data: ${message.data}');
-    print('Message notification: ${message.notification?.title}');
-    print('Message notification: ${message.notification?.body}');
-  }
-
-  // // Check the message type
-  // String messageType = message.data['type'] ?? '';
-  // if (messageType == 'text') {
-  //   displayTextNotification(message.notification?.title ?? '', message.notification?.body ?? '');
-  // } else if (messageType == 'image') {
-  //   displayImageNotification(message.data);
-  // }
-}
-
-void displayTextNotification(String title, String body) async {
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  AndroidNotificationDetails(
-    'AFRI2024',
-    'Limpia',
-    channelDescription: 'your_channel_description',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: false,
-  );
-
-  const NotificationDetails platformChannelSpecifics =
-  NotificationDetails(android: androidPlatformChannelSpecifics);
-
-  await flutterLocalNotificationsPlugin.show(
-    0,
-    title,
-    body,
-    platformChannelSpecifics,
-    payload: 'item x',
-  );
-}
-
+// void displayTextNotification(String title, String body) async {
+//   const AndroidNotificationDetails androidPlatformChannelSpecifics =
+//   AndroidNotificationDetails(
+//     'LIMP2024',
+//     'Limpia',
+//     channelDescription: 'your_channel_description',
+//     importance: Importance.max,
+//     priority: Priority.high,
+//     showWhen: false,
+//   );
+//
+//   const NotificationDetails platformChannelSpecifics =
+//   NotificationDetails(android: androidPlatformChannelSpecifics);
+//
+//   await flutterLocalNotificationsPlugin.show(
+//     0,
+//     title,
+//     body,
+//     platformChannelSpecifics,
+//     payload: 'item x',
+//   );
+// }
+//
 
 
 
@@ -177,7 +170,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     fetchUiState();
-    checkForUpdates();
+    // checkForUpdates();
     super.initState();
   }
 
@@ -255,13 +248,13 @@ class _MyAppState extends State<MyApp> {
       textTheme: GoogleFonts.poppinsTextTheme().apply(bodyColor: kcBlackColor),
     );
   }
-
-  void checkForUpdates() async {
-    final availability = await getUpdateAvailability();
-    if (availability is UpdateAvailable) {
-      showUpdateCard();
-    }
-  }
+  //
+  // void checkForUpdates() async {
+  //   final availability = await getUpdateAvailability();
+  //   if (availability is UpdateAvailable) {
+  //     showUpdateCard();
+  //   }
+  // }
 
   void showUpdateCard() {
     showDialog(

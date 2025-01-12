@@ -89,7 +89,7 @@ class ProfileView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${profile.value.firstname ?? 'User'} ${profile.value.lastname ?? ''}',
+                                      '${profile.value.firstName ?? 'User'} ${profile.value.lastName ?? ''}',
                                       style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,

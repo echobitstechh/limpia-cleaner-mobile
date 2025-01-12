@@ -12,8 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:update_available/update_available.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/data/models/raffle_cart_item.dart';
 import '../../../core/network/api_response.dart';
@@ -136,12 +134,7 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> checkForUpdates(BuildContext context) async {
-    final availability = await getUpdateAvailability();
-    if (availability is UpdateAvailable) {
-      showUpdateCard(context);
-    }
-  }
+
 
   void showUpdateCard(BuildContext context) {
     showDialog(
@@ -167,15 +160,7 @@ class HomeViewModel extends BaseViewModel {
                 ),
                 ButtonBar(
                   children: <Widget>[
-                    TextButton(
-                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(kcSecondaryColor)),
-                      onPressed: () {
-                        Platform.isIOS ? _launchURL(AppConfig.APPLESTOREURL) : _launchURL(AppConfig.GOOGLESTOREURL);
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Update Now', style: TextStyle(
-                          fontFamily: "Panchang", fontWeight: FontWeight.bold, color: kcWhiteColor)),
-                    ),
+
                   ],
                 ),
               ],
@@ -186,13 +171,7 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+
 
   Future<void> fetchOnlineCart() async {
     setBusy(true);
