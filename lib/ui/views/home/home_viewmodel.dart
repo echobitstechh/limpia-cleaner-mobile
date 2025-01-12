@@ -6,7 +6,6 @@ import 'package:limpia/app/app.locator.dart';
 import 'package:limpia/core/utils/config.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/common/app_strings.dart';
-import 'package:limpia/ui/views/cart/raffle_cart_view.dart';
 import 'package:limpia/ui/views/dashboard/dashboard_view.dart';
 import 'package:limpia/ui/views/profile/profile_view.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +161,7 @@ class HomeViewModel extends BaseViewModel {
                 const ListTile(
                   title: Text('App Updates', style: TextStyle(fontSize: 22,
                     fontFamily: "Panchang", fontWeight: FontWeight.bold, color: kcSecondaryColor)),
-                  subtitle: Text('A new version of Afriprize is now available.'
+                  subtitle: Text('A new version of Limpia is now available.'
                       ' download now to enjoy our lastest features.', style: TextStyle(fontSize: 13,
                     fontFamily: "Panchang",)),
                 ),

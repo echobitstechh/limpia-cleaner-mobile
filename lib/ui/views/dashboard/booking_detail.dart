@@ -285,7 +285,7 @@ class _RaffleDetailState extends State<RaffleDetail> {
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10.0,10.0,0,16.0),
-                          child: doMoreOnAfriprize(context),
+                          child: doMoreOnLimpia(context),
                         ),
                         Container(
                           margin: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
@@ -485,7 +485,7 @@ class _RaffleDetailState extends State<RaffleDetail> {
   }
 
 
-  Widget doMoreOnAfriprize(BuildContext context) {
+  Widget doMoreOnLimpia(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

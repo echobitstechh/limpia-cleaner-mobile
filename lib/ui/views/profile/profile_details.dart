@@ -14,7 +14,6 @@ import '../../../state.dart';
 import '../../common/app_colors.dart';
 import '../../common/ui_helpers.dart';
 import '../../components/profile_picture.dart';
-import '../cart/add_shipping.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({

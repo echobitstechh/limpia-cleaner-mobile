@@ -1,26 +1,17 @@
 import 'package:flutter/widgets.dart';
 import 'package:limpia/app/app.locator.dart';
 import 'package:limpia/app/app.router.dart';
-import 'package:limpia/core/utils/local_store_dir.dart';
-import 'package:limpia/core/utils/local_stotage.dart';
 import 'package:limpia/state.dart';
 import 'package:limpia/ui/common/app_colors.dart';
 import 'package:limpia/ui/common/ui_helpers.dart';
-import 'package:limpia/ui/components/profile_picture.dart';
-import 'package:limpia/ui/views/profile/order_list.dart';
 import 'package:limpia/ui/views/profile/profile_details.dart';
-import 'package:limpia/ui/views/profile/refferal.dart';
 import 'package:limpia/ui/views/profile/settings.dart';
 import 'package:limpia/ui/views/profile/support.dart';
-import 'package:limpia/ui/views/profile/ticket_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import '../../../core/data/models/profile.dart';
-import '../../../core/network/api_response.dart';
-import '../../../core/network/interceptors.dart';
 import 'profile_viewmodel.dart';
 
 class ProfileView extends StatelessWidget {

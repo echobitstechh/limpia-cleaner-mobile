@@ -144,7 +144,7 @@ void displayTextNotification(String title, String body) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
   AndroidNotificationDetails(
     'AFRI2024',
-    'Afriprize',
+    'Limpia',
     channelDescription: 'your_channel_description',
     importance: Importance.max,
     priority: Priority.high,
@@ -281,7 +281,7 @@ class _MyAppState extends State<MyApp> {
                 const ListTile(
                   title: Text('App Updates', style: TextStyle(fontSize: 12,
                     fontFamily: "Panchang", fontWeight: FontWeight.bold,)),
-                  subtitle: Text('A new version of Afriprize is now available.'
+                  subtitle: Text('A new version of Limpia is now available.'
                       ' download now to enjoy our lastest features.', style: TextStyle(fontSize: 8,
                     fontFamily: "Panchang",)),
                 ),

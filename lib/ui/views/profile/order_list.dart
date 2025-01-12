@@ -1,14 +1,14 @@
 //
-// import 'package:afriprize/app/app.locator.dart';
-// import 'package:afriprize/app/app.router.dart';
-// import 'package:afriprize/core/data/models/order_item.dart';
-// import 'package:afriprize/core/data/repositories/repository.dart';
-// import 'package:afriprize/core/network/api_response.dart';
-// import 'package:afriprize/state.dart';
-// import 'package:afriprize/ui/common/app_colors.dart';
-// import 'package:afriprize/ui/common/ui_helpers.dart';
-// import 'package:afriprize/ui/components/empty_state.dart';
-// import 'package:afriprize/utils/money_util.dart';
+// import 'package:Limpia/app/app.locator.dart';
+// import 'package:Limpia/app/app.router.dart';
+// import 'package:Limpia/core/data/models/order_item.dart';
+// import 'package:Limpia/core/data/repositories/repository.dart';
+// import 'package:Limpia/core/network/api_response.dart';
+// import 'package:Limpia/state.dart';
+// import 'package:Limpia/ui/common/app_colors.dart';
+// import 'package:Limpia/ui/common/ui_helpers.dart';
+// import 'package:Limpia/ui/components/empty_state.dart';
+// import 'package:Limpia/utils/money_util.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_svg/svg.dart';
 // // import 'package:flutter_paystack/flutter_paystack.dart';

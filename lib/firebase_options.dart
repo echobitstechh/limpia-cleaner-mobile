@@ -53,16 +53,16 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyA0JGun_aEZTJ6RmvRciGRv_ZK5OR_k4eI',
     appId: '1:877177955248:android:0ba0a0e8629d652030ac75',
     messagingSenderId: '877177955248',
-    projectId: 'afriprize-762ab',
-    storageBucket: 'afriprize-762ab.appspot.com',
+    projectId: 'Limpia-762ab',
+    storageBucket: 'Limpia-762ab.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyB1YA5spCRZUXb6PILtV8pmzkJdziCIgXI',
     appId: '1:877177955248:ios:7121d2bbca2b4ba430ac75',
     messagingSenderId: '877177955248',
-    projectId: 'afriprize-762ab',
-    storageBucket: 'afriprize-762ab.appspot.com',
-    iosBundleId: 'com.afriprize.afriprize.mobile',
+    projectId: 'Limpia-762ab',
+    storageBucket: 'Limpia-762ab.appspot.com',
+    iosBundleId: 'com.Limpia.Limpia.mobile',
   );
 }

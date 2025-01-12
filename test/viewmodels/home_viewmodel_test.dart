@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:afriprize/app/app.bottomsheets.dart';
-import 'package:afriprize/app/app.locator.dart';
-import 'package:afriprize/ui/common/app_strings.dart';
-import 'package:afriprize/ui/views/home/home_viewmodel.dart';
+import 'package:Limpia/app/app.bottomsheets.dart';
+import 'package:Limpia/app/app.locator.dart';
+import 'package:Limpia/ui/common/app_strings.dart';
+import 'package:Limpia/ui/views/home/home_viewmodel.dart';
 
 import '../helpers/test_helpers.dart';
 

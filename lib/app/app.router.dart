@@ -12,13 +12,10 @@ import 'package:limpia/core/data/models/profile.dart' as _i25;
 import 'package:limpia/ui/components/payment_success_page.dart';
 import 'package:limpia/ui/views/auth/auth_view.dart' as _i5;
 import 'package:limpia/ui/views/auth/register.dart';
-import 'package:limpia/ui/views/cart/add_shipping.dart';
-import 'package:limpia/ui/views/cart/raffle_cart_view.dart' as _i8;
-import 'package:limpia/ui/views/cart/add_shipping.dart' as _i13;
 import 'package:limpia/ui/views/change_password/change_password_view.dart'
     as _i17;
 import 'package:limpia/ui/views/dashboard/dashboard_view.dart' as _i6;
-import 'package:limpia/ui/views/dashboard/raffle_detail.dart' as _i12;
+import 'package:limpia/ui/views/dashboard/booking_detail.dart' as _i12;
 import 'package:limpia/ui/views/delete_account/delete_account_view.dart'
     as _i19;
 import 'package:limpia/ui/views/bookings/booking_view.dart' as _i7;
@@ -28,7 +25,6 @@ import 'package:limpia/ui/views/notification/notification_view.dart' as _i9;
 import 'package:limpia/ui/views/onboarding/onboarding_view2.dart' as _i31;
 import 'package:limpia/ui/views/otp/otp_view.dart' as _i16;
 import 'package:limpia/ui/views/profile/profile_view.dart' as _i10;
-import 'package:limpia/ui/views/profile/track.dart' as _i15;
 import 'package:limpia/ui/views/profile/wallet.dart' as _i14;
 import 'package:limpia/ui/views/startup/startup_view.dart' as _i3;
 import 'package:limpia/ui/views/withdraw/withdraw_view.dart' as _i20;
@@ -39,8 +35,6 @@ import 'package:stacked/stacked.dart' as _i1;
 import 'package:stacked_services/stacked_services.dart' as _i27;
 import '../core/data/models/cart_item.dart';
 import '../core/data/models/raffle_ticket.dart';
-import '../ui/views/profile/order_list.dart';
-import '../ui/views/profile/ticket_list.dart' as _i28;
 
 /// @author George David
 /// email: georgequin19@gmail.com
@@ -138,14 +132,6 @@ class StackedRouter extends _i1.RouterBase {
       page: _i2.HomeView,
     ),
     _i1.RouteDef(
-      Routes.ticketView,
-      page: _i28.TicketList,
-    ),
-    // _i1.RouteDef(
-    //   Routes.orderView,
-    //   page: OrderList,
-    // ),
-    _i1.RouteDef(
       Routes.startupView,
       page: _i3.StartupView,
     ),
@@ -164,10 +150,6 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(
       Routes.drawsView,
       page: _i7.BookingView,
-    ),
-    _i1.RouteDef(
-      Routes.cartView,
-      page: _i8.CartView,
     ),
     _i1.RouteDef(
       Routes.notificationView,
@@ -221,22 +203,12 @@ class StackedRouter extends _i1.RouterBase {
       Routes.successView,
       page: PaymentSuccessPage,
     ),
-    _i1.RouteDef(
-      Routes.shippingView,
-      page: AddShipping,
-    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.HomeView: (data) {
       return _i21.MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.HomeView(),
-        settings: data,
-      );
-    },
-    _i28.TicketList: (data) {
-      return _i21.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i28.TicketList(),
         settings: data,
       );
     },
@@ -277,12 +249,6 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i8.CartView: (data) {
-      return _i21.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i8.CartView(),
-        settings: data,
-      );
-    },
     _i9.NotificationView: (data) {
       return _i21.MaterialPageRoute<dynamic>(
         builder: (context) => const _i9.NotificationView(),
@@ -300,12 +266,6 @@ class StackedRouter extends _i1.RouterBase {
       return _i21.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i12.RaffleDetail(raffle: args.raffle, key: args.key),
-        settings: data,
-      );
-    },
-    _i13.AddShipping: (data) {
-      return _i21.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i13.AddShipping(),
         settings: data,
       );
     },

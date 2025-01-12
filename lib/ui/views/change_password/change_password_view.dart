@@ -47,7 +47,7 @@ class ChangePasswordView extends StackedView<ChangePasswordViewModel> {
             //       bottom: 0,
             //       child: Padding(
             //         padding: const EdgeInsets.all(80.0),
-            //         child: Image.asset("assets/images/afriprize_light.png"),
+            //         child: Image.asset("assets/images/Limpia_light.png"),
             //       ),
             //     )
             //   ],

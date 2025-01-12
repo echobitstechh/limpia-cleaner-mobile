@@ -34,9 +34,9 @@ class _SupportState extends State<Support> {
           SupportOption(
             icon: Icons.email_outlined,
             title: "Email Us",
-            //subtitle: "support@afriprize.com",
+            //subtitle: "support@Limpia.com",
             onTap: () async {
-              sendEmail("support@afriprize.com", context);
+              sendEmail("support@Limpia.com", context);
             },
           ),
           // SupportOption(
@@ -60,7 +60,7 @@ class _SupportState extends State<Support> {
             title: "FAQs",
             subtitle: "",
             onTap: () {
-              goToFaqs('https://afriprize.com/faq');
+              goToFaqs('https://Limpia.com/faq');
             },
           ),
 
@@ -75,7 +75,7 @@ Future<void> sendEmail(String emailAddress, BuildContext context) async {
     to: [
       emailAddress,
     ],
-    bcc: ['dev@afriprize.com'],
+    bcc: ['dev@Limpia.com'],
   );
 
   OpenMailAppResult result =
@@ -125,7 +125,7 @@ void showNoMailAppsDialog(BuildContext context) {
 
 Future<void> goToFaqs(String url) async {
   final Uri toLaunch =
-  Uri(scheme: 'https', host: 'www.afriprize.com', path: '/faq');
+  Uri(scheme: 'https', host: 'www.Limpia.com', path: '/faq');
 
   if (!await launchUrl(toLaunch, mode: LaunchMode.inAppBrowserView)) {
     throw Exception('Could not launch $url');

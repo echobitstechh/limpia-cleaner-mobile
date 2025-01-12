@@ -15,9 +15,9 @@ class FlutterwavePaymentService {
     bool isTestMode = false,
   }) async {
     final Customer customer = Customer(
-      name: '${profile.value.firstname} ${profile.value.lastname}' ?? "Afriprize NG",
+      name: '${profile.value.firstname} ${profile.value.lastname}' ?? "Limpia NG",
       phoneNumber: profile.value.phone ?? "07045007400",
-      email: profile.value.email ?? 'dev@afriprize.com',
+      email: profile.value.email ?? 'dev@Limpia.com',
     );
 
     final Flutterwave flutterwave = Flutterwave(
@@ -26,10 +26,10 @@ class FlutterwavePaymentService {
       currency: "NGN",
       amount: amount,
       txRef: reference!,
-      redirectUrl: "https://www.afriprize.com",
+      redirectUrl: "https://www.Limpia.com",
       customer: customer,
       paymentOptions: "card, ussd, payattitude, barter",
-      customization: Customization(title: "Afriprize Test Payment"),
+      customization: Customization(title: "Limpia Test Payment"),
       isTestMode: isTestMode,
     );
 

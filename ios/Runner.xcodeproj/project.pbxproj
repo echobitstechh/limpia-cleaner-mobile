@@ -373,7 +373,7 @@
 				DEVELOPMENT_TEAM = M59GLZAC4B;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Afriprize;
+				INFOPLIST_KEY_CFBundleDisplayName = Limpia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -515,7 +515,7 @@
 				DEVELOPMENT_TEAM = M59GLZAC4B;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Afriprize;
+				INFOPLIST_KEY_CFBundleDisplayName = Limpia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -547,7 +547,7 @@
 				"DYLIB_COMPATIBILITY_VERSION[arch=*]" = 14;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Afriprize;
+				INFOPLIST_KEY_CFBundleDisplayName = Limpia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
